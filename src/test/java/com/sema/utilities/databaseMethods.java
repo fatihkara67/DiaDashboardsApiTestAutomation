@@ -47,7 +47,7 @@ public class databaseMethods {
                 "    AS num_distributors_with_so\n" +
                 "FROM cat\n" +
                 "GROUP BY URUN_TIP_ACIKLAMA\n" +
-                "ORDER BY num_distributors_with_so DESC, URUN_TIP_ACIKLAMA desc\n" +
+                "ORDER BY num_distributors_with_so DESC\n" +
                 "LIMIT 10;";
 
         Map<String, Integer> urunVeStockOutSayilariW43 = new HashMap<>();
@@ -131,8 +131,7 @@ public class databaseMethods {
     }
 
     public static int getPlannedRoutesScenario15() {
-        final String query = "\n" +
-                "SELECT\n" +
+        final String query = "SELECT\n" +
                 "\tCOUNT(DISTINCT pvv.ROTA_KODU) AS HedefRotaSayisi\n" +
                 "FROM\n" +
                 "\tmy_database.planned_visits pvv\n" +
@@ -312,7 +311,8 @@ public class databaseMethods {
                 "      AND sf.LNGDISTKOD NOT IN (1,2,384,999)\n" +
                 "      AND sf.MUSTERI_KOD != 'Mey İçki'\n" +
                 "      AND TRHISLEMTARIHI >= today()\n" +
-                "      AND EK_BOLGEMUDURLUGU = 'Marmara Bölge'";
+                "      AND EK_BOLGEMUDURLUGU = 'Marmara Bölge'\n" +
+                "      AND EK_ROUTE_NAME NOT ILIKE '%LZM%'";
 
         double totalSales = 0;
 
@@ -434,5 +434,201 @@ public class databaseMethods {
         }
 
         return projectedSalesS39;
+    }
+
+    public static int getCountDistinctDistCodeS21() {
+        String query = "select\n" +
+                "        COUNT(DISTINCT DIST_CODE) AS countDistinctDistCode\n" +
+                "from\n" +
+                "        my_database.MEY_TR_T_WRH_STOCK_HISTORY_CRM mttwshc\n" +
+                "WHERE\n" +
+                "        DIST_CODE IN ('ASYA KAYIKCI', 'ADIYAMAN DATA', 'AGRI TANRIVERDI', 'ANKARA GRAM', 'ANKARA LACIN', 'ANTALYA ANDA', 'ANTALYA ANKA', 'ANTALYA INCI', 'ARTVIN KESKIN', 'ASYA DOGUS', 'AYDIN PIRIM', 'BAYIR ACARLAR', 'BODRUM PIRIM', 'BURSA RIT', 'CAGAN', 'CANAKKALE BAYRAKTAR', 'DENIZLI BIZIMYAKI', 'DIYARBAKIR HNR', 'DUNYA ZOGULDAK', 'ELAZIG POLAT', 'GAZIANTEP EKER', 'ISPARTA CANTAYLAR', 'ISTANBUL DOGUS', 'ISTANBUL GURPA', 'ISTANBUL KAYIKCI', 'ISTANBUL OZYIGIT', 'ISTANBUL PIRIM', 'IZMIR GURPA', 'IZMIR PIRIM', 'KARAMAN ALFA', 'KASTAMONU LACIN', 'KAYSERI 4GEN', 'KIRSEHIR YUKSELLER', 'KOCAELI GULENER', 'MALATYA OZSAH', 'MANISA CANTAY', 'MANISA CANTAY 2', 'MARDIN SECEM', 'MERSIN ALFA', 'MERSIN SGM', 'MUGLA ACARLAR', 'NEVSEHIR ONUR', 'ORDU GURESCIOGLU', 'OSMANIYE MARSAS', 'SAKARYA KOSEOGLU', 'SAMSUN TANRIVERDI', 'SIVAS SES', 'TRAKYA ERZA', 'URFA UCKOK', 'USAK BIZIMYAKI', 'YALOVA KUZEYNAM', 'CORUM TANRIVERDI')";
+        int countDistCode = 0;
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_CLICKHOUSE, DbConfigs.DIA_CLICKHOUSE_USERNAME, DbConfigs.DIA_CLICKHOUSE_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                // Kolon adlarıyla güvenli okuma
+                countDistCode = rs.getInt("countDistinctDistCode");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println("-----\ncountDistinctDistCodeS21: " + countDistCode + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return countDistCode;
+
+    }
+
+    public static double getAvgSalesPerBusinessDayS37() {
+        String query = "WITH\n" +
+                "    toStartOfMonth(toDate(now('Europe/Istanbul'))) AS start_dt,\n" +
+                "    toDate(now('Europe/Istanbul'))                 AS end_dt,\n" +
+                "    (\n" +
+                "        SELECT count() \n" +
+                "        FROM\n" +
+                "        (\n" +
+                "            SELECT start_dt + number AS d\n" +
+                "            FROM numbers(dateDiff('day', start_dt, end_dt))\n" +
+                "        )\n" +
+                "        WHERE toDayOfWeek(d) BETWEEN 1 AND 5   \n" +
+                "    ) AS business_days,\n" +
+                "    (\n" +
+                "        SELECT toFloat64(SUM(\n" +
+                "            IF(sf.BYTTUR IN (0,3),  sf.URUN_AMBALAJ_LITRE * sf.INVOICE_QUANTITY,\n" +
+                "            IF(sf.BYTTUR IN (2,4), -sf.URUN_AMBALAJ_LITRE * sf.INVOICE_QUANTITY, 0))\n" +
+                "        ))\n" +
+                "        FROM my_database.staging_fatura_v2 AS sf\n" +
+                "        WHERE sf.BYTDURUM = 0\n" +
+                "          AND sf.LNGDISTKOD NOT IN (1,2,384,999)\n" +
+                "          AND sf.MUSTERI_KOD != 'Mey İçki'\n" +
+                "          AND sf.TRHISLEMTARIHI >= start_dt\n" +
+                "          AND sf.TRHISLEMTARIHI <  end_dt\n" +
+                "          AND sf.EK_BOLGEMUDURLUGU = 'Marmara Bölge'\n" +
+                "          AND sf.EK_ROUTE_NAME NOT ILIKE '%LZM%'\n" +
+                "    ) AS total_sales\n" +
+                "SELECT\n" +
+                "    total_sales                                       AS Total_Sales,\n" +
+                "    business_days                                     AS Business_Days,\n" +
+                "    total_sales / NULLIF(toFloat64(business_days), 0) AS Avg_Sales_Per_Business_Day;";
+
+        double avgSalesPerBusinessDay = 0;
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_CLICKHOUSE, DbConfigs.DIA_CLICKHOUSE_USERNAME, DbConfigs.DIA_CLICKHOUSE_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                // Kolon adlarıyla güvenli okuma
+                avgSalesPerBusinessDay = rs.getDouble("Avg_Sales_Per_Business_Day");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println("-----\nAvg_Sales_Per_Business_DayS21: " + avgSalesPerBusinessDay + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return avgSalesPerBusinessDay;
+
+
+    }
+
+    public static double getZamanindaOdemeOraniCheck() {
+        String query = "SELECT toStartOfMonth(toDateTime(`PayDate`)) AS `PayDate`, AVG(ZamanindaOdemeOrani) AS `Zamanında Ödeme` \n" +
+                "FROM (WITH cust AS (\n" +
+                "    SELECT DISTINCT TXTERPKOD_ORG AS CustomerCode\n" +
+                "    FROM staging_account_dummy\n" +
+                "    WHERE BYTDURUM = 0\n" +
+                "),\n" +
+                "data AS (\n" +
+                "    SELECT\n" +
+                "        bt.CustomerCode,\n" +
+                "        toDateOrNull(toString(PaymentDate))             AS PayDate,\n" +
+                "        toStartOfMonth(PayDate)                         AS Ay,\n" +
+                "        toDateOrNull(toString(InvoiceDueDate))          AS DueDate,\n" +
+                "        InvoiceNo,\n" +
+                "        DistributorCode,\n" +
+                "        CAST(COALESCE(MatchedAmount, 0) AS Decimal(15,2)) AS Amt\n" +
+                "    FROM my_database.BalanceTable bt\n" +
+                "    WHERE PaymentDate IS NOT NULL\n" +
+                "      AND (        \n" +
+                "          1 = 1\n" +
+                "      )\n" +
+                ")\n" +
+                "SELECT\n" +
+                "    DistributorCode,\n" +
+                "    Ay                                                       AS PayDate,\n" +
+                "    IF(uniqExact(InvoiceNo) = 0, 0,\n" +
+                "       uniqExactIf(InvoiceNo, PayDate <= DueDate) * 100.0 / uniqExact(InvoiceNo))\n" +
+                "                                                             AS ZamanindaOdemeOrani\n" +
+                "FROM data\n" +
+                "GROUP BY DistributorCode, Ay\n" +
+                "ORDER BY PayDate\n" +
+                ")\n" +
+                "WHERE ((PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS)) \n" +
+                "GROUP BY toStartOfMonth(toDateTime(`PayDate`)), PayDate";
+
+        double zamanindaOdemeOraniCheck = 0;
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_CLICKHOUSE, DbConfigs.DIA_CLICKHOUSE_USERNAME, DbConfigs.DIA_CLICKHOUSE_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                // Kolon adlarıyla güvenli okuma
+                zamanindaOdemeOraniCheck = rs.getDouble("Zamanında Ödeme");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println("-----\nzamanindaOdemeOraniCheckS67: " + zamanindaOdemeOraniCheck + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return zamanindaOdemeOraniCheck;
+
+    }
+
+    public static String getAyTrS10() {
+        String query = "WITH base AS (\n" +
+                "    SELECT\n" +
+                "        toDate(CONCAT(t.FISCALYEAR,'-',t.FISCALMONTH,'-1')) AS AY,\n" +
+                "        avg(TotalTarget) AS TotalTarget,     -- rota/ürün kırılımında hedef\n" +
+                "        sum(Total_Sales) AS Total_Sales      -- rota/ürün kırılımında gerçekleşme\n" +
+                "    FROM my_database.IcHedefSatisVeriSuperset_v4 t\n" +
+                "    WHERE\n" +
+                "        toDate(CONCAT(t.FISCALYEAR,'-',t.FISCALMONTH,'-1')) >= toDate('2024-11-01')\n" +
+                "    GROUP BY\n" +
+                "        t.FISCALYEAR, t.FISCALMONTH, t.ProductQuality, t.ProductCat, t.Product,\n" +
+                "        t.BM, t.SM, t.FM, t.ROUTE_CODE, t.ROTA\n" +
+                "),\n" +
+                "ay_ozet AS (\n" +
+                "    SELECT\n" +
+                "        AY,\n" +
+                "        sum(TotalTarget) AS Ic_Hedef,\n" +
+                "        sum(Total_Sales) AS Gerceklesme\n" +
+                "    FROM base\n" +
+                "    GROUP BY AY\n" +
+                ")\n" +
+                "SELECT\n" +
+                "        arrayElement(['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'], toMonth(AY)) AS Ay_TR\n" +
+                "FROM ay_ozet\n" +
+                "WHERE Gerceklesme > Ic_Hedef\n" +
+                "ORDER BY AY DESC\n" +
+                "LIMIT 1;";
+
+
+        String ayTrS10 = null;
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_CLICKHOUSE, DbConfigs.DIA_CLICKHOUSE_USERNAME, DbConfigs.DIA_CLICKHOUSE_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                // Kolon adlarıyla güvenli okuma
+                ayTrS10 = rs.getString("Ay_TR");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println("-----\nayTrS10: " + ayTrS10 + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ayTrS10;
+
     }
 }

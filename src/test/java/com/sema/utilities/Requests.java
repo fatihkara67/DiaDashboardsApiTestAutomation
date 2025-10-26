@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
@@ -16,9 +17,9 @@ public class Requests {
         // İnsecure client'ı oluştur ve AYNI client üstüne timeoutları uygula (ssl ayarları korunur)
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(2, TimeUnit.SECONDS)
+                .writeTimeout(2, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -72,9 +73,9 @@ public class Requests {
         // SSL doğrulamasını kapatan client'ı baz al, timeout'ları ekle
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(4, TimeUnit.SECONDS)
+                .readTimeout(4, TimeUnit.SECONDS)
+                .writeTimeout(4, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -126,7 +127,7 @@ public class Requests {
         throw new IOException("sendV12Request failed after " + maxRetries + " attempts", lastEx);
     }
 
-
+    static int timeoutValue = Integer.parseInt(ConfigurationReader.getProperty("timeout"));
     public static JSONObject sendWidget13Request(String region) throws IOException {
         // 1) Cookie'yi en başta al
         String cookie = ConfigurationReader.getProperty("cookie"); // örn: "session=...."
@@ -134,9 +135,9 @@ public class Requests {
         // 2) PKIX hatasını bypass eden client + timeoutlar (lokal/test içindir)
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -193,9 +194,9 @@ public class Requests {
         // PKIX/SSL hatasını bypass eden client + timeoutlar (lokal/test içindir)
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -249,9 +250,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -499,9 +500,9 @@ public class Requests {
         // SSL doğrulamasını bypass eden client (lokal/test için) + timeoutlar
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -565,9 +566,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
+                .connectTimeout(6, TimeUnit.SECONDS)
+                .readTimeout(6, TimeUnit.SECONDS)
+                .writeTimeout(6, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -723,9 +724,9 @@ public class Requests {
         // 2) Insecure SSL + makul timeoutlar
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -787,9 +788,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -1409,9 +1410,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -1720,9 +1721,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -1892,9 +1893,9 @@ public class Requests {
     public static JSONObject sendWidget25Request() {
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -2142,8 +2143,174 @@ public class Requests {
     }
 
 
+    public static JSONObject sendWidget42Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A380%7D&force=true";
 
-    public static JSONObject sendWidget47Request() {
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource":{"id":209,"type":"table"},
+  "force":true,
+  "queries":[
+    {
+      "filters":[{"col":"DISTRIBUTOR_KOD","op":"NOT IN","val":["EDIRNE MAHALO"]}],
+      "extras":{"having":"","where":""},
+      "applied_time_extras":{},
+      "columns":[{"datasourceWarning":false,"expressionType":"SQL","label":"Marka","sqlExpression":"URUN_TIP_ACIKLAMA"}],
+      "metrics":[
+        {
+          "aggregate":null,
+          "column":null,
+          "datasourceWarning":false,
+          "expressionType":"SQL",
+          "hasCustomLabel":true,
+          "label":"Kalan Stok Gün",
+          "optionName":"metric_t2nf5uauaar_heczve27fu",
+          "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+        }
+      ],
+      "orderby":[
+        [
+          {
+            "aggregate":null,
+            "column":null,
+            "datasourceWarning":false,
+            "expressionType":"SQL",
+            "hasCustomLabel":false,
+            "label":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n",
+            "optionName":"metric_4n0u3ciixyr_0u06yz56st0g",
+            "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+          },
+          true
+        ]
+      ],
+      "annotation_layers":[],
+      "row_limit":5,
+      "series_limit":0,
+      "series_limit_metric":{
+        "aggregate":null,
+        "column":null,
+        "datasourceWarning":false,
+        "expressionType":"SQL",
+        "hasCustomLabel":false,
+        "label":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n",
+        "optionName":"metric_4n0u3ciixyr_0u06yz56st0g",
+        "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+      },
+      "order_desc":false,
+      "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","slice_id":"380"},
+      "custom_params":{},
+      "custom_form_data":{},
+      "post_processing":[],
+      "time_offsets":[]
+    }
+  ],
+  "form_data":{
+    "datasource":"209__table",
+    "viz_type":"table",
+    "slice_id":380,
+    "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","slice_id":"380"},
+    "query_mode":"aggregate",
+    "groupby":[{"datasourceWarning":false,"expressionType":"SQL","label":"Marka","sqlExpression":"URUN_TIP_ACIKLAMA"}],
+    "temporal_columns_lookup":{},
+    "metrics":[
+      {
+        "aggregate":null,
+        "column":null,
+        "datasourceWarning":false,
+        "expressionType":"SQL",
+        "hasCustomLabel":true,
+        "label":"Kalan Stok Gün",
+        "optionName":"metric_t2nf5uauaar_heczve27fu",
+        "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+      }
+    ],
+    "all_columns":[],
+    "percent_metrics":[],
+    "adhoc_filters":[
+      {
+        "clause":"WHERE",
+        "comparator":["EDIRNE MAHALO"],
+        "datasourceWarning":false,
+        "expressionType":"SIMPLE",
+        "filterOptionName":"filter_bo2gs628ayv_rd9b9mn71w",
+        "isExtra":false,
+        "isNew":false,
+        "operator":"NOT IN",
+        "operatorId":"NOT_IN",
+        "sqlExpression":null,
+        "subject":"DISTRIBUTOR_KOD"
+      }
+    ],
+    "timeseries_limit_metric":{
+      "aggregate":null,
+      "column":null,
+      "datasourceWarning":false,
+      "expressionType":"SQL",
+      "hasCustomLabel":false,
+      "label":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n",
+      "optionName":"metric_4n0u3ciixyr_0u06yz56st0g",
+      "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+    },
+    "order_by_cols":[],
+    "order_desc":false,
+    "row_limit":"5",
+    "table_timestamp_format":"smart_date",
+    "allow_render_html":true,
+    "show_cell_bars":true,
+    "color_pn":true,
+    "comparison_color_scheme":"Green",
+    "conditional_formatting":[],
+    "comparison_type":"values",
+    "extra_form_data":{},
+    "force":true,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=bOwPByLDjbg&dashboard_page_id=RQU5lFjUavfRCcebEFYwP&slice_id=380")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+    public static JSONObject sendWidget43AggreationS56Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A376%7D";
+
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
                 .connectTimeout(5, TimeUnit.SECONDS)
@@ -2154,15 +2321,310 @@ public class Requests {
 
         String cookie = ConfigurationReader.getProperty("cookie");
 
-        RequestBody body = RequestBody.create("""
+        // Not: Bu sorguda AY/YIL yok. Eğer tablo destekliyorsa aşağıdaki OPSİYONEL bloğa bakın.
+        String body = """
+{
+  "datasource":{"id":209,"type":"table"},
+  "force":false,
+  "queries":[
+    {
+      "filters":[
+        {"col":"DISTRIBUTOR_KOD","op":"NOT IN","val":["EDIRNE MAHALO"]}
+      ],
+      "extras":{"time_grain_sqla":"P1D","having":"","where":""},
+      "applied_time_extras":{},
+      "columns":[
+        {"expressionType":"SQL","label":"Ürün Kısa Ad","sqlExpression":"URUN_KISA_AD"}
+      ],
+      "metrics":[
+        {
+          "expressionType":"SQL",
+          "sqlExpression":"    SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n    /\\r\\n    SUM(\\r\\n       CAST(\\r\\n         CASE\\r\\n           WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n               THEN 0\\r\\n               ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n         END\\r\\n         AS FLOAT\\r\\n       )\\r\\n    ) * 1.0 \\r\\n",
+          "column":null,"aggregate":null,"datasourceWarning":false,
+          "hasCustomLabel":true,"label":"Kalan Stok Gün",
+          "optionName":"metric_9qo7z6huo08_4rdu8tfhocu"
+        }
+      ],
+      "orderby":[
+        [
+          {
+            "expressionType":"SQL",
+            "sqlExpression":"    SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n    /\\r\\n    SUM(\\r\\n       CAST(\\r\\n         CASE\\r\\n           WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n               THEN 0\\r\\n               ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n         END\\r\\n         AS FLOAT\\r\\n       )\\r\\n    ) * 1.0 \\r\\n",
+            "column":null,"aggregate":null,"datasourceWarning":false,
+            "hasCustomLabel":true,"label":"Kalan Stok Gün",
+            "optionName":"metric_9qo7z6huo08_4rdu8tfhocu"
+          },
+          false
+        ]
+      ],
+      "annotation_layers":[],
+      "row_limit":100000,
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","form_data_key":"g-kk0LNmc6U","slice_id":"376"},
+      "custom_params":{},
+      "custom_form_data":{},
+      "post_processing":[],
+      "time_offsets":[]
+    }
+  ],
+  "form_data":{
+    "datasource":"209__table",
+    "viz_type":"table",
+    "slice_id":376,
+    "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","form_data_key":"g-kk0LNmc6U","slice_id":"376"},
+    "query_mode":"aggregate",
+    "groupby":[
+      {"expressionType":"SQL","label":"Ürün Kısa Ad","sqlExpression":"URUN_KISA_AD"}
+    ],
+    "time_grain_sqla":"P1D",
+    "temporal_columns_lookup":{},
+    "metrics":[
+      {
+        "expressionType":"SQL",
+        "sqlExpression":"    SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n    /\\r\\n    SUM(\\r\\n       CAST(\\r\\n         CASE\\r\\n           WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n               THEN 0\\r\\n               ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n         END\\r\\n         AS FLOAT\\r\\n       )\\r\\n    ) * 1.0 \\r\\n",
+        "column":null,"aggregate":null,"datasourceWarning":false,
+        "hasCustomLabel":true,"label":"Kalan Stok Gün",
+        "optionName":"metric_9qo7z6huo08_4rdu8tfhocu"
+      }
+    ],
+    "all_columns":[],
+    "percent_metrics":[],
+    "adhoc_filters":[
+      {
+        "clause":"WHERE","comparator":["EDIRNE MAHALO"],"datasourceWarning":false,
+        "expressionType":"SIMPLE","filterOptionName":"filter_xxpk6dan4db_yrds5ko880b",
+        "isExtra":false,"isNew":false,"operator":"NOT IN","operatorId":"NOT_IN",
+        "sqlExpression":null,"subject":"DISTRIBUTOR_KOD"
+      }
+    ],
+    "order_by_cols":[],
+    "row_limit":"100000",
+    "table_timestamp_format":"smart_date",
+    "include_search":true,
+    "allow_render_html":true,
+    "column_config":{
+      "Günlük Ortalama Litre Satış":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"},
+      "Günlük Ortalama Şişe Satış":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"},
+      "Kalan Stok Gün":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"},
+      "Litre Stok":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"}
+    },
+    "show_cell_bars":false,
+    "color_pn":true,
+    "comparison_color_scheme":"Green",
+    "conditional_formatting":[],
+    "comparison_type":"values",
+    "extra_form_data":{},
+    "force":false,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=g-kk0LNmc6U&dashboard_page_id=RQU5lFjUavfRCcebEFYwP&slice_id=376")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONObject sendWidget43AggreationS57Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A376%7D";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource":{"id":209,"type":"table"},
+  "force":false,
+  "queries":[
+    {
+      "filters":[{"col":"DISTRIBUTOR_KOD","op":"NOT IN","val":["EDIRNE MAHALO"]}],
+      "extras":{"time_grain_sqla":"P1D","having":"","where":""},
+      "applied_time_extras":{},
+      "columns":[{"label":"Marka","sqlExpression":"URUN_TIP_ACIKLAMA","expressionType":"SQL"}],
+      "metrics":[
+        {
+          "expressionType":"SQL",
+          "sqlExpression":"    SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n    /\\r\\n    SUM(\\r\\n       CAST(\\r\\n         CASE\\r\\n           WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n               THEN 0\\r\\n               ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n         END\\r\\n         AS FLOAT\\r\\n       )\\r\\n    ) * 1.0 \\r\\n",
+          "column":null,
+          "aggregate":null,
+          "datasourceWarning":false,
+          "hasCustomLabel":true,
+          "label":"Kalan Stok Gün",
+          "optionName":"metric_9qo7z6huo08_4rdu8tfhocu"
+        }
+      ],
+      "orderby":[
+        [
+          {
+            "expressionType":"SQL",
+            "sqlExpression":"    SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n    /\\r\\n    SUM(\\r\\n       CAST(\\r\\n         CASE\\r\\n           WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n               THEN 0\\r\\n               ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n         END\\r\\n         AS FLOAT\\r\\n       )\\r\\n    ) * 1.0 \\r\\n",
+            "column":null,
+            "aggregate":null,
+            "datasourceWarning":false,
+            "hasCustomLabel":true,
+            "label":"Kalan Stok Gün",
+            "optionName":"metric_9qo7z6huo08_4rdu8tfhocu"
+          },
+          false
+        ]
+      ],
+      "annotation_layers":[],
+      "row_limit":100000,
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","form_data_key":"g-kk0LNmc6U","slice_id":"376"},
+      "custom_params":{},
+      "custom_form_data":{},
+      "post_processing":[],
+      "time_offsets":[]
+    }
+  ],
+  "form_data":{
+    "datasource":"209__table",
+    "viz_type":"table",
+    "slice_id":376,
+    "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","form_data_key":"g-kk0LNmc6U","slice_id":"376"},
+    "query_mode":"aggregate",
+    "groupby":[{"label":"Marka","sqlExpression":"URUN_TIP_ACIKLAMA","expressionType":"SQL"}],
+    "time_grain_sqla":"P1D",
+    "temporal_columns_lookup":{},
+    "metrics":[
+      {
+        "expressionType":"SQL",
+        "sqlExpression":"    SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n    /\\r\\n    SUM(\\r\\n       CAST(\\r\\n         CASE\\r\\n           WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n               THEN 0\\r\\n               ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n         END\\r\\n         AS FLOAT\\r\\n       )\\r\\n    ) * 1.0 \\r\\n",
+        "column":null,
+        "aggregate":null,
+        "datasourceWarning":false,
+        "hasCustomLabel":true,
+        "label":"Kalan Stok Gün",
+        "optionName":"metric_9qo7z6huo08_4rdu8tfhocu"
+      }
+    ],
+    "all_columns":[],
+    "percent_metrics":[],
+    "adhoc_filters":[
+      {
+        "clause":"WHERE",
+        "comparator":["EDIRNE MAHALO"],
+        "datasourceWarning":false,
+        "expressionType":"SIMPLE",
+        "filterOptionName":"filter_xxpk6dan4db_yrds5ko880b",
+        "isExtra":false,
+        "isNew":false,
+        "operator":"NOT IN",
+        "operatorId":"NOT_IN",
+        "sqlExpression":null,
+        "subject":"DISTRIBUTOR_KOD"
+      }
+    ],
+    "order_by_cols":[],
+    "row_limit":"100000",
+    "table_timestamp_format":"smart_date",
+    "include_search":true,
+    "allow_render_html":true,
+    "column_config":{
+      "Günlük Ortalama Litre Satış":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"},
+      "Günlük Ortalama Şişe Satış":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"},
+      "Kalan Stok Gün":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"}
+    },
+    "show_cell_bars":false,
+    "color_pn":true,
+    "comparison_color_scheme":"Green",
+    "conditional_formatting":[],
+    "comparison_type":"values",
+    "extra_form_data":{},
+    "force":false,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=g-kk0LNmc6U&dashboard_page_id=RQU5lFjUavfRCcebEFYwP&slice_id=376")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+    public static JSONObject sendWidget47Request() {
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        // İçinde bulunduğumuz yıl/ay
+        int currentYear  = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+
+        // Yer tutucular: ${YEAR} ve ${MONTH}
+        String template = """
 {
   "datasource": { "id": 381, "type": "table" },
   "force": true,
   "queries": [
     {
       "filters": [
-        { "col": "FISCALYEAR", "op": "IN", "val": [2025] },
-        { "col": "FISCALMONTH", "op": "IN", "val": [9] }
+        { "col": "FISCALYEAR", "op": "IN", "val": [${YEAR}] },
+        { "col": "FISCALMONTH", "op": "IN", "val": [${MONTH}] }
       ],
       "extras": {
         "having": "",
@@ -2193,8 +2655,13 @@ public class Requests {
   "result_format": "json",
   "result_type": "full"
 }
-""", MediaType.parse("application/json"));
+""";
 
+        String bodyStr = template
+                .replace("${YEAR}", String.valueOf(currentYear))
+                .replace("${MONTH}", String.valueOf(currentMonth));
+
+        RequestBody body = RequestBody.create(bodyStr, MediaType.parse("application/json"));
 
         Request request = new Request.Builder()
                 .url("https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1814%7D&force=true")
@@ -5328,126 +5795,165 @@ public class Requests {
     }
 
     public static JSONObject sendWidget9Request() {
-        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A614%7D&force=true";
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A614%7D";
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(6, TimeUnit.SECONDS)
+                .readTimeout(6, TimeUnit.SECONDS)
+                .writeTimeout(6, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
         String cookie = ConfigurationReader.getProperty("cookie");
 
         String body = """
+{
+  "datasource": {"id":289,"type":"table"},
+  "force": false,
+  "queries": [
     {
-      "datasource":{"id":289,"type":"table"},
-      "force":true,
-      "queries":[
+      "filters": [
+        {"col":"sf.BYTDURUM","op":"IN","val":["0"]}
+      ],
+      "extras": {
+        "time_grain_sqla":"P1D",
+        "having":"",
+        "where":"(TRHISLEMTARIHI >= today()-9) AND (splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(MUSTERI_BOLGE_1_ACIKLAMA, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('dashboard_filter_bm') %}\\r\\n      '{{ url_param('dashboard_filter_bm') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]) AND (MUSTERI_ROTA_ICI_KANAL_KOD NOT IN (4) OR MUSTERI_ROTA_ICI_KANAL_KOD IS NULL) AND (EK_ROUTE_NAME NOT ILIKE '%LZM%')"
+      },
+      "applied_time_extras": {},
+      "columns": [
         {
-          "filters":[{"col":"sf.BYTDURUM","op":"IN","val":["0"]}],
-          "extras":{
-            "time_grain_sqla":"P1D",
-            "having":"",
-            "where":"(TRHISLEMTARIHI >= today()-9) AND (splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(MUSTERI_BOLGE_1_ACIKLAMA, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n {% if url_param('dashboard_filter_bm') %}\\r\\n '{{ url_param('dashboard_filter_bm') }}'\\r\\n {% else %}\\r\\n 'Marmara'\\r\\n {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]) AND (MUSTERI_ROTA_ICI_KANAL_KOD NOT IN (4) OR MUSTERI_ROTA_ICI_KANAL_KOD IS NULL)"
-          },
-          "applied_time_extras":{},
-          "columns":[
-            {"timeGrain":"P1D","columnType":"BASE_AXIS","sqlExpression":"TRHISLEMTARIHI","label":"TRHISLEMTARIHI","expressionType":"SQL"}
-          ],
-          "metrics":[
-            {
-              "aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,
-              "label":"Satış (L)","optionName":"metric_snm5jhpgv_ch0nh6zmlp",
-              "sqlExpression":" SUM(\\r\\n IF(\\r\\n BYTTUR IN (0,3), \\r\\n URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, \\r\\n IF(BYTTUR IN (2, 4), -1 * URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, 0)\\r\\n )\\r\\n )"
-            }
-          ],
-          "orderby":[[
-            {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Satış (L)","optionName":"metric_snm5jhpgv_ch0nh6zmlp","sqlExpression":" SUM(\\r\\n IF(\\r\\n BYTTUR IN (0,3), \\r\\n URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, \\r\\n IF(BYTTUR IN (2, 4), -1 * URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, 0)\\r\\n )\\r\\n )"},
-            false
-          ]],
-          "annotation_layers":[],
-          "row_limit":10000,
-          "series_columns":[],
-          "series_limit":0,
-          "order_desc":true,
-          "url_params":{"dashboard_page_id":"Yn9pIQiFlhfBwFAQkmiHs","slice_id":"614"},
-          "custom_params":{},
-          "custom_form_data":{},
-          "time_offsets":[],
-          "post_processing":[
-            {
-              "operation":"pivot",
-              "options":{"index":["TRHISLEMTARIHI"],"columns":[],"aggregates":{"Satış (L)":{"operator":"mean"}},"drop_missing_columns":false}
-            },
-            {"operation":"flatten"}
-          ]
+          "timeGrain":"P1D",
+          "columnType":"BASE_AXIS",
+          "sqlExpression":"TRHISLEMTARIHI",
+          "label":"TRHISLEMTARIHI",
+          "expressionType":"SQL"
         }
       ],
-      "form_data":{
-        "datasource":"289__table",
-        "viz_type":"echarts_timeseries_bar",
-        "slice_id":614,
-        "url_params":{"dashboard_page_id":"Yn9pIQiFlhfBwFAQkmiHs","slice_id":"614"},
-        "x_axis":"TRHISLEMTARIHI",
-        "time_grain_sqla":"P1D",
-        "metrics":[
+      "metrics": [
+        {
+          "aggregate": null,
+          "column": null,
+          "datasourceWarning": false,
+          "expressionType": "SQL",
+          "hasCustomLabel": true,
+          "label": "Satış (L)",
+          "optionName": "metric_snm5jhpgv_ch0nh6zmlp",
+          "sqlExpression": " SUM(\\r\\n            IF(\\r\\n                BYTTUR IN (0,3), \\r\\n                URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, \\r\\n                IF(BYTTUR IN (2, 4), -1 * URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, 0)\\r\\n            )\\r\\n        )"
+        }
+      ],
+      "orderby": [
+        [
           {
-            "aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,
-            "label":"Satış (L)","optionName":"metric_snm5jhpgv_ch0nh6zmlp",
-            "sqlExpression":" SUM(\\r\\n IF(\\r\\n BYTTUR IN (0,3), \\r\\n URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, \\r\\n IF(BYTTUR IN (2, 4), -1 * URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, 0)\\r\\n )\\r\\n )"
-          }
-        ],
-        "groupby":[],
-        "adhoc_filters":[
-          {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_yd6d2mtg61_jmdpxyp4qvp","isExtra":false,"isNew":false,"operator":"TEMPORAL_RANGE","sqlExpression":"TRHISLEMTARIHI >= today()-9","subject":"TRHISLEMTARIHI"},
-          {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_sazau3qly9_utbjjah4tz","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(MUSTERI_BOLGE_1_ACIKLAMA, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n {% if url_param('dashboard_filter_bm') %}\\r\\n '{{ url_param('dashboard_filter_bm') }}'\\r\\n {% else %}\\r\\n 'Marmara'\\r\\n {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]","subject":null},
-          {"clause":"WHERE","comparator":["0"],"datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_9b0qy9uz9vl_6tve85l5k4c","isExtra":false,"isNew":false,"operator":"IN","operatorId":"IN","sqlExpression":null,"subject":"sf.BYTDURUM"},
-          {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_ba23yc8qae_tkwy7d7lwiq","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"MUSTERI_ROTA_ICI_KANAL_KOD NOT IN (4) OR MUSTERI_ROTA_ICI_KANAL_KOD IS NULL","subject":null}
-        ],
-        "row_limit":10000,
-        "truncate_metric":true,
-        "show_empty_columns":true,
-        "comparison_type":"values",
-        "annotation_layers":[],
-        "forecastPeriods":10,
-        "forecastInterval":0.8,
-        "orientation":"vertical",
-        "x_axis_title_margin":15,
-        "y_axis_title_margin":15,
-        "y_axis_title_position":"Left",
-        "sort_series_type":"sum",
-        "color_scheme":"supersetColors",
-        "time_shift_color":true,
-        "show_value":true,
-        "only_total":true,
-        "show_legend":true,
-        "legendType":"scroll",
-        "legendOrientation":"bottom",
-        "x_axis_time_format":"smart_date",
-        "xAxisLabelRotation":0,
-        "y_axis_format":"SMART_NUMBER",
-        "y_axis_bounds":[null,null],
-        "truncateXAxis":true,
-        "rich_tooltip":true,
-        "showTooltipTotal":true,
-        "tooltipTimeFormat":"%d/%m/%Y",
-        "extra_form_data":{},
-        "force":true,
-        "result_format":"json",
-        "result_type":"full"
+            "aggregate": null,
+            "column": null,
+            "datasourceWarning": false,
+            "expressionType": "SQL",
+            "hasCustomLabel": true,
+            "label": "Satış (L)",
+            "optionName": "metric_snm5jhpgv_ch0nh6zmlp",
+            "sqlExpression": " SUM(\\r\\n            IF(\\r\\n                BYTTUR IN (0,3), \\r\\n                URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, \\r\\n                IF(BYTTUR IN (2, 4), -1 * URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, 0)\\r\\n            )\\r\\n        )"
+          },
+          false
+        ]
+      ],
+      "annotation_layers": [],
+      "row_limit": 10000,
+      "series_columns": [],
+      "series_limit": 0,
+      "order_desc": true,
+      "url_params": {
+        "dashboard_page_id":"Yn9pIQiFlhfBwFAQkmiHs",
+        "form_data_key":"z7umYDQ6gOU",
+        "slice_id":"614"
       },
-      "result_format":"json",
-      "result_type":"full"
+      "custom_params": {},
+      "custom_form_data": {},
+      "time_offsets": [],
+      "post_processing": [
+        {
+          "operation":"pivot",
+          "options":{
+            "index":["TRHISLEMTARIHI"],
+            "columns":[],
+            "aggregates":{"Satış (L)":{"operator":"mean"}},
+            "drop_missing_columns":false
+          }
+        },
+        {"operation":"flatten"}
+      ]
     }
-    """;
+  ],
+  "form_data": {
+    "datasource":"289__table",
+    "viz_type":"echarts_timeseries_bar",
+    "slice_id":614,
+    "url_params":{"dashboard_page_id":"Yn9pIQiFlhfBwFAQkmiHs","form_data_key":"z7umYDQ6gOU","slice_id":"614"},
+    "x_axis":"TRHISLEMTARIHI",
+    "time_grain_sqla":"P1D",
+    "metrics":[
+      {
+        "aggregate":null,
+        "column":null,
+        "datasourceWarning":false,
+        "expressionType":"SQL",
+        "hasCustomLabel":true,
+        "label":"Satış (L)",
+        "optionName":"metric_snm5jhpgv_ch0nh6zmlp",
+        "sqlExpression":" SUM(\\r\\n            IF(\\r\\n                BYTTUR IN (0,3), \\r\\n                URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, \\r\\n                IF(BYTTUR IN (2, 4), -1 * URUN_AMBALAJ_LITRE * INVOICE_QUANTITY, 0)\\r\\n            )\\r\\n        )"
+      }
+    ],
+    "groupby":[],
+    "adhoc_filters":[
+      {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_yd6d2mtg61_jmdpxyp4qvp","isExtra":false,"isNew":false,"operator":"TEMPORAL_RANGE","sqlExpression":"TRHISLEMTARIHI >= today()-9","subject":"TRHISLEMTARIHI"},
+      {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_sazau3qly9_utbjjah4tz","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(MUSTERI_BOLGE_1_ACIKLAMA, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('dashboard_filter_bm') %}\\r\\n      '{{ url_param('dashboard_filter_bm') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]","subject":null},
+      {"clause":"WHERE","comparator":["0"],"datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_9b0qy9uz9vl_6tve85l5k4c","isExtra":false,"isNew":false,"operator":"IN","operatorId":"IN","sqlExpression":null,"subject":"sf.BYTDURUM"},
+      {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_ba23yc8qae_tkwy7d7lwiq","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"MUSTERI_ROTA_ICI_KANAL_KOD NOT IN (4) OR MUSTERI_ROTA_ICI_KANAL_KOD IS NULL","subject":null},
+      {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_3x1vp8ip6e7_f5pzsp2vgu","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"EK_ROUTE_NAME NOT ILIKE '%LZM%'","subject":null}
+    ],
+    "row_limit":10000,
+    "truncate_metric":true,
+    "show_empty_columns":true,
+    "comparison_type":"values",
+    "annotation_layers":[],
+    "forecastPeriods":10,
+    "forecastInterval":0.8,
+    "orientation":"vertical",
+    "x_axis_title_margin":15,
+    "y_axis_title_margin":15,
+    "y_axis_title_position":"Left",
+    "sort_series_type":"sum",
+    "color_scheme":"supersetColors",
+    "time_shift_color":true,
+    "show_value":true,
+    "only_total":true,
+    "show_legend":true,
+    "legendType":"scroll",
+    "legendOrientation":"bottom",
+    "x_axis_time_format":"smart_date",
+    "xAxisLabelRotation":0,
+    "y_axis_format":"SMART_NUMBER",
+    "y_axis_bounds":[null,null],
+    "truncateXAxis":true,
+    "rich_tooltip":true,
+    "showTooltipTotal":true,
+    "tooltipTimeFormat":"%d/%m/%Y",
+    "extra_form_data":{},
+    "force":false,
+    "result_format":"json",
+    "result_type":"results"
+  },
+  "result_format":"json",
+  "result_type":"results"
+}
+""";
 
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Accept", "application/json")
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr-TR;q=0.8,tr;q=0.7")
                 .addHeader("Origin", "https://dia-dashboard.efectura.com")
                 .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=z7umYDQ6gOU&dashboard_page_id=Yn9pIQiFlhfBwFAQkmiHs&slice_id=614")
                 .addHeader("User-Agent", "Mozilla/5.0")
@@ -5468,6 +5974,9 @@ public class Requests {
             return null;
         }
     }
+
+
+
 
     public static JSONObject sendWidget4Request() {
         final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A615%7D&force=true";
@@ -5810,6 +6319,169 @@ public class Requests {
             return null;
         }
     }
+
+
+    public static JSONObject sendWidget3AggreationS10Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A331%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        // Dinamik yıl ve ay
+        LocalDate now = LocalDate.now();
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+
+        String body = """
+{
+  "datasource":{"id":235,"type":"table"},
+  "force":true,
+  "queries":[
+    {
+      "filters":[],
+      "extras":{"having":"","where":""},
+      "applied_time_extras":{},
+      "columns":[
+        {
+          "expressionType":"SQL",
+          "label":"My column",
+          "sqlExpression":"GMY_LGD"
+        }
+      ],
+      "metrics":[
+        {
+          "aggregate":"COUNT_DISTINCT",
+          "column":{
+            "advanced_data_type":null,
+            "changed_on":"2025-04-23T15:36:55.513172",
+            "column_name":"SM",
+            "created_on":"2025-04-23T15:36:55.513169",
+            "description":null,
+            "expression":null,
+            "extra":null,
+            "filterable":true,
+            "groupby":true,
+            "id":7071,
+            "is_active":true,
+            "is_dttm":false,
+            "python_date_format":null,
+            "type":"String",
+            "type_generic":1,
+            "uuid":"b495ab96-2a2f-4555-a6df-f113fb6008cf",
+            "verbose_name":null
+          },
+          "datasourceWarning":false,
+          "expressionType":"SIMPLE",
+          "hasCustomLabel":false,
+          "label":"COUNT_DISTINCT(SM)",
+          "optionName":"metric_5cpklbu3pya_7n7pnkm5cm7",
+          "sqlExpression":null
+        }
+      ],
+      "annotation_layers":[],
+      "row_limit":100,
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{
+        "dashboard_page_id":"l1TKaHEB81w9YjrOrNac3",
+        "slice_id":"331"
+      },
+      "custom_params":{},
+      "custom_form_data":{}
+    }
+  ],
+  "form_data":{
+    "datasource":"235__table",
+    "viz_type":"word_cloud",
+    "slice_id":331,
+    "url_params":{
+      "dashboard_page_id":"l1TKaHEB81w9YjrOrNac3",
+      "slice_id":"331"
+    },
+    "series":{
+      "expressionType":"SQL",
+      "label":"My column",
+      "sqlExpression":"GMY_LGD"
+    },
+    "metric":{
+      "aggregate":"COUNT_DISTINCT",
+      "column":{
+        "advanced_data_type":null,
+        "changed_on":"2025-04-23T15:36:55.513172",
+        "column_name":"SM",
+        "created_on":"2025-04-23T15:36:55.513169",
+        "description":null,
+        "expression":null,
+        "extra":null,
+        "filterable":true,
+        "groupby":true,
+        "id":7071,
+        "is_active":true,
+        "is_dttm":false,
+        "python_date_format":null,
+        "type":"String",
+        "type_generic":1,
+        "uuid":"b495ab96-2a2f-4555-a6df-f113fb6008cf",
+        "verbose_name":null
+      },
+      "datasourceWarning":false,
+      "expressionType":"SIMPLE",
+      "hasCustomLabel":false,
+      "label":"COUNT_DISTINCT(SM)",
+      "optionName":"metric_5cpklbu3pya_7n7pnkm5cm7",
+      "sqlExpression":null
+    },
+    "adhoc_filters":[
+      
+    ],
+    "row_limit":100,
+    "size_from":10,
+    "size_to":70,
+    "rotation":"flat",
+    "color_scheme":"supersetColors",
+    "extra_form_data":{},
+    "force":true,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""".formatted(currentYear, currentMonth);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=oAnrGYjbPcw&dashboard_page_id=l1TKaHEB81w9YjrOrNac3&slice_id=331")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     // W22 (slice_id=1990) – Son 12 ay (ay başlangıçtan 11 ay geriye), BM=Marmara, LZM hariç, Rakı kategorisi, marka kırılımında Satış (L)
     public static JSONObject sendWidget22Request() {
@@ -6524,15 +7196,19 @@ public class Requests {
 
         String cookie = ConfigurationReader.getProperty("cookie");
 
-        String body = """
+        // İçinde bulunduğumuz yıl/ay
+        int currentYear  = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+
+        String template = """
 {
   "datasource":{"id":372,"type":"table"},
   "force":true,
   "queries":[
     {
       "filters":[
-        {"col":"FISCALYEAR","op":"IN","val":[2025]},
-        {"col":"FISCALMONTH","op":"IN","val":[9]}
+        {"col":"FISCALYEAR","op":"IN","val":[${YEAR}]},
+        {"col":"FISCALMONTH","op":"IN","val":[${MONTH}]}
       ],
       "extras":{
         "having":"",
@@ -6573,8 +7249,8 @@ public class Requests {
     "adhoc_filters":[
       {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_vo3qu7rmqoo_4xgkz73uqbd","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]","subject":null},
       {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_0cgl2e6xragr_bsae4rotrtu","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"ROTA NOT ILIKE '%LZM%'","subject":null},
-      {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","operatorId":"IN","subject":"FISCALYEAR","comparator":[2025],"isExtra":true,"filterOptionName":"filter_85ng918c07q_ubddtddjlc"},
-      {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","operatorId":"IN","subject":"FISCALMONTH","comparator":[9],"isExtra":true,"filterOptionName":"filter_iz42v2faz6s_z4ajue2ymb"}
+      {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","operatorId":"IN","subject":"FISCALYEAR","comparator":[${YEAR}],"isExtra":true,"filterOptionName":"filter_85ng918c07q_ubddtddjlc"},
+      {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","operatorId":"IN","subject":"FISCALMONTH","comparator":[${MONTH}],"isExtra":true,"filterOptionName":"filter_iz42v2faz6s_z4ajue2ymb"}
     ],
     "subheader":"Tahmini Kapanış %",
     "header_font_size":0.4,
@@ -6591,6 +7267,10 @@ public class Requests {
   "result_type":"full"
 }
 """;
+
+        String body = template
+                .replace("${YEAR}", String.valueOf(currentYear))
+                .replace("${MONTH}", String.valueOf(currentMonth));
 
         Request request = new Request.Builder()
                 .url(url)
@@ -6630,15 +7310,19 @@ public class Requests {
 
         String cookie = ConfigurationReader.getProperty("cookie");
 
-        String body = """
+        // İçinde bulunduğumuz yıl/ay
+        int currentYear  = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+
+        String template = """
 {
   "datasource":{"id":330,"type":"table"},
   "force":true,
   "queries":[
     {
       "filters":[
-        {"col":"FISCALYEAR","op":"IN","val":[2025]},
-        {"col":"FISCALMONTH","op":"IN","val":[9]}
+        {"col":"FISCALYEAR","op":"IN","val":[${YEAR}]},
+        {"col":"FISCALMONTH","op":"IN","val":[${MONTH}]}
       ],
       "extras":{
         "having":"",
@@ -6677,10 +7361,10 @@ public class Requests {
       },
       {
         "clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_6xfr1cutlfa_yr8rx64wn87","isExtra":false,"isNew":false,"operator":null,
-        "sqlExpression":"ROTA NOT ILIKE '%LZM%'","subject":null
+        "sqlExpression":"ROTA NOT ILIKE '%LZM%'", "subject":null
       },
-      {"clause":"WHERE","comparator":[2025],"expressionType":"SIMPLE","filterOptionName":"filter_n15wuovdc7m_qz4t7puf2iq","isExtra":true,"operator":"IN","operatorId":"IN","subject":"FISCALYEAR"},
-      {"clause":"WHERE","comparator":[9],"expressionType":"SIMPLE","filterOptionName":"filter_slfwqdjira_kdkeur0zug","isExtra":true,"operator":"IN","operatorId":"IN","subject":"FISCALMONTH"}
+      {"clause":"WHERE","comparator":[${YEAR}],"expressionType":"SIMPLE","filterOptionName":"filter_n15wuovdc7m_qz4t7puf2iq","isExtra":true,"operator":"IN","operatorId":"IN","subject":"FISCALYEAR"},
+      {"clause":"WHERE","comparator":[${MONTH}],"expressionType":"SIMPLE","filterOptionName":"filter_slfwqdjira_kdkeur0zug","isExtra":true,"operator":"IN","operatorId":"IN","subject":"FISCALMONTH"}
     ],
     "subheader":"İç Hedef",
     "header_font_size":0.4,
@@ -6697,6 +7381,10 @@ public class Requests {
   "result_type":"full"
 }
 """;
+
+        String body = template
+                .replace("${YEAR}", String.valueOf(currentYear))
+                .replace("${MONTH}", String.valueOf(currentMonth));
 
         Request request = new Request.Builder()
                 .url(url)
@@ -7028,9 +7716,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
+                .connectTimeout(4, TimeUnit.SECONDS)
+                .readTimeout(4, TimeUnit.SECONDS)
+                .writeTimeout(4, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -7974,101 +8662,110 @@ public class Requests {
 
         String cookie = ConfigurationReader.getProperty("cookie");
 
-        String body = """
+        // Dinamik yıl ve ay
+        int currentYear = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+
+        // Template (YEAR/MONTH dinamik)
+        String template = """
+{
+  "datasource":{"id":330,"type":"table"},
+  "force": false,
+  "queries":[
     {
-      "datasource":{"id":330,"type":"table"},
-      "force": false,
-      "queries":[
+      "filters":[
+        {"col":"BM","op":"IN","val":["Marmara Bölge"]},
+        {"col":"SM","op":"NOT IN","val":["Kıbrıs"]},
+        {"col":"FISCALYEAR","op":"IN","val":[${YEAR}]},
+        {"col":"FISCALMONTH","op":"IN","val":[${MONTH}]}
+      ],
+      "extras":{"having":"","where":"(ROTA NOT ILIKE '%LZM%')"},
+      "applied_time_extras":{},
+      "columns":["BM"],
+      "metrics":[
         {
-          "filters":[
-            {"col":"BM","op":"IN","val":["Marmara Bölge"]},
-            {"col":"SM","op":"NOT IN","val":["Kıbrıs"]},
-            {"col":"FISCALYEAR","op":"IN","val":[2025]},
-            {"col":"FISCALMONTH","op":"IN","val":[9]}
-          ],
-          "extras":{"having":"","where":"(ROTA NOT ILIKE '%LZM%')"},
-          "applied_time_extras":{},
-          "columns":["BM"],
-          "metrics":[
-            {
-              "aggregate":null,
-              "column":null,
-              "datasourceWarning":false,
-              "expressionType":"SQL",
-              "hasCustomLabel":true,
-              "label":"Gerçekleşme %",
-              "optionName":"metric_z6k9pder6gd_xe3ph1kyopd",
-              "sqlExpression":"sum(Total_Sales) / nullIf(sum(TotalTarget), 0)"
-            }
-          ],
-          "orderby":[[
-            {
-              "aggregate":null,
-              "column":null,
-              "datasourceWarning":false,
-              "expressionType":"SQL",
-              "hasCustomLabel":true,
-              "label":"Gerçekleşme %",
-              "optionName":"metric_z6k9pder6gd_xe3ph1kyopd",
-              "sqlExpression":"sum(Total_Sales) / nullIf(sum(TotalTarget), 0)"
-            }, false
-          ]],
-          "annotation_layers":[],
-          "row_limit":1000,
-          "series_limit":0,
-          "order_desc":true,
-          "url_params":{"dashboard_page_id":"Xiio5-y-oQ4KZF4iTs0EX","slice_id":"1750"},
-          "custom_params":{},
-          "custom_form_data":{},
-          "post_processing":[],
-          "time_offsets":[]
+          "aggregate":null,
+          "column":null,
+          "datasourceWarning":false,
+          "expressionType":"SQL",
+          "hasCustomLabel":true,
+          "label":"Gerçekleşme %",
+          "optionName":"metric_z6k9pder6gd_xe3ph1kyopd",
+          "sqlExpression":"sum(Total_Sales) / nullIf(sum(TotalTarget), 0)"
         }
       ],
-      "form_data":{
-        "datasource":"330__table",
-        "viz_type":"table",
-        "slice_id":1750,
-        "url_params":{"dashboard_page_id":"Xiio5-y-oQ4KZF4iTs0EX","slice_id":"1750"},
-        "query_mode":"aggregate",
-        "groupby":["BM"],
-        "metrics":[
-          {
-            "aggregate":null,
-            "column":null,
-            "datasourceWarning":false,
-            "expressionType":"SQL",
-            "hasCustomLabel":true,
-            "label":"Gerçekleşme %",
-            "optionName":"metric_z6k9pder6gd_xe3ph1kyopd",
-            "sqlExpression":"sum(Total_Sales) / nullIf(sum(TotalTarget), 0)"
-          }
-        ],
-        "adhoc_filters":[
-          {"expressionType":"SIMPLE","subject":"BM","operator":"IN","operatorId":"IN","comparator":["Marmara Bölge"],"clause":"WHERE","sqlExpression":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_fpen5yml4wj_sy8hecj09ue"},
-          {"expressionType":"SIMPLE","subject":"SM","operator":"NOT IN","operatorId":"NOT_IN","comparator":["Kıbrıs"],"clause":"WHERE","sqlExpression":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_79pgmzhjx38_1sff87o3gd6"},
-          {"expressionType":"SQL","sqlExpression":"ROTA NOT ILIKE '%LZM%'", "clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_bo8mbesc5r_gq8a8rl811v"},
-          {"expressionType":"SIMPLE","subject":"FISCALYEAR","operator":"IN","operatorId":"IN","comparator":[2025],"clause":"WHERE","sqlExpression":null,"isExtra":true,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_1j0wvmc7bvs_7k9ttcz12fp"},
-          {"expressionType":"SIMPLE","subject":"FISCALMONTH","operator":"IN","operatorId":"IN","comparator":[9],"clause":"WHERE","sqlExpression":null,"isExtra":true,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_gp3r4usejdg_pkiff3hzrn"}
-        ],
-        "column_config":{"Gerçekleşme %":{"d3NumberFormat":".2%"}},
-        "order_desc":true,
-        "row_limit":1000,
-        "server_page_length":10,
-        "allow_render_html":true,
-        "show_cell_bars":true,
-        "color_pn":true,
-        "comparison_color_scheme":"Green",
-        "conditional_formatting":[],
-        "comparison_type":"values",
-        "extra_form_data":{},
-        "force": false,
-        "result_format":"json",
-        "result_type":"full"
-      },
-      "result_format":"json",
-      "result_type":"full"
+      "orderby":[[
+        {
+          "aggregate":null,
+          "column":null,
+          "datasourceWarning":false,
+          "expressionType":"SQL",
+          "hasCustomLabel":true,
+          "label":"Gerçekleşme %",
+          "optionName":"metric_z6k9pder6gd_xe3ph1kyopd",
+          "sqlExpression":"sum(Total_Sales) / nullIf(sum(TotalTarget), 0)"
+        }, false
+      ]],
+      "annotation_layers":[],
+      "row_limit":1000,
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{"dashboard_page_id":"Xiio5-y-oQ4KZF4iTs0EX","slice_id":"1750"},
+      "custom_params":{},
+      "custom_form_data":{},
+      "post_processing":[],
+      "time_offsets":[]
     }
-    """;
+  ],
+  "form_data":{
+    "datasource":"330__table",
+    "viz_type":"table",
+    "slice_id":1750,
+    "url_params":{"dashboard_page_id":"Xiio5-y-oQ4KZF4iTs0EX","slice_id":"1750"},
+    "query_mode":"aggregate",
+    "groupby":["BM"],
+    "metrics":[
+      {
+        "aggregate":null,
+        "column":null,
+        "datasourceWarning":false,
+        "expressionType":"SQL",
+        "hasCustomLabel":true,
+        "label":"Gerçekleşme %",
+        "optionName":"metric_z6k9pder6gd_xe3ph1kyopd",
+        "sqlExpression":"sum(Total_Sales) / nullIf(sum(TotalTarget), 0)"
+      }
+    ],
+    "adhoc_filters":[
+      {"expressionType":"SIMPLE","subject":"BM","operator":"IN","operatorId":"IN","comparator":["Marmara Bölge"],"clause":"WHERE","sqlExpression":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_fpen5yml4wj_sy8hecj09ue"},
+      {"expressionType":"SIMPLE","subject":"SM","operator":"NOT IN","operatorId":"NOT_IN","comparator":["Kıbrıs"],"clause":"WHERE","sqlExpression":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_79pgmzhjx38_1sff87o3gd6"},
+      {"expressionType":"SQL","sqlExpression":"ROTA NOT ILIKE '%LZM%'", "clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_bo8mbesc5r_gq8a8rl811v"},
+      {"expressionType":"SIMPLE","subject":"FISCALYEAR","operator":"IN","operatorId":"IN","comparator":[${YEAR}],"clause":"WHERE","sqlExpression":null,"isExtra":true,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_1j0wvmc7bvs_7k9ttcz12fp"},
+      {"expressionType":"SIMPLE","subject":"FISCALMONTH","operator":"IN","operatorId":"IN","comparator":[${MONTH}],"clause":"WHERE","sqlExpression":null,"isExtra":true,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_gp3r4usejdg_pkiff3hzrn"}
+    ],
+    "column_config":{"Gerçekleşme %":{"d3NumberFormat":".2%"}},
+    "order_desc":true,
+    "row_limit":1000,
+    "server_page_length":10,
+    "allow_render_html":true,
+    "show_cell_bars":true,
+    "color_pn":true,
+    "comparison_color_scheme":"Green",
+    "conditional_formatting":[],
+    "comparison_type":"values",
+    "extra_form_data":{},
+    "force": false,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        String body = template
+                .replace("${YEAR}", String.valueOf(currentYear))
+                .replace("${MONTH}", String.valueOf(currentMonth));
 
         Request request = new Request.Builder()
                 .url(url)
@@ -8095,6 +8792,7 @@ public class Requests {
         }
     }
 
+
     public static JSONObject sendWidget48Request(String bmValue) {
         final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1816%7D&force=true";
 
@@ -8108,6 +8806,10 @@ public class Requests {
 
         String cookie = ConfigurationReader.getProperty("cookie");
         if (bmValue == null || bmValue.isBlank()) bmValue = "Marmara";
+
+        // 🔹 İçinde bulunduğumuz yıl/ay
+        int currentYear  = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
 
         // where ve BM filtresi (Jinja yok; sabit değer)
         String whereClause =
@@ -8136,8 +8838,14 @@ public class Requests {
             // queries[0]
             JSONObject query0 = new JSONObject()
                     .put("filters", new JSONArray()
-                            .put(new JSONObject().put("col", "FISCALYEAR").put("op", "IN").put("val", new JSONArray().put(2025)))
-                            .put(new JSONObject().put("col", "FISCALMONTH").put("op", "IN").put("val", new JSONArray().put(9)))
+                            .put(new JSONObject()
+                                    .put("col", "FISCALYEAR")
+                                    .put("op", "IN")
+                                    .put("val", new JSONArray().put(currentYear)))    // ← dinamik yıl
+                            .put(new JSONObject()
+                                    .put("col", "FISCALMONTH")
+                                    .put("op", "IN")
+                                    .put("val", new JSONArray().put(currentMonth)))   // ← dinamik ay
                     )
                     .put("extras", new JSONObject()
                             .put("having", "")
@@ -8156,7 +8864,7 @@ public class Requests {
                     .put("custom_params", new JSONObject())
                     .put("custom_form_data", new JSONObject());
 
-            // form_data
+            // form_data.adhoc_filters (yıl/ay dinamik)
             JSONArray adhocFilters = new JSONArray()
                     .put(new JSONObject()
                             .put("clause", "WHERE")
@@ -8186,7 +8894,7 @@ public class Requests {
                             .put("operator", "IN")
                             .put("operatorId", "IN")
                             .put("subject", "FISCALYEAR")
-                            .put("comparator", new JSONArray().put(2025))
+                            .put("comparator", new JSONArray().put(currentYear))       // ← dinamik yıl
                             .put("isExtra", true)
                             .put("filterOptionName", "filter_year")
                     )
@@ -8196,7 +8904,7 @@ public class Requests {
                             .put("operator", "IN")
                             .put("operatorId", "IN")
                             .put("subject", "FISCALMONTH")
-                            .put("comparator", new JSONArray().put(9))
+                            .put("comparator", new JSONArray().put(currentMonth))      // ← dinamik ay
                             .put("isExtra", true)
                             .put("filterOptionName", "filter_month")
                     );
@@ -8242,8 +8950,7 @@ public class Requests {
                     .addHeader("Origin", "https://dia-dashboard.efectura.com")
                     .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=ryIUc8cITPg&dashboard_page_id=pHSLgQAVyKoqIcsgv5HUW&slice_id=1816")
                     .addHeader("User-Agent", "Mozilla/5.0")
-                    // X-CSRFToken göndermiyoruz (boş header 400 tetikleyebilir)
-                    .addHeader("Cookie", cookie) // cookie string’in Postman’dakiyle aynı olduğundan emin ol
+                    .addHeader("Cookie", cookie)
                     .post(requestBody)
                     .build();
 
@@ -8260,7 +8967,6 @@ public class Requests {
         }
     }
 
-    // Request'i atan metod
     public static JSONObject sendWidget52Request() {
         final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1819%7D&force=true";
 
@@ -8274,19 +8980,24 @@ public class Requests {
 
         String cookie = ConfigurationReader.getProperty("cookie");
 
+        // İçinde bulunduğumuz yıl/ay
+        int currentYear  = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+
         // Jinja şablonları 400’e sebep olabildiği için "Marmara"yı düz metin olarak gömdüm.
         String where =
                 "(splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1] " +
                         "LIKE splitByChar(' ', upperUTF8(replaceAll(replaceAll('Marmara', 'ı', 'i'), 'İ', 'I')))[1]) " +
                         "AND (ROTA NOT ILIKE '%LZM%')";
 
-        String body = "{\n" +
+        // BODY şablonu: Yıl/Ay yer tutucuları
+        String template = "{\n" +
                 "  \"datasource\": {\"id\": 330, \"type\": \"table\"},\n" +
                 "  \"force\": true,\n" +
                 "  \"queries\": [{\n" +
                 "    \"filters\": [\n" +
-                "      {\"col\": \"FISCALYEAR\", \"op\": \"IN\", \"val\": [2025]},\n" +
-                "      {\"col\": \"FISCALMONTH\", \"op\": \"IN\", \"val\": [9]}\n" +
+                "      {\"col\": \"FISCALYEAR\", \"op\": \"IN\", \"val\": [${YEAR}]},\n" +
+                "      {\"col\": \"FISCALMONTH\", \"op\": \"IN\", \"val\": [${MONTH}]}\n" +
                 "    ],\n" +
                 "    \"extras\": {\"time_grain_sqla\": \"P1D\", \"having\": \"\", \"where\": \"" + where.replace("\"","\\\"") + "\"},\n" +
                 "    \"applied_time_extras\": {},\n" +
@@ -8328,8 +9039,8 @@ public class Requests {
                 "    \"adhoc_filters\": [\n" +
                 "      {\"clause\": \"WHERE\", \"expressionType\": \"SQL\", \"sqlExpression\": \"" + where.replace("\"","\\\"") + "\"},\n" +
                 "      {\"clause\": \"WHERE\", \"expressionType\": \"SQL\", \"sqlExpression\": \"ROTA NOT ILIKE '%LZM%'\"},\n" +
-                "      {\"expressionType\": \"SIMPLE\", \"clause\": \"WHERE\", \"operator\": \"IN\", \"operatorId\": \"IN\", \"subject\": \"FISCALYEAR\", \"comparator\": [2025], \"isExtra\": true},\n" +
-                "      {\"expressionType\": \"SIMPLE\", \"clause\": \"WHERE\", \"operator\": \"IN\", \"operatorId\": \"IN\", \"subject\": \"FISCALMONTH\", \"comparator\": [9], \"isExtra\": true}\n" +
+                "      {\"expressionType\": \"SIMPLE\", \"clause\": \"WHERE\", \"operator\": \"IN\", \"operatorId\": \"IN\", \"subject\": \"FISCALYEAR\", \"comparator\": [${YEAR}], \"isExtra\": true},\n" +
+                "      {\"expressionType\": \"SIMPLE\", \"clause\": \"WHERE\", \"operator\": \"IN\", \"operatorId\": \"IN\", \"subject\": \"FISCALMONTH\", \"comparator\": [${MONTH}], \"isExtra\": true}\n" +
                 "    ],\n" +
                 "    \"row_limit\": 50000,\n" +
                 "    \"order_desc\": true,\n" +
@@ -8354,6 +9065,10 @@ public class Requests {
                 "  \"result_type\": \"full\"\n" +
                 "}";
 
+        String body = template
+                .replace("${YEAR}", String.valueOf(currentYear))
+                .replace("${MONTH}", String.valueOf(currentMonth));
+
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Accept", "application/json")
@@ -8362,7 +9077,6 @@ public class Requests {
                 .addHeader("Origin", "https://dia-dashboard.efectura.com")
                 .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=5dTlQ0nDxTo&dashboard_page_id=pHSLgQAVyKoqIcsgv5HUW&slice_id=1819")
                 .addHeader("User-Agent", "Mozilla/5.0")
-                // .addHeader("X-CSRFToken", "") // boş göndermek yerine hiç göndermemek daha stabil
                 .addHeader("Cookie", cookie)
                 .post(RequestBody.create(body, MediaType.parse("application/json")))
                 .build();
@@ -8379,7 +9093,6 @@ public class Requests {
         }
     }
 
-    // Requests.java
     public static JSONObject sendWidget45Request() {
         final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1820%7D&force=true";
 
@@ -8393,15 +9106,19 @@ public class Requests {
 
         String cookie = ConfigurationReader.getProperty("cookie");
 
-        String body = """
+        int currentMonth = LocalDate.now().getMonthValue();
+        int currentYear  = LocalDate.now().getYear();
+
+        // ŞABLON: Yıl/Ay için ${YEAR} ve ${MONTH} yer tutucuları kullandık
+        String template = """
     {
       "datasource":{"id":330,"type":"table"},
       "force":true,
       "queries":[
         {
           "filters":[
-            {"col":"FISCALYEAR","op":"IN","val":[2025]},
-            {"col":"FISCALMONTH","op":"IN","val":[9]}
+            {"col":"FISCALYEAR","op":"IN","val":[${YEAR}]},
+            {"col":"FISCALMONTH","op":"IN","val":[${MONTH}]}
           ],
           "extras":{
             "having":"",
@@ -8412,31 +9129,9 @@ public class Requests {
           "metrics":[
             {
               "aggregate":"SUM",
-              "column":{
-                "advanced_data_type":null,
-                "changed_on":"2025-07-09T10:26:37.244026",
-                "column_name":"Total_Sales",
-                "created_on":"2025-07-09T10:26:37.244023",
-                "description":null,
-                "expression":null,
-                "extra":"{}",
-                "filterable":true,
-                "groupby":true,
-                "id":8273,
-                "is_active":true,
-                "is_dttm":false,
-                "python_date_format":null,
-                "type":"Float64",
-                "type_generic":0,
-                "uuid":"951a7c24-7e49-41df-bbca-a25d8f6e7131",
-                "verbose_name":null
-              },
-              "datasourceWarning":false,
+              "column":{"column_name":"Total_Sales"},
               "expressionType":"SIMPLE",
-              "hasCustomLabel":false,
-              "label":"SUM(Total_Sales)",
-              "optionName":"metric_bxcptkedwsj_ha284vsf0a",
-              "sqlExpression":null
+              "label":"SUM(Total_Sales)"
             }
           ],
           "annotation_layers":[],
@@ -8454,65 +9149,29 @@ public class Requests {
         "url_params":{"dashboard_page_id":"G3J7lAQ8fSBRoVCthsylN","slice_id":"1820"},
         "metric":{
           "aggregate":"SUM",
-          "column":{
-            "advanced_data_type":null,
-            "changed_on":"2025-07-09T10:26:37.244026",
-            "column_name":"Total_Sales",
-            "created_on":"2025-07-09T10:26:37.244023",
-            "description":null,
-            "expression":null,
-            "extra":"{}",
-            "filterable":true,
-            "groupby":true,
-            "id":8273,
-            "is_active":true,
-            "is_dttm":false,
-            "python_date_format":null,
-            "type":"Float64",
-            "type_generic":0,
-            "uuid":"951a7c24-7e49-41df-bbca-a25d8f6e7131",
-            "verbose_name":null
-          },
-          "datasourceWarning":false,
+          "column":{"column_name":"Total_Sales"},
           "expressionType":"SIMPLE",
-          "hasCustomLabel":false,
-          "label":"SUM(Total_Sales)",
-          "optionName":"metric_bxcptkedwsj_ha284vsf0a",
-          "sqlExpression":null
+          "label":"SUM(Total_Sales)"
         },
         "adhoc_filters":[
           {
             "clause":"WHERE",
-            "comparator":null,
-            "datasourceWarning":false,
             "expressionType":"SQL",
-            "filterOptionName":"filter_a6tubp729uw_lbgdze4zod",
-            "isExtra":false,
-            "isNew":false,
-            "operator":null,
             "sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\nLIKE \\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\n    {% if url_param('BM') %}\\n      '{{ url_param('BM') }}'\\n    {% else %}\\n      'Marmara'\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]"
           },
           {
             "clause":"WHERE",
-            "comparator":null,
-            "datasourceWarning":false,
             "expressionType":"SQL",
-            "filterOptionName":"filter_c37liy2tuyt_vhsxundexfg",
-            "isExtra":false,
-            "isNew":false,
-            "operator":null,
             "sqlExpression":"ROTA NOT ILIKE '%LZM%'"
           },
-          {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","operatorId":"IN","subject":"FISCALYEAR","comparator":[2025],"isExtra":true,"filterOptionName":"filter_qbqsac828d_7q6p2u3872n"},
-          {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","operatorId":"IN","subject":"FISCALMONTH","comparator":[9],"isExtra":true,"filterOptionName":"filter_2mlk9al08fe_n3cnowmoc0p"}
+          {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","subject":"FISCALYEAR","comparator":[${YEAR}]},
+          {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","subject":"FISCALMONTH","comparator":[${MONTH}]}
         ],
         "subheader":"Gerçekleşme",
         "header_font_size":0.4,
         "subheader_font_size":0.15,
         "y_axis_format":"SMART_NUMBER",
         "time_format":"smart_date",
-        "conditional_formatting":[],
-        "extra_form_data":{},
         "force":true,
         "result_format":"json",
         "result_type":"full"
@@ -8521,6 +9180,10 @@ public class Requests {
       "result_type":"full"
     }
     """;
+
+        String body = template
+                .replace("${YEAR}", String.valueOf(currentYear))
+                .replace("${MONTH}", String.valueOf(currentMonth));
 
         Request request = new Request.Builder()
                 .url(url)
@@ -8546,6 +9209,2791 @@ public class Requests {
             return null;
         }
     }
+
+
+
+
+
+    public static JSONObject sendWidget40Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A381%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource":{"id":209,"type":"table"},
+  "force":true,
+  "queries":[
+    {
+      "filters":[
+        {"col":"DISTRIBUTOR_KOD","op":"NOT IN","val":["EDIRNE MAHALO"]}
+      ],
+      "extras":{"having":"","where":""},
+      "applied_time_extras":{},
+      "columns":[
+        {"datasourceWarning":false,"expressionType":"SQL","label":"Ürün","sqlExpression":"URUN_KISA_AD"}
+      ],
+      "metrics":[
+        {
+          "aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,
+          "label":"Kalan Stok Gün","optionName":"metric_t2nf5uauaar_heczve27fu",
+          "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+        }
+      ],
+      "orderby":[
+        [
+          {
+            "aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":false,
+            "label":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n",
+            "optionName":"metric_4lwx5jbmw3q_vo733pmf2lj",
+            "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+          },
+          true
+        ]
+      ],
+      "annotation_layers":[],
+      "row_limit":5,
+      "series_limit":0,
+      "series_limit_metric":{
+        "aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":false,
+        "label":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n",
+        "optionName":"metric_4lwx5jbmw3q_vo733pmf2lj",
+        "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+      },
+      "order_desc":false,
+      "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","slice_id":"381"},
+      "custom_params":{},
+      "custom_form_data":{},
+      "post_processing":[],
+      "time_offsets":[]
+    }
+  ],
+  "form_data":{
+    "datasource":"209__table",
+    "viz_type":"table",
+    "slice_id":381,
+    "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","slice_id":"381"},
+    "query_mode":"aggregate",
+    "groupby":[{"datasourceWarning":false,"expressionType":"SQL","label":"Ürün","sqlExpression":"URUN_KISA_AD"}],
+    "temporal_columns_lookup":{},
+    "metrics":[
+      {
+        "aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,
+        "label":"Kalan Stok Gün","optionName":"metric_t2nf5uauaar_heczve27fu",
+        "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+      }
+    ],
+    "all_columns":[],
+    "percent_metrics":[],
+    "adhoc_filters":[
+      {
+        "clause":"WHERE","comparator":["EDIRNE MAHALO"],"datasourceWarning":false,"expressionType":"SIMPLE",
+        "filterOptionName":"filter_4cgeyudndwt_i44wzvtvdg","isExtra":false,"isNew":false,"operator":"NOT IN","operatorId":"NOT_IN",
+        "sqlExpression":null,"subject":"DISTRIBUTOR_KOD"
+      }
+    ],
+    "timeseries_limit_metric":{
+      "aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":false,
+      "label":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n",
+      "optionName":"metric_4lwx5jbmw3q_vo733pmf2lj",
+      "sqlExpression":" SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))\\r\\n /\\r\\n SUM(\\r\\n CAST(\\r\\n CASE\\r\\n WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\\r\\n THEN 0\\r\\n ELSE COALESCE(Est_Total_Sales_Liters, 0)\\r\\n END\\r\\n AS FLOAT\\r\\n )\\r\\n ) * 1.0 \\r\\n"
+    },
+    "order_by_cols":[],
+    "order_desc":false,
+    "row_limit":"5",
+    "table_timestamp_format":"smart_date",
+    "allow_render_html":true,
+    "show_cell_bars":true,
+    "color_pn":true,
+    "comparison_color_scheme":"Green",
+    "conditional_formatting":[],
+    "comparison_type":"values",
+    "extra_form_data":{},
+    "force":true,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=Aa1QeuB45nY&dashboard_page_id=RQU5lFjUavfRCcebEFYwP&slice_id=381")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static JSONObject sendWidget50Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1824%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        // İçinde bulunduğumuz yıl/ay
+        int currentYear  = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+
+        // ${YEAR} ve ${MONTH} yer tutucularını kullanıyoruz (formatted() kullanmıyoruz!)
+        String template = """
+{
+  "datasource":{"id":381,"type":"table"},
+  "force":true,
+  "queries":[
+    {
+      "filters":[
+        {"col":"FISCALYEAR","op":"IN","val":[${YEAR}]},
+        {"col":"FISCALMONTH","op":"IN","val":[${MONTH}]}
+      ],
+      "extras":{
+        "time_grain_sqla":"P1D",
+        "having":"",
+        "where":"(splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]) AND (ROTA NOT ILIKE '%LZM%')"
+      },
+      "applied_time_extras":{},
+      "columns":[
+        {"datasourceWarning":false,"expressionType":"SQL","label":"Ürün Kategori","sqlExpression":"ProductCat"}
+      ],
+      "metrics":[
+        {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"İç Hedef","optionName":"metric_massxws5la_ljiii0bepu","sqlExpression":"SUM(month_target)"},
+        {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Gerçekleşme","optionName":"metric_6g3co30fvdr_tijy1lnx78","sqlExpression":"SUM(Total_Sales)"},
+        {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Günlük Ort. Gerç.","optionName":"metric_aqogyk8i8p_qrbeo7vunbs","sqlExpression":"SUM(ytd_sales)\\r\\n/ nullIf(\\r\\n    length(\\r\\n        arrayFilter(\\r\\n            x ->\\r\\n                dayOfWeek(\\r\\n                    addDays(\\r\\n                        toStartOfMonth(\\r\\n                            toDate(                     \\r\\n                                concat(\\r\\n                                    toString(toUInt32(any(FISCALYEAR))),\\r\\n                                    '-',\\r\\n                                    leftPad(\\r\\n                                        toString(toUInt32(any(FISCALMONTH))),\\r\\n                                        2,\\r\\n                                        '0'\\r\\n                                    ),\\r\\n                                    '-01'\\r\\n                                )\\r\\n                            )\\r\\n                        ),\\r\\n                        x\\r\\n                    )\\r\\n                ) BETWEEN 1 AND 5,                     \\r\\n            range(\\r\\n                toUInt64(\\r\\n                    dateDiff(\\r\\n                        'day',\\r\\n                        toStartOfMonth(\\r\\n                            toDate(\\r\\n                                concat(\\r\\n                                    toString(toUInt32(any(FISCALYEAR))),\\r\\n                                    '-',\\r\\n                                    leftPad(\\r\\n                                        toString(toUInt32(any(FISCALMONTH))),\\r\\n                                        2,\\r\\n                                        '0'\\r\\n                                    ),\\r\\n                                    '-01'\\r\\n                                )\\r\\n                            )\\r\\n                        ),\\r\\n                        least(\\r\\n                            today(),\\r\\n                            addMonths(\\r\\n                                toStartOfMonth(\\r\\n                                    toDate(\\r\\n                                        concat(\\r\\n                                            toString(toUInt32(any(FISCALYEAR))),\\r\\n                                            '-',\\r\\n                                            leftPad(\\r\\n                                                toString(toUInt32(any(FISCALMONTH))),\\r\\n                                                2,\\r\\n                                                '0'\\r\\n                                            ),\\r\\n                                            '-01'\\r\\n                                        )\\r\\n                                    )\\r\\n                                ),\\r\\n                                1\\r\\n                            )\\r\\n                        )\\r\\n                    )\\r\\n                )\\r\\n            )\\r\\n        )\\r\\n    ),\\r\\n    0                           \\r\\n)\\r\\n"},
+        {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Günlük Hedef","optionName":"metric_cm904h3ovh_q9vxpav3boa","sqlExpression":"(SUM(month_target) - SUM(ytd_sales)) / MAX(bd_remaining_from_today_inclusive)"},
+        {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Gerçekleşme %","optionName":"metric_6znao65vssp_yshas122kff","sqlExpression":"(sum(ytd_sales)+sum(today_sales)) / nullIf(sum(month_target), 0)*100.0"}
+      ],
+      "orderby":[[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"İç Hedef","optionName":"metric_massxws5la_ljiii0bepu","sqlExpression":"SUM(month_target)"},false]],
+      "annotation_layers":[],
+      "row_limit":50000,
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{"dashboard_page_id":"8ul2z96El8lQAsQzkEbFM","form_data_key":"GlqUaLJJkoQ","save_action":"overwrite","slice_id":"1824"},
+      "custom_params":{},
+      "custom_form_data":{}
+    }
+  ],
+  "form_data":{
+    "datasource":"381__table",
+    "viz_type":"pivot_table_v2",
+    "slice_id":1824,
+    "url_params":{"dashboard_page_id":"8ul2z96El8lQAsQzkEbFM","form_data_key":"GlqUaLJJkoQ","save_action":"overwrite","slice_id":"1824"},
+    "groupbyColumns":[{"datasourceWarning":false,"expressionType":"SQL","label":"Ürün Kategori","sqlExpression":"ProductCat"}],
+    "groupbyRows":[],
+    "time_grain_sqla":"P1D",
+    "temporal_columns_lookup":{},
+    "metrics":[
+      {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"İç Hedef","optionName":"metric_massxws5la_ljiii0bepu","sqlExpression":"SUM(month_target)"},
+      {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Gerçekleşme","optionName":"metric_6g3co30fvdr_tijy1lnx78","sqlExpression":"SUM(Total_Sales)"},
+      {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Günlük Ort. Gerç.","optionName":"metric_aqogyk8i8p_qrbeo7vunbs","sqlExpression":"SUM(ytd_sales)\\r\\n/ nullIf(\\r\\n    length(\\r\\n        arrayFilter(\\r\\n            x ->\\r\\n                dayOfWeek(\\r\\n                    addDays(\\r\\n                        toStartOfMonth(\\r\\n                            toDate(                     \\r\\n                                concat(\\r\\n                                    toString(toUInt32(any(FISCALYEAR))),\\r\\n                                    '-',\\r\\n                                    leftPad(\\r\\n                                        toString(toUInt32(any(FISCALMONTH))),\\r\\n                                        2,\\r\\n                                        '0'\\r\\n                                    ),\\r\\n                                    '-01'\\r\\n                                )\\r\\n                            )\\r\\n                        ),\\r\\n                        x\\r\\n                    )\\r\\n                ) BETWEEN 1 AND 5,                     \\r\\n            range(\\r\\n                toUInt64(\\r\\n                    dateDiff(\\r\\n                        'day',\\r\\n                        toStartOfMonth(\\r\\n                            toDate(\\r\\n                                concat(\\r\\n                                    toString(toUInt32(any(FISCALYEAR))),\\r\\n                                    '-',\\r\\n                                    leftPad(\\r\\n                                        toString(toUInt32(any(FISCALMONTH))),\\r\\n                                        2,\\r\\n                                        '0'\\r\\n                                    ),\\r\\n                                    '-01'\\r\\n                                )\\r\\n                            )\\r\\n                        ),\\r\\n                        least(\\r\\n                            today(),\\r\\n                            addMonths(\\r\\n                                toStartOfMonth(\\r\\n                                    toDate(\\r\\n                                        concat(\\r\\n                                            toString(toUInt32(any(FISCALYEAR))),\\r\\n                                            '-',\\r\\n                                            leftPad(\\r\\n                                                toString(toUInt32(any(FISCALMONTH))),\\r\\n                                                2,\\r\\n                                                '0'\\r\\n                                            ),\\r\\n                                            '-01'\\r\\n                                        )\\r\\n                                    )\\r\\n                                ),\\r\\n                                1\\r\\n                            )\\r\\n                        )\\r\\n                    )\\r\\n                )\\r\\n            )\\r\\n        )\\r\\n    ),\\r\\n    0                           \\r\\n)\\r\\n"},
+      {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Günlük Hedef","optionName":"metric_cm904h3ovh_q9vxpav3boa","sqlExpression":"(SUM(month_target) - SUM(ytd_sales)) / MAX(bd_remaining_from_today_inclusive)"},
+      {"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Gerçekleşme %","optionName":"metric_6znao65vssp_yshas122kff","sqlExpression":"(sum(ytd_sales)+sum(today_sales)) / nullIf(sum(month_target), 0)*100.0"}
+    ],
+    "metricsLayout":"COLUMNS",
+    "adhoc_filters":[
+      {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_wwqt5i7ya5n_43is682hogw","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]","subject":null},
+      {"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_sr6ocxmxu3k_u3j8p3gephi","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"ROTA NOT ILIKE '%LZM%'","subject":null},
+      {"clause":"WHERE","comparator":[${YEAR}],"expressionType":"SIMPLE","filterOptionName":"filter_xe9fjgoicur_ziglwxlb8wn","isExtra":true,"operator":"IN","operatorId":"IN","subject":"FISCALYEAR"},
+      {"clause":"WHERE","comparator":[${MONTH}],"expressionType":"SIMPLE","filterOptionName":"filter_qbeck43gv4_a3x1ywbd5aq","isExtra":true,"operator":"IN","operatorId":"IN","subject":"FISCALMONTH"}
+    ],
+    "row_limit":50000,
+    "order_desc":true,
+    "aggregateFunction":"Sum",
+    "rowTotals":false,
+    "rowSubTotals":true,
+    "colTotals":true,
+    "colSubTotals":true,
+    "transposePivot":true,
+    "valueFormat":"SMART_NUMBER",
+    "date_format":"smart_date",
+    "rowOrder":"key_a_to_z",
+    "colOrder":"key_a_to_z",
+    "conditional_formatting":[],
+    "allow_render_html":true,
+    "extra_form_data":{},
+    "force":true,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        String body = template
+                .replace("${YEAR}", String.valueOf(currentYear))
+                .replace("${MONTH}", String.valueOf(currentMonth));
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=GlqUaLJJkoQ&dashboard_page_id=8ul2z96El8lQAsQzkEbFM&slice_id=1824&save_action=overwrite")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+    public static JSONObject sendWidget46Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1817%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        // İçinde bulunduğumuz yıl/ay
+        int currentYear  = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+
+        // ŞABLON: YEAR/MONTH yer tutucularını body içinde her geçtiği yerde kullan
+        String template = """
+{
+  "datasource":{"id":372,"type":"table"},
+  "force":true,
+  "queries":[
+    {
+      "filters":[
+        {"col":"FISCALYEAR","op":"IN","val":[${YEAR}]},
+        {"col":"FISCALMONTH","op":"IN","val":[${MONTH}]}
+      ],
+      "extras":{
+        "having":"",
+        "where":"(splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]) AND (ROTA NOT ILIKE '%LZM%')"
+      },
+      "applied_time_extras":{},
+      "columns":[],
+      "metrics":[
+        {
+          "aggregate":null,
+          "column":null,
+          "datasourceWarning":false,
+          "expressionType":"SQL",
+          "hasCustomLabel":true,
+          "label":"Ort. Günlük Gerçekleşme",
+          "optionName":"metric_lko7lwgwphj_o76jqjipan",
+          "sqlExpression":"SUM(Total_Sales)\\r\\n/ nullIf(\\r\\n    length(\\r\\n        arrayFilter(\\r\\n            x ->\\r\\n                dayOfWeek(\\r\\n                    addDays(\\r\\n                        toStartOfMonth(\\r\\n                            toDate(                     \\r\\n                                concat(\\r\\n                                    toString(toUInt32(any(FISCALYEAR))),\\r\\n                                    '-',\\r\\n                                    leftPad(\\r\\n                                        toString(toUInt32(any(FISCALMONTH))),\\r\\n                                        2,\\r\\n                                        '0'\\r\\n                                    ),\\r\\n                                    '-01'\\r\\n                                )\\r\\n                            )\\r\\n                        ),\\r\\n                        x\\r\\n                    )\\r\\n                ) BETWEEN 1 AND 5,                     \\r\\n            range(\\r\\n                toUInt64(\\r\\n                    dateDiff(\\r\\n                        'day',\\r\\n                        toStartOfMonth(\\r\\n                            toDate(\\r\\n                                concat(\\r\\n                                    toString(toUInt32(any(FISCALYEAR))),\\r\\n                                    '-',\\r\\n                                    leftPad(\\r\\n                                        toString(toUInt32(any(FISCALMONTH))),\\r\\n                                        2,\\r\\n                                        '0'\\r\\n                                    ),\\r\\n                                    '-01'\\r\\n                                )\\r\\n                            )\\r\\n                        ),\\r\\n                        least(\\r\\n                            today(),\\r\\n                            addMonths(\\r\\n                                toStartOfMonth(\\r\\n                                    toDate(\\r\\n                                        concat(\\r\\n                                            toString(toUInt32(any(FISCALYEAR))),\\r\\n                                            '-',\\r\\n                                            leftPad(\\r\\n                                                toString(toUInt32(any(FISCALMONTH))),\\r\\n                                                2,\\r\\n                                                '0'\\r\\n                                            ),\\r\\n                                            '-01'\\r\\n                                        )\\r\\n                                    )\\r\\n                                ),\\r\\n                                1\\r\\n                            )\\r\\n                        )\\r\\n                    )\\r\\n                )\\r\\n            )\\r\\n        )\\r\\n    ),\\r\\n    0                           \\r\\n)\\r\\n"
+        }
+      ],
+      "annotation_layers":[],
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{"dashboard_page_id":"pHSLgQAVyKoqIcsgv5HUW","slice_id":"1817"},
+      "custom_params":{},
+      "custom_form_data":{}
+    }
+  ],
+  "form_data":{
+    "datasource":"372__table",
+    "viz_type":"big_number_total",
+    "slice_id":1817,
+    "url_params":{"dashboard_page_id":"pHSLgQAVyKoqIcsgv5HUW","slice_id":"1817"},
+    "metric":{
+      "aggregate":null,
+      "column":null,
+      "datasourceWarning":false,
+      "expressionType":"SQL",
+      "hasCustomLabel":true,
+      "label":"Ort. Günlük Gerçekleşme",
+      "optionName":"metric_lko7lwgwphj_o76jqjipan",
+      "sqlExpression":"SUM(Total_Sales)\\r\\n/ nullIf(\\r\\n    length(\\r\\n        arrayFilter(\\r\\n            x ->\\r\\n                dayOfWeek(\\r\\n                    addDays(\\r\\n                        toStartOfMonth(\\r\\n                            toDate(                     \\r\\n                                concat(\\r\\n                                    toString(toUInt32(any(FISCALYEAR))),\\r\\n                                    '-',\\r\\n                                    leftPad(\\r\\n                                        toString(toUInt32(any(FISCALMONTH))),\\r\\n                                        2,\\r\\n                                        '0'\\r\\n                                    ),\\r\\n                                    '-01'\\r\\n                                )\\r\\n                            )\\r\\n                        ),\\r\\n                        x\\r\\n                    )\\r\\n                ) BETWEEN 1 AND 5,                     \\r\\n            range(\\r\\n                toUInt64(\\r\\n                    dateDiff(\\r\\n                        'day',\\r\\n                        toStartOfMonth(\\r\\n                            toDate(\\r\\n                                concat(\\r\\n                                    toString(toUInt32(any(FISCALYEAR))),\\r\\n                                    '-',\\r\\n                                    leftPad(\\r\\n                                        toString(toUInt32(any(FISCALMONTH))),\\r\\n                                        2,\\r\\n                                        '0'\\r\\n                                    ),\\r\\n                                    '-01'\\r\\n                                )\\r\\n                            )\\r\\n                        ),\\r\\n                        least(\\r\\n                            today(),\\r\\n                            addMonths(\\r\\n                                toStartOfMonth(\\r\\n                                    toDate(\\r\\n                                        concat(\\r\\n                                            toString(toUInt32(any(FISCALYEAR))),\\r\\n                                            '-',\\r\\n                                            leftPad(\\r\\n                                                toString(toUInt32(any(FISCALMONTH))),\\r\\n                                                2,\\r\\n                                                '0'\\r\\n                                            ),\\r\\n                                            '-01'\\r\\n                                        )\\r\\n                                    )\\r\\n                                ),\\r\\n                                1\\r\\n                            )\\r\\n                        )\\r\\n                    )\\r\\n                )\\r\\n            )\\r\\n        )\\r\\n    ),\\r\\n    0                           \\r\\n)\\r\\n"
+    },
+    "adhoc_filters":[
+      {
+        "clause":"WHERE",
+        "comparator":null,
+        "datasourceWarning":false,
+        "expressionType":"SQL",
+        "filterOptionName":"filter_ct8uxzqywqh_hgrac6lz4f",
+        "isExtra":false,
+        "isNew":false,
+        "operator":null,
+        "sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]"
+      },
+      {
+        "clause":"WHERE",
+        "comparator":null,
+        "datasourceWarning":false,
+        "expressionType":"SQL",
+        "filterOptionName":"filter_4chxm8vm2ud_16zdyw9czvuj",
+        "isExtra":false,
+        "isNew":false,
+        "operator":null,
+        "sqlExpression":"ROTA NOT ILIKE '%LZM%'"
+      },
+      {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","operatorId":"IN","subject":"FISCALYEAR","comparator":[${YEAR}],"isExtra":true,"filterOptionName":"filter_971tj403659_rf5srdng4o"},
+      {"expressionType":"SIMPLE","clause":"WHERE","operator":"IN","operatorId":"IN","subject":"FISCALMONTH","comparator":[${MONTH}],"isExtra":true,"filterOptionName":"filter_64dvbgz1qg_0yexo9xc1up"}
+    ],
+    "subheader":"Günlük Ort.  Gerçekleşme",
+    "header_font_size":0.4,
+    "subheader_font_size":0.15,
+    "y_axis_format":"SMART_NUMBER",
+    "time_format":"smart_date",
+    "extra_form_data":{},
+    "force":true,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        String body = template
+                .replace("${YEAR}", String.valueOf(currentYear))
+                .replace("${MONTH}", String.valueOf(currentMonth));
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=8KxX6Si7QwE&dashboard_page_id=pHSLgQAVyKoqIcsgv5HUW&slice_id=1817")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static JSONObject sendWidget48AggreationS50Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1844%7D";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource":{"id":331,"type":"table"},
+  "force":false,
+  "queries":[
+    {
+      "filters":[
+        {"col":"FISCALYEAR","op":"IN","val":[2025]},
+        {"col":"FISCALMONTH","op":"IN","val":[9]},
+        {"col":"ROTA","op":"IN","val":["PRESELL D. HAY-BAB ROTASI"]}
+      ],
+      "extras":{
+        "having":"",
+        "where":"(ROTA NOT ILIKE '%LZM%' AND ROTA NOT ILIKE '%Büyük Nokta%')"
+      },
+      "applied_time_extras":{},
+      "columns":[],
+      "metrics":[
+        {
+          "aggregate":null,
+          "column":null,
+          "datasourceWarning":true,
+          "expressionType":"SQL",
+          "hasCustomLabel":true,
+          "label":"Gerçekleşme %",
+          "optionName":"metric_zb0zhchi3ka_zdkjsc4njos",
+          "sqlExpression":"sum(Total_Sales) / nullIf(sum(TotalTarget), 0)"
+        }
+      ],
+      "annotation_layers":[],
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{"dashboard_page_id":"WF8g3owQZuEKA7yV-Fekh","slice_id":"1844"},
+      "custom_params":{},
+      "custom_form_data":{}
+    }
+  ],
+  "form_data":{
+    "datasource":"331__table",
+    "viz_type":"big_number_total",
+    "slice_id":1844,
+    "url_params":{"dashboard_page_id":"WF8g3owQZuEKA7yV-Fekh","slice_id":"1844"},
+    "metric":{
+      "aggregate":null,
+      "column":null,
+      "datasourceWarning":true,
+      "expressionType":"SQL",
+      "hasCustomLabel":true,
+      "label":"Gerçekleşme %",
+      "optionName":"metric_zb0zhchi3ka_zdkjsc4njos",
+      "sqlExpression":"sum(Total_Sales) / nullIf(sum(TotalTarget), 0)"
+    },
+    "adhoc_filters":[
+      {
+        "expressionType":"SQL",
+        "sqlExpression":"ROTA NOT ILIKE '%LZM%' AND ROTA NOT ILIKE '%Büyük Nokta%'",
+        "clause":"WHERE",
+        "subject":null,
+        "operator":null,
+        "comparator":null,
+        "isExtra":false,
+        "isNew":false,
+        "datasourceWarning":false,
+        "filterOptionName":"filter_2t5wwzuo4k_do6wrxbi1qc"
+      },
+      {
+        "expressionType":"SIMPLE",
+        "subject":"FISCALYEAR",
+        "operator":"IN",
+        "operatorId":"IN",
+        "comparator":[2025],
+        "clause":"WHERE",
+        "sqlExpression":null,
+        "isExtra":true,
+        "isNew":false,
+        "datasourceWarning":false,
+        "filterOptionName":"filter_8u1txz9q7q_5wbggefgbvy"
+      },
+      {
+        "expressionType":"SIMPLE",
+        "subject":"FISCALMONTH",
+        "operator":"IN",
+        "operatorId":"IN",
+        "comparator":[9],
+        "clause":"WHERE",
+        "sqlExpression":null,
+        "isExtra":true,
+        "isNew":false,
+        "datasourceWarning":false,
+        "filterOptionName":"filter_ml8vkemzr7_chi00hgez8h"
+      },
+      {
+        "expressionType":"SIMPLE",
+        "subject":"ROTA",
+        "operator":"IN",
+        "operatorId":"IN",
+        "comparator":["PRESELL D. HAY-BAB ROTASI"],
+        "clause":"WHERE",
+        "sqlExpression":null,
+        "isExtra":false,
+        "isNew":false,
+        "datasourceWarning":false,
+        "filterOptionName":"filter_ajomv1cu18h_tcaj06sps0b"
+      }
+    ],
+    "subheader":"Gerçekleşme %",
+    "header_font_size":0.4,
+    "subheader_font_size":0.15,
+    "y_axis_format":".2%",
+    "time_format":"smart_date",
+    "conditional_formatting":[],
+    "extra_form_data":{},
+    "force":false,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=WSmKJ7kHkbM&dashboard_page_id=WF8g3owQZuEKA7yV-Fekh&slice_id=1844")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONObject sendWidget36Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A271%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource":{"id":285,"type":"table"},
+  "force":true,
+  "queries":[
+    {
+      "filters":[
+        {"col":"TARIH","op":"TEMPORAL_RANGE","val":"No filter"}
+      ],
+      "extras":{
+        "time_grain_sqla":"P1D",
+        "having":"",
+        "where":"(TARIH >= DATE_TRUNC('Month', NOW()) AND TARIH <= today())"
+      },
+      "applied_time_extras":{},
+      "columns":[
+        {
+          "timeGrain":"P1D",
+          "columnType":"BASE_AXIS",
+          "sqlExpression":"TARIH",
+          "label":"TARIH",
+          "expressionType":"SQL"
+        }
+      ],
+      "metrics":[
+        {
+          "aggregate":"SUM",
+          "column":{
+            "advanced_data_type":null,
+            "certification_details":null,
+            "certified_by":null,
+            "column_name":"BASARILI_MUSTERI_SAYISI",
+            "description":null,
+            "expression":null,
+            "filterable":true,
+            "groupby":true,
+            "id":6427,
+            "is_certified":false,
+            "is_dttm":false,
+            "python_date_format":null,
+            "type":"UInt64",
+            "type_generic":0,
+            "verbose_name":null,
+            "warning_markdown":null
+          },
+          "datasourceWarning":false,
+          "expressionType":"SIMPLE",
+          "hasCustomLabel":true,
+          "label":"Müşteri Sayısı",
+          "optionName":"metric_6trs7pqmoa4_qhujh1pq79",
+          "sqlExpression":null
+        }
+      ],
+      "annotation_layers":[],
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{"dashboard_page_id":"5NCptbSXXst-z0R9ZBf4L","slice_id":"271"},
+      "custom_params":{},
+      "custom_form_data":{},
+      "post_processing":[
+        {
+          "operation":"pivot",
+          "options":{
+            "index":["TARIH"],
+            "columns":[],
+            "aggregates":{"Müşteri Sayısı":{"operator":"mean"}},
+            "drop_missing_columns":true
+          }
+        },
+        {"operation":"flatten"}
+      ]
+    }
+  ],
+  "form_data":{
+    "datasource":"285__table",
+    "viz_type":"big_number",
+    "slice_id":271,
+    "url_params":{"dashboard_page_id":"5NCptbSXXst-z0R9ZBf4L","slice_id":"271"},
+    "x_axis":"TARIH",
+    "time_grain_sqla":"P1D",
+    "metric":{
+      "aggregate":"SUM",
+      "column":{
+        "advanced_data_type":null,
+        "certification_details":null,
+        "certified_by":null,
+        "column_name":"BASARILI_MUSTERI_SAYISI",
+        "description":null,
+        "expression":null,
+        "filterable":true,
+        "groupby":true,
+        "id":6427,
+        "is_certified":false,
+        "is_dttm":false,
+        "python_date_format":null,
+        "type":"UInt64",
+        "type_generic":0,
+        "verbose_name":null,
+        "warning_markdown":null
+      },
+      "datasourceWarning":false,
+      "expressionType":"SIMPLE",
+      "hasCustomLabel":true,
+      "label":"Müşteri Sayısı",
+      "optionName":"metric_6trs7pqmoa4_qhujh1pq79",
+      "sqlExpression":null
+    },
+    "adhoc_filters":[
+      {
+        "clause":"WHERE",
+        "comparator":null,
+        "datasourceWarning":false,
+        "expressionType":"SQL",
+        "filterOptionName":"filter_l6pj38q1gi_84i05zipt9g",
+        "isExtra":false,
+        "isNew":false,
+        "operator":"TEMPORAL_RANGE",
+        "sqlExpression":"TARIH >= DATE_TRUNC('Month', NOW()) AND TARIH <= today()",
+        "subject":"TARIH"
+      },
+      {
+        "clause":"WHERE",
+        "comparator":"No filter",
+        "datasourceWarning":false,
+        "expressionType":"SIMPLE",
+        "filterOptionName":"filter_w8ek5nfksmf_27af1wj5qym",
+        "isExtra":false,
+        "isNew":false,
+        "operator":"TEMPORAL_RANGE",
+        "sqlExpression":null,
+        "subject":"TARIH"
+      }
+    ],
+    "compare_lag":1,
+    "compare_suffix":"DoD",
+    "show_timestamp":true,
+    "show_trend_line":true,
+    "start_y_axis_at_zero":true,
+    "color_picker":{"a":1,"b":135,"g":122,"r":0},
+    "header_font_size":0.4,
+    "subheader_font_size":0.15,
+    "y_axis_format":",d",
+    "time_format":"%d/%m/%Y",
+    "rolling_type":"None",
+    "extra_form_data":{},
+    "force":true,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=XwQfk01CUPQ&dashboard_page_id=5NCptbSXXst-z0R9ZBf4L&slice_id=271")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONObject sendWidget37Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A273%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource":{"id":216,"type":"table"},
+  "force":true,
+  "queries":[
+    {
+      "filters":[{"col":"SM","op":"IS NOT NULL"}],
+      "extras":{"having":"","where":"(TARIH = today())"},
+      "applied_time_extras":{},
+      "columns":["ROUTE_NAME","FM"],
+      "metrics":[
+        {
+          "aggregate":null,
+          "column":null,
+          "datasourceWarning":false,
+          "expressionType":"SQL",
+          "hasCustomLabel":true,
+          "label":"Ziyaret İç Hedef",
+          "optionName":"metric_ab6mdk3a4ng_dgsu9m79ruf",
+          "sqlExpression":"SUM(PLANANAN_MUSTERI_SAYISI)"
+        },
+        {
+          "aggregate":null,
+          "column":null,
+          "datasourceWarning":false,
+          "expressionType":"SQL",
+          "hasCustomLabel":true,
+          "label":"Gerçekleşen Ziyaret",
+          "optionName":"metric_8xew93462zr_buovqxd5f5m",
+          "sqlExpression":"SUM(YAPILAN_ZIYARET_MUSTERI_SAYISI)"
+        },
+        {
+          "aggregate":null,
+          "column":null,
+          "datasourceWarning":false,
+          "expressionType":"SQL",
+          "hasCustomLabel":true,
+          "label":"Başarılı Ziyaret",
+          "optionName":"metric_plr6q85g48q_9sjxo33ugn",
+          "sqlExpression":"SUM(BASARILI_MUSTERI_SAYISI)/SUM(YAPILAN_ZIYARET_MUSTERI_SAYISI)*1.0"
+        }
+      ],
+      "annotation_layers":[],
+      "row_limit":50000,
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{"dashboard_page_id":"5NCptbSXXst-z0R9ZBf4L","slice_id":"273"},
+      "custom_params":{},
+      "custom_form_data":{}
+    }
+  ],
+  "form_data":{
+    "datasource":"216__table",
+    "viz_type":"bubble_v2",
+    "slice_id":273,
+    "url_params":{"dashboard_page_id":"5NCptbSXXst-z0R9ZBf4L","slice_id":"273"},
+    "series":"FM",
+    "entity":"ROUTE_NAME",
+    "x":{
+      "aggregate":null,
+      "column":null,
+      "datasourceWarning":false,
+      "expressionType":"SQL",
+      "hasCustomLabel":true,
+      "label":"Ziyaret İç Hedef",
+      "optionName":"metric_ab6mdk3a4ng_dgsu9m79ruf",
+      "sqlExpression":"SUM(PLANANAN_MUSTERI_SAYISI)"
+    },
+    "y":{
+      "aggregate":null,
+      "column":null,
+      "datasourceWarning":false,
+      "expressionType":"SQL",
+      "hasCustomLabel":true,
+      "label":"Gerçekleşen Ziyaret",
+      "optionName":"metric_8xew93462zr_buovqxd5f5m",
+      "sqlExpression":"SUM(YAPILAN_ZIYARET_MUSTERI_SAYISI)"
+    },
+    "adhoc_filters":[
+      {
+        "clause":"WHERE",
+        "comparator":null,
+        "datasourceWarning":false,
+        "expressionType":"SQL",
+        "filterOptionName":"filter_1y8xc57gmqh_6eik70zf0gw",
+        "isExtra":false,
+        "isNew":false,
+        "operator":"TEMPORAL_RANGE",
+        "sqlExpression":"TARIH = today()",
+        "subject":"TARIH"
+      },
+      {
+        "clause":"WHERE",
+        "comparator":null,
+        "datasourceWarning":false,
+        "expressionType":"SIMPLE",
+        "filterOptionName":"filter_j4ffkiu9ndo_cj270cl7d6q",
+        "isExtra":false,
+        "isNew":false,
+        "operator":"IS NOT NULL",
+        "operatorId":"IS_NOT_NULL",
+        "sqlExpression":null,
+        "subject":"SM"
+      }
+    ],
+    "size":{
+      "aggregate":null,
+      "column":null,
+      "datasourceWarning":false,
+      "expressionType":"SQL",
+      "hasCustomLabel":true,
+      "label":"Başarılı Ziyaret",
+      "optionName":"metric_plr6q85g48q_9sjxo33ugn",
+      "sqlExpression":"SUM(BASARILI_MUSTERI_SAYISI)/SUM(YAPILAN_ZIYARET_MUSTERI_SAYISI)*1.0"
+    },
+    "row_limit":50000,
+    "color_scheme":"presetColors",
+    "show_legend":true,
+    "legendType":"scroll",
+    "legendOrientation":"left",
+    "legendMargin":150,
+    "max_bubble_size":"20",
+    "tooltipSizeFormat":".2%",
+    "opacity":0.6,
+    "x_axis_label":"Ziyaret İç Hedef",
+    "x_axis_title_margin":30,
+    "xAxisFormat":"SMART_NUMBER",
+    "logXAxis":false,
+    "y_axis_label":"Ziyaret Gerçekleşme",
+    "y_axis_title_margin":30,
+    "y_axis_format":"SMART_NUMBER",
+    "logYAxis":false,
+    "truncateXAxis":true,
+    "y_axis_bounds":[null,null],
+    "extra_form_data":{},
+    "force":true,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=Tau-zQ6IExU&dashboard_page_id=5NCptbSXXst-z0R9ZBf4L&slice_id=273")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONObject sendWidget29AggreationS25Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A785%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource": {"id": 216, "type": "table"},
+  "force": true,
+  "queries": [
+    {
+      "filters": [],
+      "extras": {
+        "having": "",
+        "where": "( TARIH >= DATE_TRUNC('day', NOW()))"
+      },
+      "applied_time_extras": {},
+      "columns": [],
+      "metrics": [
+        {
+          "aggregate": null,
+          "column": null,
+          "datasourceWarning": false,
+          "expressionType": "SQL",
+          "hasCustomLabel": false,
+          "label": "SUM(BASARILI_MUSTERI_SAYISI)*1.0/SUM(YAPILAN_ZIYARET_MUSTERI_SAYISI)",
+          "optionName": "metric_jv4qytjnxvc_zatvndn061s",
+          "sqlExpression": "SUM(BASARILI_MUSTERI_SAYISI)*1.0/SUM(YAPILAN_ZIYARET_MUSTERI_SAYISI)"
+        }
+      ],
+      "annotation_layers": [],
+      "series_limit": 0,
+      "order_desc": true,
+      "url_params": {
+        "dashboard_page_id": "_RvsnBtgUopUggm5vkV7P",
+        "slice_id": "785"
+      },
+      "custom_params": {},
+      "custom_form_data": {}
+    }
+  ],
+  "form_data": {
+    "datasource": "216__table",
+    "viz_type": "big_number_total",
+    "slice_id": 785,
+    "url_params": {
+      "dashboard_page_id": "_RvsnBtgUopUggm5vkV7P",
+      "slice_id": "785"
+    },
+    "metric": {
+      "aggregate": null,
+      "column": null,
+      "datasourceWarning": false,
+      "expressionType": "SQL",
+      "hasCustomLabel": false,
+      "label": "SUM(BASARILI_MUSTERI_SAYISI)*1.0/SUM(YAPILAN_ZIYARET_MUSTERI_SAYISI)",
+      "optionName": "metric_jv4qytjnxvc_zatvndn061s",
+      "sqlExpression": "SUM(BASARILI_MUSTERI_SAYISI)*1.0/SUM(YAPILAN_ZIYARET_MUSTERI_SAYISI)"
+    },
+    "adhoc_filters": [
+      {
+        "clause": "WHERE",
+        "comparator": null,
+        "datasourceWarning": false,
+        "expressionType": "SQL",
+        "filterOptionName": "filter_f2icu4o5ea_6rjov6xciz8",
+        "isExtra": false,
+        "isNew": false,
+        "operator": "TEMPORAL_RANGE",
+        "sqlExpression": " TARIH >= DATE_TRUNC('day', NOW())",
+        "subject": "TARIH"
+      }
+    ],
+    "header_font_size": 0.4,
+    "subheader_font_size": 0.15,
+    "y_axis_format": ".2%",
+    "time_format": "smart_date",
+    "conditional_formatting": [],
+    "extra_form_data": {},
+    "force": true,
+    "result_format": "json",
+    "result_type": "full"
+  },
+  "result_format": "json",
+  "result_type": "full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=7HjmXcJrSLM&dashboard_page_id=_RvsnBtgUopUggm5vkV7P&slice_id=785")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static JSONObject sendWidget29AggreationS53Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A163%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource":{"id":302,"type":"table"},
+  "force":true,
+  "queries":[
+    {
+      "filters":[
+        {"col":"Z_Status","op":"IN","val":["Başarılı Ziyaret","Başarılı Olmayan Ziyaret"]},
+        {"col":"Tarih","op":"TEMPORAL_RANGE","val":"No filter"}
+      ],
+      "extras":{"having":"","where":""},
+      "applied_time_extras":{},
+      "columns":[
+        {
+          "datasourceWarning":false,
+          "expressionType":"SQL",
+          "label":"Z_Status",
+          "sqlExpression":"CASE WHEN Z_Status = 'Başarılı Olmayan Ziyaret' Then 'Başarısız' WHEN Z_Status= 'Başarılı Ziyaret' Then 'Başarılı'END"
+        }
+      ],
+      "metrics":[
+        {
+          "aggregate":"SUM",
+          "column":{
+            "advanced_data_type":null,
+            "certification_details":null,
+            "certified_by":null,
+            "column_name":"Z_Number",
+            "description":null,
+            "expression":null,
+            "filterable":true,
+            "groupby":true,
+            "id":6755,
+            "is_certified":false,
+            "is_dttm":false,
+            "python_date_format":null,
+            "type":"Nullable(Int64)",
+            "type_generic":0,
+            "verbose_name":null,
+            "warning_markdown":null
+          },
+          "datasourceWarning":false,
+          "expressionType":"SIMPLE",
+          "hasCustomLabel":true,
+          "label":"Ziyaret Sayısı",
+          "optionName":"metric_391jewukb5s_9dmhfqpgw79",
+          "sqlExpression":null
+        }
+      ],
+      "orderby":[
+        [
+          {
+            "aggregate":"SUM",
+            "column":{
+              "advanced_data_type":null,
+              "certification_details":null,
+              "certified_by":null,
+              "column_name":"Z_Number",
+              "description":null,
+              "expression":null,
+              "filterable":true,
+              "groupby":true,
+              "id":6755,
+              "is_certified":false,
+              "is_dttm":false,
+              "python_date_format":null,
+              "type":"Nullable(Int64)",
+              "type_generic":0,
+              "verbose_name":null,
+              "warning_markdown":null
+            },
+            "datasourceWarning":false,
+            "expressionType":"SIMPLE",
+            "hasCustomLabel":true,
+            "label":"Ziyaret Sayısı",
+            "optionName":"metric_391jewukb5s_9dmhfqpgw79",
+            "sqlExpression":null
+          },
+          false
+        ]
+      ],
+      "annotation_layers":[],
+      "row_limit":100,
+      "series_limit":0,
+      "order_desc":true,
+      "url_params":{"dashboard_page_id":"3nyhN1NSOHcjPWUhEYLpm","slice_id":"163"},
+      "custom_params":{},
+      "custom_form_data":{}
+    }
+  ],
+  "form_data":{
+    "datasource":"302__table",
+    "viz_type":"pie",
+    "slice_id":163,
+    "url_params":{"dashboard_page_id":"3nyhN1NSOHcjPWUhEYLpm","slice_id":"163"},
+    "groupby":[
+      {
+        "datasourceWarning":false,
+        "expressionType":"SQL",
+        "label":"Z_Status",
+        "sqlExpression":"CASE WHEN Z_Status = 'Başarılı Olmayan Ziyaret' Then 'Başarısız' WHEN Z_Status= 'Başarılı Ziyaret' Then 'Başarılı'END"
+      }
+    ],
+    "metric":{
+      "aggregate":"SUM",
+      "column":{
+        "advanced_data_type":null,
+        "certification_details":null,
+        "certified_by":null,
+        "column_name":"Z_Number",
+        "description":null,
+        "expression":null,
+        "filterable":true,
+        "groupby":true,
+        "id":6755,
+        "is_certified":false,
+        "is_dttm":false,
+        "python_date_format":null,
+        "type":"Nullable(Int64)",
+        "type_generic":0,
+        "verbose_name":null,
+        "warning_markdown":null
+      },
+      "datasourceWarning":false,
+      "expressionType":"SIMPLE",
+      "hasCustomLabel":true,
+      "label":"Ziyaret Sayısı",
+      "optionName":"metric_391jewukb5s_9dmhfqpgw79",
+      "sqlExpression":null
+    },
+    "adhoc_filters":[
+      {
+        "clause":"WHERE",
+        "comparator":["Başarılı Ziyaret","Başarılı Olmayan Ziyaret"],
+        "datasourceWarning":false,
+        "expressionType":"SIMPLE",
+        "filterOptionName":"filter_00wksw2qf5u5h_jvcpw4lwhab",
+        "isExtra":false,
+        "isNew":false,
+        "operator":"IN",
+        "operatorId":"IN",
+        "sqlExpression":null,
+        "subject":"Z_Status"
+      },
+      {
+        "clause":"WHERE",
+        "comparator":"No filter",
+        "expressionType":"SIMPLE",
+        "operator":"TEMPORAL_RANGE",
+        "subject":"Tarih"
+      }
+    ],
+    "row_limit":100,
+    "sort_by_metric":true,
+    "color_scheme":"bnbColors",
+    "show_labels_threshold":5,
+    "show_legend":true,
+    "legendType":"scroll",
+    "legendOrientation":"bottom",
+    "legendMargin":null,
+    "label_type":"percent",
+    "number_format":"SMART_NUMBER",
+    "date_format":"smart_date",
+    "show_labels":true,
+    "labels_outside":true,
+    "label_line":true,
+    "show_total":true,
+    "outerRadius":60,
+    "donut":true,
+    "innerRadius":38,
+    "extra_form_data":{},
+    "force":true,
+    "result_format":"json",
+    "result_type":"full"
+  },
+  "result_format":"json",
+  "result_type":"full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=rCCT-e87sJ4&dashboard_page_id=3nyhN1NSOHcjPWUhEYLpm&slice_id=163")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful())
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // --- WIDGET 83: Request ---
+    public static JSONObject sendWidget83Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1949%7D";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = "{\n" +
+                "  \"datasource\": {\"id\": 346, \"type\": \"table\"},\n" +
+                "  \"force\": false,\n" +
+                "  \"queries\": [\n" +
+                "    {\n" +
+                "      \"filters\": [],\n" +
+                "      \"extras\": {\"time_grain_sqla\": \"P1M\", \"having\": \"\", \"where\": \"(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS)\"},\n" +
+                "      \"applied_time_extras\": {},\n" +
+                "      \"columns\": [{\"timeGrain\": \"P1M\", \"columnType\": \"BASE_AXIS\", \"expressionType\": \"SQL\", \"label\": \"PayDate\", \"sqlExpression\": \"COALESCE(PayDate, toDate('1970-01-01'))\"}],\n" +
+                "      \"metrics\": [{\"aggregate\": \"SUM\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Ödeme Tutarı\", \"column\": {\"column_name\": \"AylikOdemeTutari\"}}],\n" +
+                "      \"row_limit\": 1000,\n" +
+                "      \"post_processing\": [\n" +
+                "        {\"operation\": \"pivot\", \"options\": {\"index\": [\"PayDate\"], \"columns\": [], \"aggregates\": {\"Ödeme Tutarı\": {\"operator\": \"mean\"}}, \"drop_missing_columns\": true}},\n" +
+                "        {\"operation\": \"flatten\"}\n" +
+                "      ],\n" +
+                "      \"orderby\": [[{\"aggregate\": \"SUM\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Ödeme Tutarı\", \"column\": {\"column_name\": \"AylikOdemeTutari\"}}, false]]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"filters\": [],\n" +
+                "      \"extras\": {\"time_grain_sqla\": \"P1M\", \"having\": \"\", \"where\": \"(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS)\"},\n" +
+                "      \"applied_time_extras\": {},\n" +
+                "      \"columns\": [{\"timeGrain\": \"P1M\", \"columnType\": \"BASE_AXIS\", \"expressionType\": \"SQL\", \"label\": \"PayDate\", \"sqlExpression\": \"COALESCE(PayDate, toDate('1970-01-01'))\"}],\n" +
+                "      \"metrics\": [{\"aggregate\": \"AVG\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Gecikme Gün\", \"column\": {\"column_name\": \"OrtalamaGecikmeGunu\"}}],\n" +
+                "      \"row_limit\": 10000,\n" +
+                "      \"post_processing\": [\n" +
+                "        {\"operation\": \"pivot\", \"options\": {\"index\": [\"PayDate\"], \"columns\": [], \"aggregates\": {\"Gecikme Gün\": {\"operator\": \"mean\"}}, \"drop_missing_columns\": true}},\n" +
+                "        {\"operation\": \"flatten\"}\n" +
+                "      ],\n" +
+                "      \"orderby\": [[{\"aggregate\": \"AVG\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Gecikme Gün\", \"column\": {\"column_name\": \"OrtalamaGecikmeGunu\"}}, false]]\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"form_data\": {\n" +
+                "    \"datasource\": \"346__table\",\n" +
+                "    \"viz_type\": \"mixed_timeseries\",\n" +
+                "    \"slice_id\": 1949,\n" +
+                "    \"x_axis\": {\"expressionType\": \"SQL\", \"label\": \"PayDate\", \"sqlExpression\": \"COALESCE(PayDate, toDate('1970-01-01'))\"},\n" +
+                "    \"time_grain_sqla\": \"P1M\",\n" +
+                "    \"metrics\": [{\"aggregate\": \"SUM\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Ödeme Tutarı\", \"column\": {\"column_name\": \"AylikOdemeTutari\"}}],\n" +
+                "    \"adhoc_filters\": [{\"clause\": \"WHERE\", \"expressionType\": \"SQL\", \"operator\": \"TEMPORAL_RANGE\", \"subject\": \"PayDate\", \"sqlExpression\": \"PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS\"}],\n" +
+                "    \"result_format\": \"json\",\n" +
+                "    \"result_type\": \"full\"\n" +
+                "  },\n" +
+                "  \"result_format\": \"json\",\n" +
+                "  \"result_type\": \"full\"\n" +
+                "}";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=mMQSZ1SMdy0&dashboard_page_id=GulxjbioGz-6_xA0Jptak&slice_id=1949")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                String err = resp.body() != null ? resp.body().string() : "";
+                throw new IOException("Unexpected code " + resp.code() + " - " + err);
+            }
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    // --- WIDGET 93: Request ---
+    public static JSONObject sendWidget93Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1958%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = "{"
+                + "\"datasource\":{\"id\":346,\"type\":\"table\"},"
+                + "\"force\":true,"
+                + "\"queries\":[{"
+                + "  \"filters\":[{\"col\":\"PayDate\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No filter\"}],"
+                + "  \"extras\":{\"having\":\"\",\"where\":\"(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS)\"},"
+                + "  \"applied_time_extras\":{},"
+                + "  \"columns\":[],"
+                + "  \"metrics\":[{"
+                + "     \"aggregate\":null,"
+                + "     \"column\":null,"
+                + "     \"datasourceWarning\":false,"
+                + "     \"expressionType\":\"SQL\","
+                + "     \"hasCustomLabel\":true,"
+                + "     \"label\":\"6 Aylık Ödeme Tutarı\","
+                + "     \"optionName\":\"metric_c123aomdklf_1qzkwhbmfkq\","
+                + "     \"sqlExpression\":\"SUM(AylikOdemeTutari)\""
+                + "  }],"
+                + "  \"annotation_layers\":[],"
+                + "  \"series_limit\":0,"
+                + "  \"order_desc\":true,"
+                + "  \"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"slice_id\":\"1958\"},"
+                + "  \"custom_params\":{},"
+                + "  \"custom_form_data\":{}"
+                + "}],"
+                + "\"form_data\":{"
+                + "  \"datasource\":\"346__table\","
+                + "  \"viz_type\":\"big_number_total\","
+                + "  \"slice_id\":1958,"
+                + "  \"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"slice_id\":\"1958\"},"
+                + "  \"metric\":{"
+                + "     \"aggregate\":null,"
+                + "     \"column\":null,"
+                + "     \"datasourceWarning\":false,"
+                + "     \"expressionType\":\"SQL\","
+                + "     \"hasCustomLabel\":true,"
+                + "     \"label\":\"6 Aylık Ödeme Tutarı\","
+                + "     \"optionName\":\"metric_c123aomdklf_1qzkwhbmfkq\","
+                + "     \"sqlExpression\":\"SUM(AylikOdemeTutari)\""
+                + "  },"
+                + "  \"adhoc_filters\":["
+                + "     {\"clause\":\"WHERE\",\"expressionType\":\"SQL\",\"sqlExpression\":\"PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS\"},"
+                + "     {\"clause\":\"WHERE\",\"expressionType\":\"SIMPLE\",\"operator\":\"TEMPORAL_RANGE\",\"subject\":\"PayDate\",\"comparator\":\"No filter\"}"
+                + "  ],"
+                + "  \"subheader\":\"6 Aylık Ödeme Tutarı\","
+                + "  \"header_font_size\":0.4,"
+                + "  \"subheader_font_size\":0.15,"
+                + "  \"y_axis_format\":\"SMART_NUMBER\","
+                + "  \"time_format\":\"smart_date\","
+                + "  \"conditional_formatting\":[],"
+                + "  \"extra_form_data\":{},"
+                + "  \"force\":true,"
+                + "  \"result_format\":\"json\","
+                + "  \"result_type\":\"full\""
+                + "},"
+                + "\"result_format\":\"json\","
+                + "\"result_type\":\"full\""
+                + "}";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=Gs2uJC95KIY&dashboard_page_id=GulxjbioGz-6_xA0Jptak&slice_id=1958")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                String err = resp.body() != null ? resp.body().string() : "";
+                throw new IOException("Unexpected code " + resp.code() + " - " + err);
+            }
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // --- WIDGET 92: Request (Ort. Gecikme Gün) ---
+    public static JSONObject sendWidget92AggreationS66Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1957%7D";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = "{"
+                + "\"datasource\":{\"id\":346,\"type\":\"table\"},"
+                + "\"force\":false,"
+                + "\"queries\":[{"
+                + "  \"filters\":[{\"col\":\"PayDate\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No filter\"}],"
+                + "  \"extras\":{\"having\":\"\",\"where\":\"(PayDate >= toStartOfMonth(today()))\"},"
+                + "  \"applied_time_extras\":{},"
+                + "  \"columns\":[],"
+                + "  \"metrics\":[{"
+                + "     \"aggregate\":\"AVG\","
+                + "     \"column\":{"
+                + "        \"column_name\":\"OrtalamaGecikmeGunu\",\"id\":7414,"
+                + "        \"type\":\"Nullable(Float64)\",\"filterable\":true,\"groupby\":true"
+                + "     },"
+                + "     \"datasourceWarning\":false,"
+                + "     \"expressionType\":\"SIMPLE\","
+                + "     \"hasCustomLabel\":true,"
+                + "     \"label\":\"Ort. Gecikme Gün\","
+                + "     \"optionName\":\"metric_ogdokbt8jzd_fdie6e916up\","
+                + "     \"sqlExpression\":null"
+                + "  }],"
+                + "  \"annotation_layers\":[],"
+                + "  \"series_limit\":0,"
+                + "  \"order_desc\":true,"
+                + "  \"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"form_data_key\":\"xg2opFTudg4\",\"slice_id\":\"1957\"},"
+                + "  \"custom_params\":{},"
+                + "  \"custom_form_data\":{}"
+                + "}],"
+                + "\"form_data\":{"
+                + "  \"datasource\":\"346__table\","
+                + "  \"viz_type\":\"big_number_total\","
+                + "  \"slice_id\":1957,"
+                + "  \"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"form_data_key\":\"xg2opFTudg4\",\"slice_id\":\"1957\"},"
+                + "  \"metric\":{"
+                + "     \"aggregate\":\"AVG\","
+                + "     \"column\":{"
+                + "        \"column_name\":\"OrtalamaGecikmeGunu\",\"id\":7414,"
+                + "        \"type\":\"Nullable(Float64)\",\"filterable\":true,\"groupby\":true"
+                + "     },"
+                + "     \"datasourceWarning\":false,"
+                + "     \"expressionType\":\"SIMPLE\","
+                + "     \"hasCustomLabel\":true,"
+                + "     \"label\":\"Ort. Gecikme Gün\","
+                + "     \"optionName\":\"metric_ogdokbt8jzd_fdie6e916up\","
+                + "     \"sqlExpression\":null"
+                + "  },"
+                + "  \"adhoc_filters\":["
+                + "     {\"expressionType\":\"SQL\",\"sqlExpression\":\"PayDate >= toStartOfMonth(today())\",\"clause\":\"WHERE\"},"
+                + "     {\"expressionType\":\"SIMPLE\",\"subject\":\"PayDate\",\"operator\":\"TEMPORAL_RANGE\",\"comparator\":\"No filter\",\"clause\":\"WHERE\"}"
+                + "  ],"
+                + "  \"subheader\":\"Ort. Gecikme Gün\","
+                + "  \"header_font_size\":0.4,"
+                + "  \"subheader_font_size\":0.15,"
+                + "  \"y_axis_format\":\"SMART_NUMBER\","
+                + "  \"time_format\":\"smart_date\","
+                + "  \"extra_form_data\":{},"
+                + "  \"force\":false,"
+                + "  \"result_format\":\"json\","
+                + "  \"result_type\":\"full\""
+                + "},"
+                + "\"result_format\":\"json\","
+                + "\"result_type\":\"full\""
+                + "}";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=xg2opFTudg4&dashboard_page_id=GulxjbioGz-6_xA0Jptak&slice_id=1957")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                String err = resp.body() != null ? resp.body().string() : "";
+                throw new IOException("Unexpected code " + resp.code() + " - " + err);
+            }
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // --- WIDGET 88: Request (slice_id=1954, Big Number) ---
+    public static JSONObject sendWidget88Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1954%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body =
+                "{\"datasource\":{\"id\":346,\"type\":\"table\"},\"force\":true," +
+                        "\"queries\":[{\"filters\":[{\"col\":\"PayDate\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No filter\"}]," +
+                        "\"extras\":{\"time_grain_sqla\":\"P1M\",\"having\":\"\",\"where\":\"(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS)\"}," +
+                        "\"applied_time_extras\":{},\"columns\":[{\"timeGrain\":\"P1M\",\"columnType\":\"BASE_AXIS\",\"sqlExpression\":\"PayDate\",\"label\":\"PayDate\",\"expressionType\":\"SQL\"}]," +
+                        "\"metrics\":[{\"aggregate\":null,\"column\":null,\"datasourceWarning\":false,\"expressionType\":\"SQL\",\"hasCustomLabel\":true,\"label\":\"Zamanında Ödeme %\",\"optionName\":\"metric_hv28lsyn4a_os39ow4yiz\",\"sqlExpression\":\"AVG(ZamanindaOdemeOrani)\"}]," +
+                        "\"annotation_layers\":[],\"series_limit\":0,\"order_desc\":true," +
+                        "\"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"slice_id\":\"1954\"}," +
+                        "\"custom_params\":{},\"custom_form_data\":{}," +
+                        "\"post_processing\":[{\"operation\":\"pivot\",\"options\":{\"index\":[\"PayDate\"],\"columns\":[],\"aggregates\":{\"Zamanında Ödeme %\":{\"operator\":\"mean\"}},\"drop_missing_columns\":true}},{\"operation\":\"flatten\"}]}]," +
+                        "\"form_data\":{\"datasource\":\"346__table\",\"viz_type\":\"big_number\",\"slice_id\":1954," +
+                        "\"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"slice_id\":\"1954\"}," +
+                        "\"x_axis\":\"PayDate\",\"time_grain_sqla\":\"P1M\"," +
+                        "\"metric\":{\"aggregate\":null,\"column\":null,\"datasourceWarning\":false,\"expressionType\":\"SQL\",\"hasCustomLabel\":true,\"label\":\"Zamanında Ödeme %\",\"optionName\":\"metric_hv28lsyn4a_os39ow4yiz\",\"sqlExpression\":\"AVG(ZamanindaOdemeOrani)\"}," +
+                        "\"adhoc_filters\":[{\"clause\":\"WHERE\",\"comparator\":null,\"datasourceWarning\":false,\"expressionType\":\"SQL\",\"filterOptionName\":\"filter_rzkkc8691c8_aytv7lqaw3\",\"isExtra\":false,\"isNew\":false,\"operator\":null,\"sqlExpression\":\"PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS\",\"subject\":null},{\"clause\":\"WHERE\",\"comparator\":\"No filter\",\"datasourceWarning\":false,\"expressionType\":\"SIMPLE\",\"filterOptionName\":\"filter_i8wigpoe8n_4fcaweracu9\",\"isExtra\":false,\"isNew\":false,\"operator\":\"TEMPORAL_RANGE\",\"sqlExpression\":null,\"subject\":\"PayDate\"}]," +
+                        "\"compare_lag\":1,\"compare_suffix\":\"Zamanında Ödeme % MoM\",\"show_timestamp\":true,\"show_trend_line\":true," +
+                        "\"start_y_axis_at_zero\":true,\"header_font_size\":0.4,\"subheader_font_size\":0.15," +
+                        "\"y_axis_format\":\"SMART_NUMBER\",\"time_format\":\"smart_date\",\"rolling_type\":\"None\"," +
+                        "\"extra_form_data\":{},\"force\":true,\"result_format\":\"json\",\"result_type\":\"full\"}," +
+                        "\"result_format\":\"json\",\"result_type\":\"full\"}";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=x9rg4nFktwE&dashboard_page_id=GulxjbioGz-6_xA0Jptak&slice_id=1954")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                String err = resp.body() != null ? resp.body().string() : "";
+                throw new IOException("Unexpected code " + resp.code() + " - " + err);
+            }
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONObject sendWidget63Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1179%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource": { "id": 64, "type": "table" },
+  "force": true,
+  "queries": [
+    {
+      "filters": [
+        { "col": "TRHISLEMTARIHI", "op": "TEMPORAL_RANGE", "val": "No filter" },
+        { "col": "BIRSISEKARLILIK", "op": "IS NOT NULL" }
+      ],
+      "extras": {
+        "time_grain_sqla": "P1M",
+        "having": "",
+        "where": "(TXTTEKILKOD = {% if url_param('lngmusterikod') %}\\r\\n '{{ url_param('lngmusterikod') }}'\\r\\n{% else %}\\r\\n '1336024'\\r\\n{% endif %}\\r\\n) AND (TRHISLEMTARIHI >= toStartOfMonth(now() - INTERVAL 12 - 1 MONTH))"
+      },
+      "applied_time_extras": {},
+      "columns": [
+        {
+          "timeGrain": "P1M",
+          "columnType": "BASE_AXIS",
+          "sqlExpression": "TRHISLEMTARIHI",
+          "label": "TRHISLEMTARIHI",
+          "expressionType": "SQL"
+        },
+        "URUN_KALITE_SEGMENT_ACIKLAMA"
+      ],
+      "metrics": [
+        {
+          "aggregate": "SUM",
+          "column": {
+            "advanced_data_type": null,
+            "certification_details": null,
+            "certified_by": null,
+            "column_name": "TOTALKARLILIK",
+            "description": null,
+            "expression": null,
+            "filterable": true,
+            "groupby": true,
+            "id": 1951,
+            "is_certified": false,
+            "is_dttm": false,
+            "python_date_format": null,
+            "type": "NULLABLE(DECIMAL(38, 6))",
+            "type_generic": 0,
+            "verbose_name": null,
+            "warning_markdown": null
+          },
+          "datasourceWarning": false,
+          "expressionType": "SIMPLE",
+          "hasCustomLabel": true,
+          "label": "Toplam Kâr",
+          "optionName": "metric_65iydsuvegm_3acupoyy58x",
+          "sqlExpression": null
+        }
+      ],
+      "orderby": [
+        [
+          {
+            "aggregate": "SUM",
+            "column": {
+              "advanced_data_type": null,
+              "certification_details": null,
+              "certified_by": null,
+              "column_name": "TOTALKARLILIK",
+              "description": null,
+              "expression": null,
+              "filterable": true,
+              "groupby": true,
+              "id": 1951,
+              "is_certified": false,
+              "is_dttm": false,
+              "python_date_format": null,
+              "type": "NULLABLE(DECIMAL(38, 6))",
+              "type_generic": 0,
+              "verbose_name": null,
+              "warning_markdown": null
+            },
+            "datasourceWarning": false,
+            "expressionType": "SIMPLE",
+            "hasCustomLabel": true,
+            "label": "Toplam Kâr",
+            "optionName": "metric_65iydsuvegm_3acupoyy58x",
+            "sqlExpression": null
+          },
+          false
+        ]
+      ],
+      "annotation_layers": [],
+      "row_limit": 10000,
+      "series_columns": ["URUN_KALITE_SEGMENT_ACIKLAMA"],
+      "series_limit": 0,
+      "order_desc": true,
+      "url_params": { "dashboard_page_id": "ygFygJ7jQ1vsYlADifTIU", "slice_id": "1179" },
+      "custom_params": {},
+      "custom_form_data": {},
+      "time_offsets": [],
+      "post_processing": [
+        {
+          "operation": "pivot",
+          "options": {
+            "index": ["TRHISLEMTARIHI"],
+            "columns": ["URUN_KALITE_SEGMENT_ACIKLAMA"],
+            "aggregates": { "Toplam Kâr": { "operator": "mean" } },
+            "drop_missing_columns": false
+          }
+        },
+        { "operation": "rename", "options": { "columns": { "Toplam Kâr": null }, "level": 0, "inplace": true } },
+        { "operation": "flatten" }
+      ]
+    }
+  ],
+  "form_data": {
+    "datasource": "64__table",
+    "viz_type": "echarts_timeseries_smooth",
+    "slice_id": 1179,
+    "url_params": { "dashboard_page_id": "ygFygJ7jQ1vsYlADifTIU", "slice_id": "1179" },
+    "x_axis": "TRHISLEMTARIHI",
+    "time_grain_sqla": "P1M",
+    "metrics": [
+      {
+        "aggregate": "SUM",
+        "column": {
+          "advanced_data_type": null,
+          "certification_details": null,
+          "certified_by": null,
+          "column_name": "TOTALKARLILIK",
+          "description": null,
+          "expression": null,
+          "filterable": true,
+          "groupby": true,
+          "id": 1951,
+          "is_certified": false,
+          "is_dttm": false,
+          "python_date_format": null,
+          "type": "NULLABLE(DECIMAL(38, 6))",
+          "type_generic": 0,
+          "verbose_name": null,
+          "warning_markdown": null
+        },
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "hasCustomLabel": true,
+        "label": "Toplam Kâr",
+        "optionName": "metric_65iydsuvegm_3acupoyy58x",
+        "sqlExpression": null
+      }
+    ],
+    "groupby": ["URUN_KALITE_SEGMENT_ACIKLAMA"],
+    "adhoc_filters": [
+      {
+        "clause": "WHERE",
+        "comparator": "No filter",
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "filterOptionName": "filter_mck7x1z7c_hv76n2mf9zp",
+        "isExtra": false,
+        "isNew": false,
+        "operator": "TEMPORAL_RANGE",
+        "sqlExpression": null,
+        "subject": "TRHISLEMTARIHI"
+      },
+      {
+        "clause": "WHERE",
+        "comparator": null,
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "filterOptionName": "filter_b0l70becyle_5unzy6ubddr",
+        "isExtra": false,
+        "isNew": false,
+        "operator": "IS NOT NULL",
+        "operatorId": "IS_NOT_NULL",
+        "sqlExpression": null,
+        "subject": "BIRSISEKARLILIK"
+      },
+      {
+        "clause": "WHERE",
+        "comparator": null,
+        "datasourceWarning": false,
+        "expressionType": "SQL",
+        "filterOptionName": "filter_l1t2g3xt01_npmt5yyuwq",
+        "isExtra": false,
+        "isNew": false,
+        "operator": null,
+        "sqlExpression": "TXTTEKILKOD = {% if url_param('lngmusterikod') %}\\r\\n '{{ url_param('lngmusterikod') }}'\\r\\n{% else %}\\r\\n '1336024'\\r\\n{% endif %}\\r\\n",
+        "subject": null
+      },
+      {
+        "clause": "WHERE",
+        "comparator": null,
+        "datasourceWarning": false,
+        "expressionType": "SQL",
+        "filterOptionName": "filter_54gg60yx9m_xnxl4nevose",
+        "isExtra": false,
+        "isNew": false,
+        "operator": null,
+        "sqlExpression": "TRHISLEMTARIHI >= toStartOfMonth(now() - INTERVAL 12 - 1 MONTH)",
+        "subject": null
+      }
+    ],
+    "row_limit": 10000,
+    "truncate_metric": true,
+    "show_empty_columns": true,
+    "comparison_type": "values",
+    "annotation_layers": [],
+    "forecastPeriods": 10,
+    "forecastInterval": 0.8,
+    "x_axis_title_margin": 15,
+    "y_axis_title": "Kâr (₺)",
+    "y_axis_title_margin": 50,
+    "y_axis_title_position": "Left",
+    "sort_series_type": "sum",
+    "color_scheme": "supersetColors",
+    "time_shift_color": true,
+    "only_total": true,
+    "markerEnabled": true,
+    "markerSize": 6,
+    "minorTicks": true,
+    "show_legend": true,
+    "legendType": "plain",
+    "legendOrientation": "left",
+    "legendMargin": 75,
+    "x_axis_time_format": "%d/%m/%Y",
+    "xAxisLabelRotation": 45,
+    "rich_tooltip": true,
+    "showTooltipTotal": true,
+    "tooltipTimeFormat": "%d/%m/%Y",
+    "y_axis_format": "SMART_NUMBER",
+    "logAxis": false,
+    "truncateXAxis": true,
+    "y_axis_bounds": [null, null],
+    "extra_form_data": {},
+    "force": true,
+    "result_format": "json",
+    "result_type": "full"
+  },
+  "result_format": "json",
+  "result_type": "full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=fR_rNZnw35w&dashboard_page_id=ygFygJ7jQ1vsYlADifTIU&slice_id=1179")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            }
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONObject sendWidget64Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1184%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource": { "id": 64, "type": "table" },
+  "force": true,
+  "queries": [
+    {
+      "filters": [
+        { "col": "TRHISLEMTARIHI", "op": "TEMPORAL_RANGE", "val": "No filter" },
+        { "col": "BIRSISEKARLILIK", "op": "IS NOT NULL" }
+      ],
+      "extras": {
+        "time_grain_sqla": "P1M",
+        "having": "",
+        "where": "(TXTTEKILKOD = {% if url_param('lngmusterikod') %}\\r\\n '{{ url_param('lngmusterikod') }}'\\r\\n{% else %}\\r\\n '1336024'\\r\\n{% endif %}\\r\\n) AND (TRHISLEMTARIHI >= toStartOfMonth(now() - INTERVAL 12 - 1 MONTH))"
+      },
+      "applied_time_extras": {},
+      "columns": [
+        {
+          "timeGrain": "P1M",
+          "columnType": "BASE_AXIS",
+          "sqlExpression": "TRHISLEMTARIHI",
+          "label": "TRHISLEMTARIHI",
+          "expressionType": "SQL"
+        },
+        "URUN_KATEGORU_ACIKLAMA"
+      ],
+      "metrics": [
+        {
+          "aggregate": "SUM",
+          "column": {
+            "advanced_data_type": null,
+            "certification_details": null,
+            "certified_by": null,
+            "column_name": "TOTALKARLILIK",
+            "description": null,
+            "expression": null,
+            "filterable": true,
+            "groupby": true,
+            "id": 1951,
+            "is_certified": false,
+            "is_dttm": false,
+            "python_date_format": null,
+            "type": "NULLABLE(DECIMAL(38, 6))",
+            "type_generic": 0,
+            "verbose_name": null,
+            "warning_markdown": null
+          },
+          "datasourceWarning": false,
+          "expressionType": "SIMPLE",
+          "hasCustomLabel": true,
+          "label": "Toplam Kâr",
+          "optionName": "metric_65iydsuvegm_3acupoyy58x",
+          "sqlExpression": null
+        }
+      ],
+      "orderby": [
+        [
+          {
+            "aggregate": "SUM",
+            "column": {
+              "advanced_data_type": null,
+              "certification_details": null,
+              "certified_by": null,
+              "column_name": "TOTALKARLILIK",
+              "description": null,
+              "expression": null,
+              "filterable": true,
+              "groupby": true,
+              "id": 1951,
+              "is_certified": false,
+              "is_dttm": false,
+              "python_date_format": null,
+              "type": "NULLABLE(DECIMAL(38, 6))",
+              "type_generic": 0,
+              "verbose_name": null,
+              "warning_markdown": null
+            },
+            "datasourceWarning": false,
+            "expressionType": "SIMPLE",
+            "hasCustomLabel": true,
+            "label": "Toplam Kâr",
+            "optionName": "metric_65iydsuvegm_3acupoyy58x",
+            "sqlExpression": null
+          },
+          false
+        ]
+      ],
+      "annotation_layers": [],
+      "row_limit": 10000,
+      "series_columns": ["URUN_KATEGORU_ACIKLAMA"],
+      "series_limit": 0,
+      "order_desc": true,
+      "url_params": { "dashboard_page_id": "ygFygJ7jQ1vsYlADifTIU", "slice_id": "1184" },
+      "custom_params": {},
+      "custom_form_data": {},
+      "time_offsets": [],
+      "post_processing": [
+        {
+          "operation": "pivot",
+          "options": {
+            "index": ["TRHISLEMTARIHI"],
+            "columns": ["URUN_KATEGORU_ACIKLAMA"],
+            "aggregates": { "Toplam Kâr": { "operator": "mean" } },
+            "drop_missing_columns": false
+          }
+        },
+        { "operation": "rename", "options": { "columns": { "Toplam Kâr": null }, "level": 0, "inplace": true } },
+        { "operation": "flatten" }
+      ]
+    }
+  ],
+  "form_data": {
+    "datasource": "64__table",
+    "viz_type": "echarts_timeseries_smooth",
+    "slice_id": 1184,
+    "url_params": { "dashboard_page_id": "ygFygJ7jQ1vsYlADifTIU", "slice_id": "1184" },
+    "x_axis": "TRHISLEMTARIHI",
+    "time_grain_sqla": "P1M",
+    "metrics": [
+      {
+        "aggregate": "SUM",
+        "column": {
+          "advanced_data_type": null,
+          "certification_details": null,
+          "certified_by": null,
+          "column_name": "TOTALKARLILIK",
+          "description": null,
+          "expression": null,
+          "filterable": true,
+          "groupby": true,
+          "id": 1951,
+          "is_certified": false,
+          "is_dttm": false,
+          "python_date_format": null,
+          "type": "NULLABLE(DECIMAL(38, 6))",
+          "type_generic": 0,
+          "verbose_name": null,
+          "warning_markdown": null
+        },
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "hasCustomLabel": true,
+        "label": "Toplam Kâr",
+        "optionName": "metric_65iydsuvegm_3acupoyy58x",
+        "sqlExpression": null
+      }
+    ],
+    "groupby": ["URUN_KATEGORU_ACIKLAMA"],
+    "adhoc_filters": [
+      {
+        "clause": "WHERE",
+        "comparator": "No filter",
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "filterOptionName": "filter_mck7x1z7c_hv76n2mf9zp",
+        "isExtra": false,
+        "isNew": false,
+        "operator": "TEMPORAL_RANGE",
+        "sqlExpression": null,
+        "subject": "TRHISLEMTARIHI"
+      },
+      {
+        "clause": "WHERE",
+        "comparator": null,
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "filterOptionName": "filter_b0l70becyle_5unzy6ubddr",
+        "isExtra": false,
+        "isNew": false,
+        "operator": "IS NOT NULL",
+        "operatorId": "IS_NOT_NULL",
+        "sqlExpression": null,
+        "subject": "BIRSISEKARLILIK"
+      },
+      {
+        "clause": "WHERE",
+        "comparator": null,
+        "datasourceWarning": false,
+        "expressionType": "SQL",
+        "filterOptionName": "filter_7tzhap79yk_y4mb41f63ak",
+        "isExtra": false,
+        "isNew": false,
+        "operator": null,
+        "sqlExpression": "TXTTEKILKOD = {% if url_param('lngmusterikod') %}\\r\\n '{{ url_param('lngmusterikod') }}'\\r\\n{% else %}\\r\\n '1336024'\\r\\n{% endif %}\\r\\n",
+        "subject": null
+      },
+      {
+        "clause": "WHERE",
+        "comparator": null,
+        "datasourceWarning": false,
+        "expressionType": "SQL",
+        "filterOptionName": "filter_3n65mvrlx2r_jf8cwmfhxe9",
+        "isExtra": false,
+        "isNew": false,
+        "operator": null,
+        "sqlExpression": "TRHISLEMTARIHI >= toStartOfMonth(now() - INTERVAL 12 - 1 MONTH)",
+        "subject": null
+      }
+    ],
+    "row_limit": 10000,
+    "truncate_metric": true,
+    "show_empty_columns": true,
+    "comparison_type": "values",
+    "annotation_layers": [],
+    "forecastPeriods": 10,
+    "forecastInterval": 0.8,
+    "x_axis_title_margin": 15,
+    "y_axis_title": "Kâr (₺)",
+    "y_axis_title_margin": 50,
+    "y_axis_title_position": "Left",
+    "sort_series_type": "sum",
+    "color_scheme": "supersetColors",
+    "time_shift_color": true,
+    "only_total": true,
+    "markerEnabled": true,
+    "markerSize": 6,
+    "minorTicks": true,
+    "show_legend": true,
+    "legendType": "scroll",
+    "legendOrientation": "bottom",
+    "x_axis_time_format": "%d/%m/%Y",
+    "xAxisLabelRotation": 45,
+    "rich_tooltip": true,
+    "showTooltipTotal": true,
+    "tooltipTimeFormat": "%d/%m/%Y",
+    "y_axis_format": "SMART_NUMBER",
+    "logAxis": false,
+    "truncateXAxis": true,
+    "y_axis_bounds": [null, null],
+    "extra_form_data": {},
+    "force": true,
+    "result_format": "json",
+    "result_type": "full"
+  },
+  "result_format": "json",
+  "result_type": "full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=2rd5qis5IK4&dashboard_page_id=ygFygJ7jQ1vsYlADifTIU&slice_id=1184")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            }
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONObject sendWidget65Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1174%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource": { "id": 64, "type": "table" },
+  "force": true,
+  "queries": [
+    {
+      "filters": [
+        { "col": "MUSTERI_LISANS_TARIH", "op": "TEMPORAL_RANGE", "val": "No filter" }
+      ],
+      "extras": {
+        "time_grain_sqla": "P1M",
+        "having": "",
+        "where": "(TXTTEKILKOD = {% if url_param('lngmusterikod') %}\\r\\n '{{ url_param('lngmusterikod') }}'\\r\\n{% else %}\\r\\n '1336024'\\r\\n{% endif %}\\r\\n) AND (TRHISLEMTARIHI >= toStartOfMonth(now() - INTERVAL 12 - 1 MONTH))"
+      },
+      "applied_time_extras": {},
+      "columns": [
+        { "expressionType": "SQL", "label": "Fatura Tarihi", "sqlExpression": "formatDateTime(toDateTime(TRHISLEMTARIHI), '%Y/%m')\\r\\n" },
+        { "datasourceWarning": false, "expressionType": "SQL", "label": "Ürün Kategorisi", "sqlExpression": "URUN_KATEGORU_ACIKLAMA" },
+        { "datasourceWarning": false, "expressionType": "SQL", "label": "Kalite Segmenti", "sqlExpression": "URUN_KALITE_SEGMENT_ACIKLAMA" }
+      ],
+      "metrics": [
+        {
+          "aggregate": "SUM",
+          "column": {
+            "advanced_data_type": null,
+            "certification_details": null,
+            "certified_by": null,
+            "column_name": "TOTALKARLILIK",
+            "description": null,
+            "expression": null,
+            "filterable": true,
+            "groupby": true,
+            "id": 1951,
+            "is_certified": false,
+            "is_dttm": false,
+            "python_date_format": null,
+            "type": "NULLABLE(DECIMAL(38, 6))",
+            "type_generic": 0,
+            "verbose_name": null,
+            "warning_markdown": null
+          },
+          "datasourceWarning": false,
+          "expressionType": "SIMPLE",
+          "hasCustomLabel": true,
+          "label": "Toplam Kâr (₺)",
+          "optionName": "metric_u2kufgot67_xlc9s0qfib9",
+          "sqlExpression": null
+        }
+      ],
+      "orderby": [
+        [
+          {
+            "aggregate": "SUM",
+            "column": {
+              "advanced_data_type": null,
+              "certification_details": null,
+              "certified_by": null,
+              "column_name": "TOTALKARLILIK",
+              "description": null,
+              "expression": null,
+              "filterable": true,
+              "groupby": true,
+              "id": 1951,
+              "is_certified": false,
+              "is_dttm": false,
+              "python_date_format": null,
+              "type": "NULLABLE(DECIMAL(38, 6))",
+              "type_generic": 0,
+              "verbose_name": null,
+              "warning_markdown": null
+            },
+            "datasourceWarning": false,
+            "expressionType": "SIMPLE",
+            "hasCustomLabel": true,
+            "label": "Toplam Kâr (₺)",
+            "optionName": "metric_u2kufgot67_xlc9s0qfib9",
+            "sqlExpression": null
+          },
+          false
+        ]
+      ],
+      "annotation_layers": [],
+      "row_limit": 10000,
+      "series_limit": 0,
+      "order_desc": true,
+      "url_params": { "dashboard_page_id": "ygFygJ7jQ1vsYlADifTIU", "slice_id": "1174" },
+      "custom_params": {},
+      "custom_form_data": {}
+    }
+  ],
+  "form_data": {
+    "datasource": "64__table",
+    "viz_type": "pivot_table_v2",
+    "slice_id": 1174,
+    "url_params": { "dashboard_page_id": "ygFygJ7jQ1vsYlADifTIU", "slice_id": "1174" },
+    "groupbyColumns": [
+      { "expressionType": "SQL", "label": "Fatura Tarihi", "sqlExpression": "formatDateTime(toDateTime(TRHISLEMTARIHI), '%Y/%m')\\r\\n" }
+    ],
+    "groupbyRows": [
+      { "datasourceWarning": false, "expressionType": "SQL", "label": "Ürün Kategorisi", "sqlExpression": "URUN_KATEGORU_ACIKLAMA" },
+      { "datasourceWarning": false, "expressionType": "SQL", "label": "Kalite Segmenti", "sqlExpression": "URUN_KALITE_SEGMENT_ACIKLAMA" }
+    ],
+    "time_grain_sqla": "P1M",
+    "temporal_columns_lookup": {
+      "TRHBASLANGICTARIH": true,
+      "TRHVADETARIHI": true,
+      "MUSTERI_LISANS_TARIH": true,
+      "TRHILKISLEMTARIHI": true,
+      "TRHSONISLEMTARIHI": true,
+      "CREATEDAT": true,
+      "UPDATEDAT": true,
+      "TRHISLEMTARIHI": true
+    },
+    "metrics": [
+      {
+        "aggregate": "SUM",
+        "column": {
+          "advanced_data_type": null,
+          "certification_details": null,
+          "certified_by": null,
+          "column_name": "TOTALKARLILIK",
+          "description": null,
+          "expression": null,
+          "filterable": true,
+          "groupby": true,
+          "id": 1951,
+          "is_certified": false,
+          "is_dttm": false,
+          "python_date_format": null,
+          "type": "NULLABLE(DECIMAL(38, 6))",
+          "type_generic": 0,
+          "verbose_name": null,
+          "warning_markdown": null
+        },
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "hasCustomLabel": true,
+        "label": "Toplam Kâr (₺)",
+        "optionName": "metric_u2kufgot67_xlc9s0qfib9",
+        "sqlExpression": null
+      }
+    ],
+    "metricsLayout": "COLUMNS",
+    "adhoc_filters": [
+      {
+        "clause": "WHERE",
+        "comparator": "No filter",
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "filterOptionName": "filter_3ing857qpm5_2odlx3bxi62",
+        "isExtra": false,
+        "isNew": false,
+        "operator": "TEMPORAL_RANGE",
+        "sqlExpression": null,
+        "subject": "MUSTERI_LISANS_TARIH"
+      },
+      {
+        "clause": "WHERE",
+        "comparator": null,
+        "datasourceWarning": false,
+        "expressionType": "SQL",
+        "filterOptionName": "filter_93e07f6c3g_gixlcwvuha6",
+        "isExtra": false,
+        "isNew": false,
+        "operator": null,
+        "sqlExpression": "TXTTEKILKOD = {% if url_param('lngmusterikod') %}\\r\\n '{{ url_param('lngmusterikod') }}'\\r\\n{% else %}\\r\\n '1336024'\\r\\n{% endif %}\\r\\n",
+        "subject": null
+      },
+      {
+        "clause": "WHERE",
+        "comparator": null,
+        "datasourceWarning": false,
+        "expressionType": "SQL",
+        "filterOptionName": "filter_l6x8c6gmyo_tq7v77ets7l",
+        "isExtra": false,
+        "isNew": false,
+        "operator": null,
+        "sqlExpression": "TRHISLEMTARIHI >= toStartOfMonth(now() - INTERVAL 12 - 1 MONTH)",
+        "subject": null
+      }
+    ],
+    "row_limit": 10000,
+    "order_desc": true,
+    "aggregateFunction": "Sum",
+    "rowTotals": true,
+    "rowSubTotals": true,
+    "colTotals": true,
+    "colSubTotals": false,
+    "valueFormat": ",.2f",
+    "date_format": "smart_date",
+    "rowOrder": "key_a_to_z",
+    "colOrder": "key_a_to_z",
+    "rowSubtotalPosition": true,
+    "colSubtotalPosition": false,
+    "conditional_formatting": [],
+    "allow_render_html": true,
+    "extra_form_data": {},
+    "force": true,
+    "result_format": "json",
+    "result_type": "full"
+  },
+  "result_format": "json",
+  "result_type": "full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=Ccv98v8D4pM&dashboard_page_id=ygFygJ7jQ1vsYlADifTIU&slice_id=1174")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            }
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static JSONObject sendWidget82Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1947%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource": { "id": 344, "type": "table" },
+  "force": true,
+  "queries": [
+    {
+      "filters": [],
+      "extras": { "having": "", "where": "" },
+      "applied_time_extras": {},
+      "columns": [
+        {
+          "columnType": "BASE_AXIS",
+          "datasourceWarning": false,
+          "expressionType": "SQL",
+          "label": "Yaş Grubu",
+          "sqlExpression": "YasGrubu"
+        }
+      ],
+      "metrics": [
+        {
+          "aggregate": "SUM",
+          "column": {
+            "advanced_data_type": null,
+            "changed_on": "2025-08-04T09:58:59.261495",
+            "column_name": "Tutar",
+            "created_on": "2025-08-04T09:58:59.261494",
+            "description": null,
+            "expression": null,
+            "extra": null,
+            "filterable": true,
+            "groupby": true,
+            "id": 7400,
+            "is_active": true,
+            "is_dttm": false,
+            "python_date_format": null,
+            "type": "Decimal(38, 2)",
+            "type_generic": 0,
+            "uuid": "8118fa35-fe65-4413-bdb7-fee783960461",
+            "verbose_name": null
+          },
+          "datasourceWarning": false,
+          "expressionType": "SIMPLE",
+          "hasCustomLabel": true,
+          "label": "Tutar",
+          "optionName": "metric_r5fa7njezfn_2p7knd1q5cb",
+          "sqlExpression": null
+        }
+      ],
+      "orderby": [
+        [
+          {
+            "aggregate": "SUM",
+            "column": {
+              "advanced_data_type": null,
+              "changed_on": "2025-08-04T09:58:59.261495",
+              "column_name": "Tutar",
+              "created_on": "2025-08-04T09:58:59.261494",
+              "description": null,
+              "expression": null,
+              "extra": null,
+              "filterable": true,
+              "groupby": true,
+              "id": 7400,
+              "is_active": true,
+              "is_dttm": false,
+              "python_date_format": null,
+              "type": "Decimal(38, 2)",
+              "type_generic": 0,
+              "uuid": "8118fa35-fe65-4413-bdb7-fee783960461",
+              "verbose_name": null
+            },
+            "datasourceWarning": false,
+            "expressionType": "SIMPLE",
+            "hasCustomLabel": true,
+            "label": "Tutar",
+            "optionName": "metric_r5fa7njezfn_2p7knd1q5cb",
+            "sqlExpression": null
+          },
+          false
+        ]
+      ],
+      "annotation_layers": [],
+      "row_limit": 100,
+      "series_columns": [],
+      "series_limit": 0,
+      "order_desc": true,
+      "url_params": { "dashboard_page_id": "GulxjbioGz-6_xA0Jptak", "slice_id": "1947" },
+      "custom_params": {},
+      "custom_form_data": {},
+      "time_offsets": [],
+      "post_processing": [
+        {
+          "operation": "pivot",
+          "options": {
+            "index": ["Yaş Grubu"],
+            "columns": [],
+            "aggregates": { "Tutar": { "operator": "mean" } },
+            "drop_missing_columns": false
+          }
+        },
+        { "operation": "flatten" }
+      ]
+    }
+  ],
+  "form_data": {
+    "datasource": "344__table",
+    "viz_type": "echarts_timeseries_bar",
+    "slice_id": 1947,
+    "url_params": { "dashboard_page_id": "GulxjbioGz-6_xA0Jptak", "slice_id": "1947" },
+    "x_axis": {
+      "datasourceWarning": false,
+      "expressionType": "SQL",
+      "label": "Yaş Grubu",
+      "sqlExpression": "YasGrubu"
+    },
+    "x_axis_sort_asc": true,
+    "x_axis_sort_series": "name",
+    "x_axis_sort_series_ascending": true,
+    "metrics": [
+      {
+        "aggregate": "SUM",
+        "column": {
+          "advanced_data_type": null,
+          "changed_on": "2025-08-04T09:58:59.261495",
+          "column_name": "Tutar",
+          "created_on": "2025-08-04T09:58:59.261494",
+          "description": null,
+          "expression": null,
+          "extra": null,
+          "filterable": true,
+          "groupby": true,
+          "id": 7400,
+          "is_active": true,
+          "is_dttm": false,
+          "python_date_format": null,
+          "type": "Decimal(38, 2)",
+          "type_generic": 0,
+          "uuid": "8118fa35-fe65-4413-bdb7-fee783960461",
+          "verbose_name": null
+        },
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "hasCustomLabel": true,
+        "label": "Tutar",
+        "optionName": "metric_r5fa7njezfn_2p7knd1q5cb",
+        "sqlExpression": null
+      }
+    ],
+    "groupby": [],
+    "adhoc_filters": [],
+    "order_desc": true,
+    "row_limit": 100,
+    "truncate_metric": true,
+    "show_empty_columns": true,
+    "comparison_type": "values",
+    "annotation_layers": [],
+    "forecastPeriods": 10,
+    "forecastInterval": 0.8,
+    "orientation": "vertical",
+    "x_axis_title_margin": 15,
+    "y_axis_title_margin": 30,
+    "y_axis_title_position": "Left",
+    "sort_series_type": "sum",
+    "color_scheme": "supersetColors",
+    "time_shift_color": true,
+    "only_total": true,
+    "show_legend": true,
+    "legendType": "scroll",
+    "legendOrientation": "bottom",
+    "x_axis_time_format": "smart_date",
+    "xAxisLabelRotation": 45,
+    "y_axis_format": "SMART_NUMBER",
+    "y_axis_bounds": [null, null],
+    "truncateXAxis": true,
+    "rich_tooltip": true,
+    "showTooltipTotal": true,
+    "tooltipTimeFormat": "smart_date",
+    "extra_form_data": {},
+    "force": true,
+    "result_format": "json",
+    "result_type": "full"
+  },
+  "result_format": "json",
+  "result_type": "full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=Wui3e9NZEbY&dashboard_page_id=GulxjbioGz-6_xA0Jptak&slice_id=1947")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            }
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static JSONObject sendWidget85Request() {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1953%7D&force=true";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie");
+
+        String body = """
+{
+  "datasource": { "id": 347, "type": "table" },
+  "force": true,
+  "queries": [
+    {
+      "filters": [
+        { "col": "VadeTarihi", "op": "TEMPORAL_RANGE", "val": "No filter" }
+      ],
+      "extras": { "having": "", "where": "" },
+      "applied_time_extras": {},
+      "columns": [],
+      "metrics": [
+        {
+          "aggregate": null,
+          "column": null,
+          "datasourceWarning": false,
+          "expressionType": "SQL",
+          "hasCustomLabel": true,
+          "label": "Tutar",
+          "optionName": "metric_y1mj68ttl4_1nde7zzxuc0j",
+          "sqlExpression": "SUM(KalanTutar)"
+        }
+      ],
+      "annotation_layers": [],
+      "series_limit": 0,
+      "order_desc": true,
+      "url_params": { "dashboard_page_id": "GulxjbioGz-6_xA0Jptak", "slice_id": "1953" },
+      "custom_params": {},
+      "custom_form_data": {}
+    }
+  ],
+  "form_data": {
+    "datasource": "347__table",
+    "viz_type": "big_number_total",
+    "slice_id": 1953,
+    "url_params": { "dashboard_page_id": "GulxjbioGz-6_xA0Jptak", "slice_id": "1953" },
+    "metric": {
+      "aggregate": null,
+      "column": null,
+      "datasourceWarning": false,
+      "expressionType": "SQL",
+      "hasCustomLabel": true,
+      "label": "Tutar",
+      "optionName": "metric_y1mj68ttl4_1nde7zzxuc0j",
+      "sqlExpression": "SUM(KalanTutar)"
+    },
+    "adhoc_filters": [
+      {
+        "clause": "WHERE",
+        "comparator": "No filter",
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "filterOptionName": "filter_2srboofnpgw_ew5fi5c2kcr",
+        "isExtra": false,
+        "isNew": false,
+        "operator": "TEMPORAL_RANGE",
+        "sqlExpression": null,
+        "subject": "VadeTarihi"
+      }
+    ],
+    "subheader": "Toplam Borç",
+    "header_font_size": 0.4,
+    "subheader_font_size": 0.15,
+    "y_axis_format": "SMART_NUMBER",
+    "time_format": "smart_date",
+    "conditional_formatting": [],
+    "extra_form_data": {},
+    "force": true,
+    "result_format": "json",
+    "result_type": "full"
+  },
+  "result_format": "json",
+  "result_type": "full"
+}
+""";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Origin", "https://dia-dashboard.efectura.com")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=kwqv9EQ7hkA&dashboard_page_id=GulxjbioGz-6_xA0Jptak&slice_id=1953")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("X-CSRFToken", "")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .build();
+
+        try (Response resp = client.newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                throw new IOException("Unexpected code " + resp.code() + " - " +
+                        (resp.body() != null ? resp.body().string() : ""));
+            }
+            String respStr = resp.body() != null ? resp.body().string() : "{}";
+            return new JSONObject(respStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
 
 
 

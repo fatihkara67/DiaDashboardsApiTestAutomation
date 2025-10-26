@@ -38,20 +38,20 @@ Feature: Widget Scenarios
     Given The user send widget17 request
     Then The user verify scenario7
 
-#  Scenario: Scenario 8
-#    Given The user send widget20 request
-#    Given The user send widget19 request
-#    Then The user verify scenario8
-#
-#  Scenario: Scenario 9
-#    Given The user send widget21 request
-#    Given The user send widget19 request
-#    Then The user verify scenario9
-#
-#  Scenario: Scenario 10
-#    Given The user send widget23 request
-#    Given The user send widget21 request
-#    Then The user verify scenario10
+  Scenario: Scenario 8
+    Given The user send widget20 request
+    Given The user send widget21 request
+    Then The user verify scenario8
+
+  Scenario: Scenario 9
+    Given The user send widget23 request
+    Given The user send widget19 request
+    Then The user verify scenario9
+
+  Scenario: Scenario 10
+    Given The user send widget3AggreationS10 request
+    Given The user get S10 query
+    Then The user verify scenario10
 
   Scenario: Scenario 11
     Given The user send widget24 request
@@ -103,6 +103,12 @@ Feature: Widget Scenarios
     Given The user send widget95 request
     Then The user verify scenario20
 
+#    yeterli yetersiz toplam mı olacak w94
+  Scenario: Scenario 21
+    Given The user send widget94 request
+    Given The user get S21 query
+    Then The user verify scenario21
+
   Scenario: Scenario 22
     Given The user send widget96 request
     Given The user send widget97 request
@@ -117,6 +123,11 @@ Feature: Widget Scenarios
     Given The user send widget99 request
     Given The user send widget43 request
     Then The user verify scenario24
+
+  Scenario: Scenario 25
+    Given The user send widget29 request
+    Given The user send widget29AggreationS25 request
+    Then The user verify scenario25
 
   Scenario: Scenario 26
     Given The user send widget1 request
@@ -163,6 +174,28 @@ Feature: Widget Scenarios
     Given The user send widget25Aggreation request
     Then The user verify scenario34
 
+    # w12 iç hedef 0 geliyor
+  Scenario: Scenario 35
+    Given The user send widget44 request
+    Given The user send widget12 request
+    Then The user verify scenario35
+
+  Scenario: Scenario 36
+    Given The user send widget45 request
+    Given The user send widget12 request
+    Then The user verify scenario36
+
+  Scenario: Scenario 37
+    Given The user send widget46 request
+    Given The user get S37 query
+    Then The user verify scenario37
+
+  Scenario: Scenario 38
+    Given The user send widget48 request
+    Given The user send widget45 request
+    Given The user send widget44 request
+    Then The user verify scenario38
+
   Scenario: Scenario 39
     Given The user send widget49 request
     Given The user send widget44 request
@@ -184,6 +217,26 @@ Feature: Widget Scenarios
     Given The user send widget45 request
     Then The user verify scenario42
 
+  Scenario: Scenario 43
+    Given The user send widget50 request
+    Given The user send widget44 request
+    Then The user verify scenario43
+
+  Scenario: Scenario 44
+    Given The user send widget50 request
+    Given The user send widget45 request
+    Then The user verify scenario44
+
+  Scenario: Scenario 45
+    Given The user send widget50 request
+    Given The user send widget46 request
+    Then The user verify scenario45
+
+  Scenario: Scenario 46
+    Given The user send widget50 request
+    Given The user send widget47 request
+    Then The user verify scenario46
+
   Scenario: Scenario 47
     Given The user send widget53 request
     Given The user send widget48 request
@@ -199,10 +252,10 @@ Feature: Widget Scenarios
     Given The user send widget48AggreationS49 request
     Then The user verify scenario49
 
-#  Scenario: Scenario 50
-#    Given The user send widget56 request
-#    Given The user send widget48AggreationS50 request
-#    Then The user verify scenario50
+  Scenario: Scenario 50
+    Given The user send widget56 request
+    Given The user send widget48AggreationS50 request
+    Then The user verify scenario50
 
   Scenario: Scenario 51
     Given The user send widget33 request
@@ -214,6 +267,47 @@ Feature: Widget Scenarios
     Given The user send widget35 request
     Then The user verify scenario52
 
+  Scenario: Scenario 53
+    Given The user send widget36 request
+    Given The user send widget29AggreationS53 request
+    Then The user verify scenario53
+
+  Scenario: Scenario 54
+    Given The user send widget37 request
+    Given The user send widget33 request
+    Then The user verify scenario54
+
+  Scenario: Scenario 55
+    Given The user send widget37 request
+    Given The user send widget33 request
+    Then The user verify scenario55
+
+    #-------------------
+  Scenario: Scenario 56
+    Given The user send widget40 request
+    Given The user send widget43AggreationS56 request
+    Then The user verify scenario56
+
+  Scenario: Scenario 57
+    Given The user send widget42 request
+    Given The user send widget43AggreationS57 request
+    Then The user verify scenario57
+
+  Scenario: Scenario 58
+    Given The user send widget63 request
+    Given The user send widget64 request
+    Then The user verify scenario58
+
+  Scenario: Scenario 59
+    Given The user send widget65 request
+    Given The user send widget64 request
+    Then The user verify scenario59
+
+  Scenario: Scenario 60
+    Given The user send widget82 request
+    Given The user send widget85 request
+    Then The user verify scenario60
+#-----------------------------------------------
   Scenario: Scenario 61
     Given The user send widget87 request
     Given The user send widget84 request
@@ -233,3 +327,18 @@ Feature: Widget Scenarios
     Given The user send widget91 request
     Given The user send widget84 request
     Then The user verify scenario64
+
+  Scenario: Scenario 65
+    Given The user send widget83 request
+    Given The user send widget93 request
+    Then The user verify scenario65
+
+  Scenario: Scenario 66
+    Given The user send widget92AggreationS66 request
+    Given The user send widget83 request
+    Then The user verify scenario66
+
+  Scenario: Scenario 67
+    Given The user send widget88 request
+    Given The user get S67 query
+    Then The user verify scenario67

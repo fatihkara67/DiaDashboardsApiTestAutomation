@@ -9,9 +9,12 @@ import org.junit.Assert;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class WidgetsStepDefs extends BaseStep {
@@ -159,6 +162,7 @@ public class WidgetsStepDefs extends BaseStep {
     @Given("The user get data")
     public void theUserGetData() {
         currentMonth = BrowserUtils.getCurrentFiscalP();
+        System.out.println("currentMonth: " + currentMonth);
         currentYear = ConfigurationReader.getProperty("currentBudgetYear");
 //        Driver.getDriver().manage().window().minimize();
     }
@@ -411,24 +415,24 @@ public class WidgetsStepDefs extends BaseStep {
 
     @Then("The user verify scenario8")
     public void theUserVerifyScenario8() {
-        Assert.assertEquals(currentMonthCategoriesSum20, totalSatis19, 0.001);
+        Assert.assertEquals(currentMonthCategoriesSum20, currentMonthCategoriesSumW21, 0.001);
     }
 
-    double currentMonthCategoriesSum21;
+    double currentMonthCategoriesSumW21;
     @Given("The user send widget21 request")
     public void theUserSendWidgetRequest() throws IOException {
         JSONObject w21JsonBody = Requests.sendWidget21Request();
 
         System.out.println("w21JsonBody: " + w21JsonBody);
 
-        currentMonthCategoriesSum21 = Requests.sumCurrentMonthCategories(w21JsonBody);
-        System.out.println("Bu ayın (widget21) toplamı: " + currentMonthCategoriesSum21);
+        currentMonthCategoriesSumW21 = Requests.sumCurrentMonthCategories(w21JsonBody);
+        System.out.println("Bu ayın (widget21) toplamı: " + currentMonthCategoriesSumW21);
 
     }
 
     @Then("The user verify scenario9")
     public void theUserVerifyScenario9() {
-        Assert.assertEquals(currentMonthCategoriesSum21, totalSatis19, 0.001);
+        Assert.assertEquals(gerceklesmeFromW23, totalSatis19, 0.001);
     }
 
     double gerceklesmeFromW23;
@@ -464,7 +468,7 @@ public class WidgetsStepDefs extends BaseStep {
 
     @Then("The user verify scenario10")
     public void theUserVerifyScenario10() {
-        Assert.assertEquals(currentMonthCategoriesSum21, gerceklesmeFromW23, 0.001);
+        Assert.assertEquals(myColumnW3AggreationS10, ayTrS10Query);
     }
 
 
@@ -854,51 +858,50 @@ public class WidgetsStepDefs extends BaseStep {
         } catch (Exception ignore) { return 0; }
     }
 
+    int basariliZiyaretSayisiW29;
+    int basarisizZiyaretSayisiW29;
     int toplamZiyaretSayisiW29;
+
     @Given("The user send widget29 request")
     public void theUserSendWidget29Request() {
         JSONObject w29JsonBody = Requests.sendWidget29Request();
 
         System.out.println("w29JsonBody: " + w29JsonBody);
 
+        basariliZiyaretSayisiW29 = 0;
+        basarisizZiyaretSayisiW29 = 0;
         toplamZiyaretSayisiW29 = 0;
 
         JSONArray results = w29JsonBody != null ? w29JsonBody.optJSONArray("result") : null;
         if (results != null && results.length() > 0) {
             JSONObject resultObj = results.optJSONObject(0);
             if (resultObj != null) {
-                // Kolon adını colnames'ten yakala (fallback ile)
-                String countKey = null;
-                JSONArray colnames = resultObj.optJSONArray("colnames");
-                if (colnames != null) {
-                    for (int i = 0; i < colnames.length(); i++) {
-                        String c = colnames.optString(i, "");
-                        if (c.equalsIgnoreCase("Nokta Sayısı")) { countKey = c; break; }
-                    }
-                }
                 JSONArray data = resultObj.optJSONArray("data");
                 if (data != null) {
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject row = data.optJSONObject(i);
                         if (row == null) continue;
 
-                        // fallback: anahtarları gez
-                        if (countKey == null) {
-                            for (Iterator<String> it = row.keys(); it.hasNext();) {
-                                String k = it.next();
-                                String lk = k.toLowerCase(Locale.ROOT);
-                                if (lk.contains("ziyaret") && lk.contains("say")) { countKey = k; break; }
-                            }
+                        String status = row.optString("Z_Status", "").toLowerCase(Locale.ROOT);
+                        int ziyaretSayisi = safeToInt(row.opt("Ziyaret Sayısı"));
+
+                        if (status.contains("başarılı") && !status.contains("olmayan")) {
+                            basariliZiyaretSayisiW29 += ziyaretSayisi;
+                        } else if (status.contains("başarısız")) {
+                            basarisizZiyaretSayisiW29 += ziyaretSayisi;
                         }
-                        toplamZiyaretSayisiW29 += safeToInt(row.opt(countKey));
+
+                        toplamZiyaretSayisiW29 += ziyaretSayisi;
                     }
                 }
             }
         }
-        System.out.println("Toplam Başarılı + Başarısız Ziyaret Sayısı W29: " + toplamZiyaretSayisiW29);
 
-
+        System.out.println("Başarılı Ziyaret Sayısı (W29): " + basariliZiyaretSayisiW29);
+        System.out.println("Başarısız Ziyaret Sayısı (W29): " + basarisizZiyaretSayisiW29);
+        System.out.println("Toplam Ziyaret Sayısı (W29): " + toplamZiyaretSayisiW29);
     }
+
 
     @Then("The user verify scenario17")
     public void theUserVerifyScenario17() {
@@ -977,9 +980,11 @@ public class WidgetsStepDefs extends BaseStep {
     }
 
     double toplamLitreStokW43 = 0.0;
+    double toplamGunlukOrtalamaLitreSatisW43 = 0.0;
 
     int stockOutCountW43;
     Map<String, Integer> urunVeStockOutSayilariW43 = new HashMap<>();
+
     @Given("The user send widget43 request")
     public void theUserSendWidget43Request() {
         JSONObject w43JsonBody = Requests.sendWidget43Request();
@@ -995,8 +1000,15 @@ public class WidgetsStepDefs extends BaseStep {
                     if (dataArray != null && !dataArray.isEmpty()) {
                         for (int i = 0; i < dataArray.length(); i++) {
                             JSONObject product = dataArray.getJSONObject(i);
+
+                            // Litre Stok Toplamı
                             if (product.has("Litre Stok") && !product.isNull("Litre Stok")) {
                                 toplamLitreStokW43 += product.optDouble("Litre Stok", 0.0);
+                            }
+
+                            // Günlük Ortalama Litre Satış Toplamı
+                            if (product.has("Günlük Ortalama Litre Satış") && !product.isNull("Günlük Ortalama Litre Satış")) {
+                                toplamGunlukOrtalamaLitreSatisW43 += product.optDouble("Günlük Ortalama Litre Satış", 0.0);
                             }
                         }
                     }
@@ -1005,12 +1017,12 @@ public class WidgetsStepDefs extends BaseStep {
         }
 
         System.out.println("Toplam Litre Stok W43: " + toplamLitreStokW43);
+        System.out.println("Toplam Günlük Ortalama Litre Satış W43: " + toplamGunlukOrtalamaLitreSatisW43);
 
         urunVeStockOutSayilariW43 = databaseMethods.getUrunVeStockOutSayilariW43();
         stockOutCountW43 = databaseMethods.getStockOutSumW43();
-
-
     }
+
 
     @Then("The user verify scenario19")
     public void theUserVerifyScenario19() {
@@ -1018,6 +1030,7 @@ public class WidgetsStepDefs extends BaseStep {
     }
 
     int yetersizDistributorSayisiW94;
+    int yeterliDistributorSayisiW94;
     @Given("The user send widget94 request")
     public void theUserSendWidget94Request() {
         JSONObject w94JsonBody = Requests.sendWidget94Request();
@@ -1025,6 +1038,7 @@ public class WidgetsStepDefs extends BaseStep {
         System.out.println("w94JsonBody: " + w94JsonBody);
 
         yetersizDistributorSayisiW94 = 0;
+        yeterliDistributorSayisiW94 = 0;
 
         assert w94JsonBody != null;
         JSONArray resultArray = w94JsonBody.optJSONArray("result");
@@ -1044,7 +1058,24 @@ public class WidgetsStepDefs extends BaseStep {
             }
         }
 
+        if (resultArray != null && resultArray.length() > 0) {
+            JSONObject resultObj = resultArray.optJSONObject(0);
+            if (resultObj != null) {
+                JSONArray dataArray = resultObj.optJSONArray("data");
+                if (dataArray != null) {
+                    for (int i = 0; i < dataArray.length(); i++) {
+                        JSONObject row = dataArray.optJSONObject(i);
+                        if (row != null && "Yeterli".equals(row.optString("Durum"))) {
+                            yeterliDistributorSayisiW94 = row.optInt("Distribütör", 0);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         System.out.println("Yetersiz Distribütör Sayısı W94: " + yetersizDistributorSayisiW94);
+        System.out.println("Yeterli Distribütör Sayısı W94: " + yeterliDistributorSayisiW94);
 
     }
 
@@ -1585,21 +1616,21 @@ public class WidgetsStepDefs extends BaseStep {
     // 1) Toplam "Satış (L)"
     double toplamSatisLW9 = 0.0;
 
-    // 2) En güncel güne ait "Satış (L)" (max TRHISLEMTARIHI)
+    // 2) Bugün dahil ve sonrasındaki "Satış (L)" toplamı
     double sonGunSatisLW9 = 0.0;
+
     @Given("The user send widget9 request")
     public void theUserSendWidget9Request() {
-        // Varsayım: W9 cevabını zaten aldın
         JSONObject w9Json = Requests.sendWidget9Request();
+        System.out.println("w9Json: " + w9Json);
 
-// 1) Toplam "Satış (L)"
         toplamSatisLW9 = 0.0;
-
-// 2) En güncel güne ait "Satış (L)" (max TRHISLEMTARIHI)
         sonGunSatisLW9 = 0.0;
-        long maxTs = Long.MIN_VALUE;
 
-// (Opsiyonel) TRHISLEMTARIHI -> ISO tarih string eşlemesi
+        // Bugünün epoch milis başlangıcı (00:00)
+        LocalDate today = LocalDate.now(ZoneId.of("Europe/Istanbul"));
+        long todayEpochMs = today.atStartOfDay(ZoneId.of("Europe/Istanbul")).toInstant().toEpochMilli();
+
         Map<String, Double> gunlukSatis = new LinkedHashMap<>();
 
         JSONArray results = w9Json.optJSONArray("result");
@@ -1617,16 +1648,16 @@ public class WidgetsStepDefs extends BaseStep {
 
                         toplamSatisLW9 += val;
 
-                        if (ts > maxTs) {
-                            maxTs = ts;
-                            sonGunSatisLW9 = val;
+                        // Bugün veya sonrasındaki günlerin toplamını al
+                        if (ts >= todayEpochMs) {
+                            sonGunSatisLW9 += val;
                         }
 
-                        // ISO tarih string (Europe/Istanbul) — istersen kullan
+                        // ISO tarih string (Europe/Istanbul)
                         if (ts > 0) {
                             Instant inst = Instant.ofEpochMilli(ts);
                             String isoDate = ZonedDateTime.ofInstant(inst, ZoneId.of("Europe/Istanbul"))
-                                    .toLocalDate().toString(); // YYYY-MM-DD
+                                    .toLocalDate().toString();
                             gunlukSatis.put(isoDate, val);
                         }
                     }
@@ -1635,9 +1666,10 @@ public class WidgetsStepDefs extends BaseStep {
         }
 
         System.out.println("W9 Toplam Satış (L): " + toplamSatisLW9);
-        System.out.println("W9 En Güncel Gün Satış (L): " + sonGunSatisLW9);
+        System.out.println("W9 Bugün + Sonrası Satış (L): " + sonGunSatisLW9);
         System.out.println("W9 Günlük Satış Haritası: " + gunlukSatis);
     }
+
 
     double totalSalesS30;
     @Given("The user get S30 query")
@@ -2152,7 +2184,7 @@ public class WidgetsStepDefs extends BaseStep {
             }
         }
 
-        System.out.println("Toplam Açık Bakiye (Tutar): " + toplamTutarW87);
+        System.out.println("Toplam Açık Bakiye (Tutar) W87: " + toplamTutarW87);
 
     }
 
@@ -2225,6 +2257,7 @@ public class WidgetsStepDefs extends BaseStep {
     @Given("The user send widget91 request")
     public void theUserSendWidget91Request() {
         JSONObject widget91Json = Requests.sendWidget91Request(); // API'den dönen tüm JSON
+        System.out.println("widget91Json: " + widget91Json);
         normalVadeliW91 = widget91Json
                 .getJSONArray("result")
                 .getJSONObject(0)
@@ -2409,8 +2442,39 @@ public class WidgetsStepDefs extends BaseStep {
 
     }
 
+    double gerceklesmeWidget48AggS50;
     @Given("The user send widget48AggreationS50 request")
     public void theUserSendWidget48AggreationS50Request() {
+        // Çağır, JSON'u al
+        JSONObject widget48AggS50Json = Requests.sendWidget48AggreationS50Request();
+        System.out.println("widget48AggS50Json: " + widget48AggS50Json);
+
+        gerceklesmeWidget48AggS50 = 0.0;
+
+        if (widget48AggS50Json != null) {
+            JSONArray results = widget48AggS50Json.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                JSONObject result0 = results.optJSONObject(0);
+                if (result0 != null) {
+                    JSONArray data = result0.optJSONArray("data");
+                    if (data != null && data.length() > 0) {
+                        JSONObject row0 = data.optJSONObject(0);
+                        if (row0 != null) {
+                            // Alan adı aynen JSON'daki gibi: "Gerçekleşme %"
+                            gerceklesmeWidget48AggS50 = row0.optDouble("Gerçekleşme %", 0.0);
+                            // NaN güvenliği (bölü sıfır vs. durumlar için)
+                            if (Double.isNaN(gerceklesmeWidget48AggS50) || Double.isInfinite(gerceklesmeWidget48AggS50)) {
+                                gerceklesmeWidget48AggS50 = 0.0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("Gerçekleşme % (ham oran): " + gerceklesmeWidget48AggS50);
+        System.out.printf("Gerçekleşme %% (yüzde): %.2f%%%n", gerceklesmeWidget48AggS50 * 100);
+
     }
 
     double gerceklesmeW54;
@@ -2721,5 +2785,1246 @@ public class WidgetsStepDefs extends BaseStep {
     public void theUserVerifyScenario42() {
         Assert.assertEquals("senaryo 42 değerler farklı",
                 gerceklesmelerToplamiW52, sumTotalSalesW45,0.01);
+    }
+
+    public static double getGunlukOrtGercekToplamiFromW50(JSONObject w50Json) {
+        if (w50Json == null) return 0.0;
+        JSONArray results = w50Json.optJSONArray("result");
+        if (results == null || results.length() == 0) return 0.0;
+        JSONObject result0 = results.optJSONObject(0);
+        if (result0 == null) return 0.0;
+
+        JSONArray data = result0.optJSONArray("data");
+        if (data == null) return 0.0;
+
+        double sum = 0.0;
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject row = data.optJSONObject(i);
+            if (row == null) continue;
+            // null olanları 0 kabul eder
+            sum += row.optDouble("Günlük Ort. Gerç.", 0.0);
+        }
+        return sum;
+    }
+
+    public static double getTotalIcHedefW50(JSONObject jsonObject) {
+        double totalIcHedef = 0.0;
+
+        // "result" dizisini al
+        JSONArray resultArray = jsonObject.getJSONArray("result");
+
+        if (resultArray.length() > 0) {
+            // İlk elemandaki "data" dizisini al
+            JSONObject firstResult = resultArray.getJSONObject(0);
+            JSONArray dataArray = firstResult.getJSONArray("data");
+
+            // "data" içindeki her objenin "İç Hedef" alanını topla
+            for (int i = 0; i < dataArray.length(); i++) {
+                JSONObject item = dataArray.getJSONObject(i);
+                if (item.has("İç Hedef") && !item.isNull("İç Hedef")) {
+                    totalIcHedef += item.getDouble("İç Hedef");
+                }
+            }
+        }
+
+        return totalIcHedef;
+    }
+
+    public static double getTotalGerceklesme(JSONObject jsonObject) {
+        double totalGerceklesme = 0.0;
+
+        // "result" dizisini al
+        JSONArray resultArray = jsonObject.getJSONArray("result");
+
+        if (resultArray.length() > 0) {
+            // İlk elemandaki "data" dizisini al
+            JSONObject firstResult = resultArray.getJSONObject(0);
+            JSONArray dataArray = firstResult.getJSONArray("data");
+
+            // "data" içindeki her objenin "Gerçekleşme" alanını topla
+            for (int i = 0; i < dataArray.length(); i++) {
+                JSONObject item = dataArray.getJSONObject(i);
+                if (item.has("Gerçekleşme") && !item.isNull("Gerçekleşme")) {
+                    totalGerceklesme += item.getDouble("Gerçekleşme");
+                }
+            }
+        }
+
+        return totalGerceklesme;
+    }
+
+    public static void main(String[] args) {
+        // Örnek kullanım
+        String jsonStr = "{...}"; // Buraya senin JSON'unu string olarak koy
+        JSONObject jsonObject = new JSONObject(jsonStr);
+
+        double toplamGerceklesme = getTotalGerceklesme(jsonObject);
+        System.out.println("Toplam Gerçekleşme: " + toplamGerceklesme);
+    }
+
+    public static double getTotalGunlukHedef(JSONObject jsonObject) {
+        double totalGunlukHedef = 0.0;
+
+        // "result" dizisini al
+        JSONArray resultArray = jsonObject.getJSONArray("result");
+
+        if (resultArray.length() > 0) {
+            // İlk elemandaki "data" dizisini al
+            JSONObject firstResult = resultArray.getJSONObject(0);
+            JSONArray dataArray = firstResult.getJSONArray("data");
+
+            // "data" içindeki her objenin "Günlük Hedef" alanını topla
+            for (int i = 0; i < dataArray.length(); i++) {
+                JSONObject item = dataArray.getJSONObject(i);
+                if (item.has("Günlük Hedef") && !item.isNull("Günlük Hedef")) {
+                    totalGunlukHedef += item.getDouble("Günlük Hedef");
+                }
+            }
+        }
+
+        return totalGunlukHedef;
+    }
+
+
+
+
+    double gunlukOrtGercekToplamW50;
+    double icHedefToplamW50;
+    double gerceklesmeToplamW50;
+    double gunlukHedefToplamW50;
+    @Given("The user send widget50 request")
+    public void theUserSendWidget50Request() {
+        JSONObject w50 = Requests.sendWidget50Request();
+        System.out.println("w50 response: " + w50);
+        gunlukOrtGercekToplamW50 = getGunlukOrtGercekToplamiFromW50(w50);
+        icHedefToplamW50 = getTotalIcHedefW50(w50);
+        gerceklesmeToplamW50 = getTotalGerceklesme(w50);
+        gunlukHedefToplamW50 = getTotalGunlukHedef(w50);
+        System.out.println("W50 Günlük Ort. Gerç. Toplamı: " + gunlukOrtGercekToplamW50);
+        System.out.println("W50 IcHedef Toplamı: " + icHedefToplamW50);
+        System.out.println("W50 Gerçekleşme Toplamı: " + gerceklesmeToplamW50);
+        System.out.println("W50 Günlük Hedef Toplamı: " + gunlukHedefToplamW50);
+    }
+
+    public static double getOrtGunlukGerceklesmeFromW46(JSONObject resp) {
+        if (resp == null) return 0.0;
+        try {
+            return resp.getJSONArray("result")
+                    .getJSONObject(0)
+                    .getJSONArray("data")
+                    .getJSONObject(0)
+                    .getDouble("Ort. Günlük Gerçekleşme");
+        } catch (Exception e) {
+            return 0.0;
+        }
+    }
+
+
+    double ortGunlukW46;
+    @Given("The user send widget46 request")
+    public void theUserSendWidget46Request() {
+        JSONObject w46 = Requests.sendWidget46Request();
+        ortGunlukW46 = getOrtGunlukGerceklesmeFromW46(w46);
+        System.out.println("W46 Ort. Günlük Gerçekleşme = " + ortGunlukW46);
+    }
+
+    @Then("The user verify scenario45")
+    public void theUserVerifyScenario45() {
+        Assert.assertEquals("senaryo 42 değerler farklı",
+                gunlukOrtGercekToplamW50, ortGunlukW46,0.01);
+    }
+
+    @Then("The user verify scenario50")
+    public void theUserVerifyScenario50() {
+        Assert.assertEquals("senaryo 42 değerler farklı",
+                gerceklesmeW56, gerceklesmeWidget48AggS50,0.01);
+    }
+
+    int musteriSayisiSonGunW36;
+    @Given("The user send widget36 request")
+    public void theUserSendWidget36Request() {
+        JSONObject widget36Json = Requests.sendWidget36Request();
+
+        musteriSayisiSonGunW36 = 0;
+        long sonGunTs = Long.MIN_VALUE;
+
+        if (widget36Json != null) {
+            JSONArray results = widget36Json.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                JSONObject result0 = results.optJSONObject(0);
+                if (result0 != null) {
+                    JSONArray data = result0.optJSONArray("data");
+                    if (data != null) {
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject row = data.optJSONObject(i);
+                            if (row == null) continue;
+
+                            // TARIH ms cinsinden double gelebiliyor → long’a güvenli çevir
+                            long ts = (long) row.optDouble("TARIH", 0d);
+                            if (ts > sonGunTs) {
+                                sonGunTs = ts;
+                                musteriSayisiSonGunW36 = row.optInt("Müşteri Sayısı", 0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("En güncel tarih (ms): " + sonGunTs);
+        System.out.println("Müşteri Sayısı (en güncel): " + musteriSayisiSonGunW36);
+
+// İstersen tarih formatlı yazdır (İstanbul saat dilimi)
+        if (sonGunTs > 0) {
+            java.time.ZonedDateTime zdt = java.time.Instant.ofEpochMilli(sonGunTs)
+                    .atZone(java.time.ZoneId.of("Europe/Istanbul"));
+            System.out.println("En güncel tarih (TR): " + zdt.toLocalDate());
+        }
+
+    }
+
+
+    int basariliZiyaretSayisiW29AggreationS53;
+    @Given("The user send widget29AggreationS53 request")
+    public void theUserSendWidget29AggreationS53Request() {
+        JSONObject widget29AggS53Json = Requests.sendWidget29AggreationS53Request();
+        System.out.println("widget29AggS53Json: " + widget29AggS53Json);
+
+        basariliZiyaretSayisiW29AggreationS53 = 0;
+
+        if (widget29AggS53Json != null) {
+            JSONArray results = widget29AggS53Json.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                JSONObject result0 = results.optJSONObject(0);
+                if (result0 != null) {
+                    JSONArray data = result0.optJSONArray("data");
+                    if (data != null) {
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject row = data.optJSONObject(i);
+                            if (row != null && "Başarılı".equalsIgnoreCase(row.optString("Z_Status"))) {
+                                basariliZiyaretSayisiW29AggreationS53 = row.optInt("Ziyaret Sayısı", 0);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("Başarılı Ziyaret Sayısı: " + basariliZiyaretSayisiW29AggreationS53);
+
+    }
+
+    @Then("The user verify scenario53")
+    public void theUserVerifyScenario53() {
+        Assert.assertEquals("senaryo 42 değerler farklı",
+                musteriSayisiSonGunW36, basariliZiyaretSayisiW29AggreationS53,0.01);
+    }
+
+    int countDistinctDistCodeS21;
+    @Given("The user get S21 query")
+    public void theUserGetS21Query() {
+        countDistinctDistCodeS21 = databaseMethods.getCountDistinctDistCodeS21();
+    }
+
+    @Then("The user verify scenario21")
+    public void theUserVerifyScenario21() {
+        Assert.assertEquals("senaryo 21 değerler farklı",
+                yetersizDistributorSayisiW94 + yeterliDistributorSayisiW94, countDistinctDistCodeS21,0.01);
+    }
+
+    @Then("The user verify scenario35")
+    public void theUserVerifyScenario35() {
+        Assert.assertEquals("senaryo 35 değerler farklı",
+                icHedefAyW44, currentTargetW12,0.01);
+    }
+
+    double avg_Sales_Per_Business_Day;
+    @Given("The user get S37 query")
+    public void theUserGetS37Query() {
+        avg_Sales_Per_Business_Day = databaseMethods.getAvgSalesPerBusinessDayS37();
+    }
+
+    @Then("The user verify scenario37")
+    public void theUserVerifyScenario37() {
+        Assert.assertEquals("senaryo 37 değerler farklı",
+                ortGunlukW46, avg_Sales_Per_Business_Day,0.01);
+    }
+
+    @Then("The user verify scenario38")
+    public void theUserVerifyScenario38() {
+        Assert.assertEquals("senaryo 38 değerler farklı",
+                gerceklesmeW48, sumTotalSalesW45 / icHedefAyW44,0.01);
+    }
+
+    @Then("The user verify scenario43")
+    public void theUserVerifyScenario43() {
+        Assert.assertEquals("senaryo 43 değerler farklı",
+                icHedefToplamW50, icHedefAyW44,0.01);
+    }
+
+    @Then("The user verify scenario44")
+    public void theUserVerifyScenario44() {
+        Assert.assertEquals("senaryo 43 değerler farklı",
+                gerceklesmeToplamW50, sumTotalSalesW45,0.01);
+    }
+
+    @Then("The user verify scenario46")
+    public void theUserVerifyScenario46() {
+        Assert.assertEquals("senaryo 43 değerler farklı",
+                gunlukHedefToplamW50, gunlukGerekliToplamW47,0.01);
+    }
+
+    // Data bloklarını döner (result[0].data ve result[1].data)
+    private static JSONArray getResultData(JSONObject resp, int blockIndex) {
+        return resp.getJSONArray("result")
+                .getJSONObject(blockIndex)
+                .getJSONArray("data");
+    }
+
+    // Ör: "2025-06-01" -> 12345.67 gibi bir harita döndür (Ödeme Tutarı için)
+    public static LinkedHashMap<String, Double> getOdemeTutarSeri(JSONObject resp) {
+        LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+        if (resp == null) return map;
+        try {
+            JSONArray data = getResultData(resp, 0); // 1. query: Ödeme Tutarı
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject row = data.getJSONObject(i);
+                String date = row.optString("PayDate", null);
+                double val = row.optDouble("Ödeme Tutarı", 0.0);
+                if (date != null) map.put(date, val);
+            }
+        } catch (Exception ignored) {}
+        return map;
+    }
+
+    // Gecikme Gün serisi (tarih -> değer)
+    public static LinkedHashMap<String, Double> getGecikmeGunSeri(JSONObject resp) {
+        LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+        if (resp == null) return map;
+        try {
+            JSONArray data = getResultData(resp, 1); // 2. query: Gecikme Gün
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject row = data.getJSONObject(i);
+                String date = row.optString("PayDate", null);
+                double val = row.optDouble("Gecikme Gün", 0.0);
+                if (date != null) map.put(date, val);
+            }
+        } catch (Exception ignored) {}
+        return map;
+    }
+
+    // Son (en güncel) ayın Ödeme Tutarı
+    public static double getLastOdemeTutari(JSONObject resp) {
+        LinkedHashMap<String, Double> series = getOdemeTutarSeri(resp);
+        double last = 0.0;
+        for (Double v : series.values()) last = v; // insertion-order LinkedHashMap: son değer
+        return last;
+    }
+
+    // Son (en güncel) ayın Gecikme Gün değeri
+    public static double getLastGecikmeGun(JSONObject resp) {
+        LinkedHashMap<String, Double> series = getGecikmeGunSeri(resp);
+        double last = 0.0;
+        for (Double v : series.values()) last = v;
+        return last;
+    }
+
+    // 6 aylık toplam Ödeme Tutarı
+    public static double getTotalOdemeTutari(JSONObject resp) {
+        LinkedHashMap<String, Double> series = getOdemeTutarSeri(resp);
+        double sum = 0.0;
+        for (double v : series.values()) sum += v;
+        return sum;
+    }
+
+
+    double odemeTutariToplamW83;
+    double lastGecikmeGunW83;
+    @Given("The user send widget83 request")
+    public void theUserSendWidget83Request() {
+        JSONObject w83JsonObjectResponse = Requests.sendWidget83Request();
+        System.out.println("w83JsonObjectResponse: " + w83JsonObjectResponse);
+
+        odemeTutariToplamW83 = getTotalOdemeTutari(w83JsonObjectResponse);
+        lastGecikmeGunW83 = getLastGecikmeGun(w83JsonObjectResponse);
+
+        System.out.println("odemeTutariToplamW83: " + odemeTutariToplamW83);
+        System.out.println("lastGecikmeGunW83: " + lastGecikmeGunW83);
+
+
+
+    }
+
+    double SixMonthOdemeTutariW93;
+    @Given("The user send widget93 request")
+    public void theUserSendWidget93Request() {
+        JSONObject w93response = Requests.sendWidget93Request();
+        System.out.println("w93response: " + w93response);
+
+        if (w93response == null) SixMonthOdemeTutariW93 = 0.0;
+        try {
+            SixMonthOdemeTutariW93 = w93response.getJSONArray("result")
+                    .getJSONObject(0)
+                    .getJSONArray("data")
+                    .getJSONObject(0)
+                    .optDouble("6 Aylık Ödeme Tutarı", 0.0);
+        } catch (Exception e) {
+            SixMonthOdemeTutariW93 = 0.0;
+        }
+
+        System.out.println("SixMonthOdemeTutariW93: " + SixMonthOdemeTutariW93);
+
+    }
+
+    @Then("The user verify scenario65")
+    public void theUserVerifyScenario65() {
+        Assert.assertEquals("senaryo 65 değerler farklı",
+                odemeTutariToplamW83, SixMonthOdemeTutariW93,0.01);
+    }
+
+    double ortGecikmeGunW92AggrS66;
+    @Given("The user send widget92AggreationS66 request")
+    public void theUserSendWidget92AggreationS66Request() {
+        JSONObject w92AggrS66Response = Requests.sendWidget92AggreationS66Request();
+        System.out.println("w92AggrS66Response: " + w92AggrS66Response);
+
+        if (w92AggrS66Response == null) ortGecikmeGunW92AggrS66 = 0.0;
+        try {
+            ortGecikmeGunW92AggrS66 = w92AggrS66Response.getJSONArray("result")
+                    .getJSONObject(0)
+                    .getJSONArray("data")
+                    .getJSONObject(0)
+                    .optDouble("Ort. Gecikme Gün", 0.0);
+        } catch (Exception e) {
+            ortGecikmeGunW92AggrS66 = 0.0;
+        }
+
+        System.out.println("ortGecikmeGunW92AggrS66: " + ortGecikmeGunW92AggrS66);
+
+    }
+
+    @Then("The user verify scenario66")
+    public void theUserVerifyScenario66() {
+        Assert.assertEquals("senaryo 66 değerler farklı",
+                ortGecikmeGunW92AggrS66, lastGecikmeGunW83,0.01);
+    }
+
+    // En güncel "Zamanında Ödeme %" (yoksa 0.0)
+    public static double getLatestOnTimePaymentPctFromW88(JSONObject root) {
+        if (root == null) return 0.0;
+
+        JSONArray data = extractDataArray(root);
+        long maxTs = Long.MIN_VALUE;
+        double latestVal = 0.0;
+
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject row = data.getJSONObject(i);
+
+            // PayDate ms/sn epoch, ISO string veya PayDate__timestamp olabilir
+            Long ts = extractEpochMillis(row, "PayDate");
+            if (ts == null) ts = extractEpochMillis(row, "PayDate__timestamp");
+            if (ts == null) continue;
+
+            double val = row.optDouble("Zamanında Ödeme %", Double.NaN);
+            if (Double.isNaN(val)) continue;
+
+            if (ts > maxTs) {
+                maxTs = ts;
+                latestVal = val;
+            }
+        }
+        return (maxTs == Long.MIN_VALUE) ? 0.0 : latestVal;
+    }
+
+    // ---- helpers ----
+
+    private static JSONArray extractDataArray(JSONObject root) {
+        // Klasik Superset yapısı: result[0].data
+        if (root.has("result")) {
+            JSONArray result = root.getJSONArray("result");
+            if (result.length() > 0 && result.getJSONObject(0).has("data")) {
+                return result.getJSONObject(0).getJSONArray("data");
+            }
+        }
+        // Üstte ekstra katman varsa (örn. "w88Response")
+        for (String key : root.keySet()) {
+            Object v = root.get(key);
+            if (v instanceof JSONObject) {
+                JSONObject o = (JSONObject) v;
+                if (o.has("result")) {
+                    JSONArray result = o.getJSONArray("result");
+                    if (result.length() > 0 && result.getJSONObject(0).has("data")) {
+                        return result.getJSONObject(0).getJSONArray("data");
+                    }
+                }
+            }
+        }
+        return new JSONArray();
+    }
+
+    private static Long extractEpochMillis(JSONObject obj, String key) {
+        if (!obj.has(key) || obj.isNull(key)) return null;
+        Object v = obj.get(key);
+
+        if (v instanceof Number) {
+            long t = ((Number) v).longValue();
+            // saniye epoch ise ms'e çevir
+            if (t < 1_000_000_000_000L) t *= 1000L;
+            return t;
+        } else if (v instanceof String) {
+            String s = ((String) v).trim();
+            if (s.isEmpty()) return null;
+
+            // yyyy-MM-dd
+            try {
+                java.time.LocalDate d = java.time.LocalDate.parse(s);
+                return d.atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli();
+            } catch (Exception ignore) {}
+
+            // ISO instant
+            try {
+                java.time.Instant inst = java.time.Instant.parse(s);
+                return inst.toEpochMilli();
+            } catch (Exception ignore) {}
+        }
+        return null;
+    }
+
+    double latestOnTimePaymentW88;
+    @Given("The user send widget88 request")
+    public void theUserSendWidget88Request() {
+        JSONObject w88Response = Requests.sendWidget88Request();
+        System.out.println("w88Response: " + w88Response);
+
+        latestOnTimePaymentW88 = getLatestOnTimePaymentPctFromW88(w88Response);
+        System.out.println("latestOnTimePaymentW88: " + latestOnTimePaymentW88);
+
+    }
+
+    double zamanindaOdemeOraniCheckS67;
+    @Given("The user get S67 query")
+    public void theUserGetS67Query() {
+        zamanindaOdemeOraniCheckS67 = databaseMethods.getZamanindaOdemeOraniCheck();
+        System.out.println("zamanindaOdemeOraniCheckS67: " + zamanindaOdemeOraniCheckS67);
+    }
+
+    @Then("The user verify scenario67")
+    public void theUserVerifyScenario67() {
+        Assert.assertEquals("senaryo 66 değerler farklı",
+                latestOnTimePaymentW88, zamanindaOdemeOraniCheckS67,0.01);
+    }
+
+    double toplamZiyaretIcHedefW37;
+    double toplamGerceklesenZiyaretW37;
+
+    @Given("The user send widget37 request")
+    public void theUserSendWidget37Request() {
+        JSONObject widget37Json = Requests.sendWidget37Request();
+        System.out.println("widget37Json: " + widget37Json);
+
+        toplamZiyaretIcHedefW37 = 0.0;
+        toplamGerceklesenZiyaretW37 = 0.0;
+
+        if (widget37Json != null) {
+            JSONArray results = widget37Json.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject resultObj = results.optJSONObject(i);
+                    if (resultObj == null) continue;
+
+                    JSONArray data = resultObj.optJSONArray("data");
+                    if (data == null || data.length() == 0) continue;
+
+                    for (int j = 0; j < data.length(); j++) {
+                        JSONObject row = data.optJSONObject(j);
+                        if (row == null) continue;
+
+                        // Ziyaret İç Hedef toplamı
+                        if (row.has("Ziyaret İç Hedef")) {
+                            toplamZiyaretIcHedefW37 += row.optDouble("Ziyaret İç Hedef", 0.0);
+                        }
+
+                        // Gerçekleşen Ziyaret toplamı
+                        if (row.has("Gerçekleşen Ziyaret")) {
+                            toplamGerceklesenZiyaretW37 += row.optDouble("Gerçekleşen Ziyaret", 0.0);
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("Toplam Ziyaret İç Hedef (W37): " + toplamZiyaretIcHedefW37);
+        System.out.println("Toplam Gerçekleşen Ziyaret (W37): " + toplamGerceklesenZiyaretW37);
+
+        // Oran hesaplamak istersen:
+        if (toplamZiyaretIcHedefW37 > 0) {
+            double gerceklesmeOrani = (toplamGerceklesenZiyaretW37 / toplamZiyaretIcHedefW37) * 100.0;
+            System.out.println("Gerçekleşme Oranı (W37): %" + String.format("%.2f", gerceklesmeOrani));
+        }
+    }
+
+
+    @Then("The user verify scenario54")
+    public void theUserVerifyScenario54() {
+        Assert.assertEquals("senaryo 66 değerler farklı",
+                toplamGerceklesenZiyaretW37, gerceklesenToplamW33,0.01);
+    }
+
+    @Then("The user verify scenario55")
+    public void theUserVerifyScenario55() {
+        Assert.assertEquals("senaryo 66 değerler farklı",
+                toplamZiyaretIcHedefW37, toplamZiyaretIcHedefW33,0.01);
+    }
+
+    double basariOraniW29AggreationS25;
+
+    @Given("The user send widget29AggreationS25 request")
+    public void theUserSendWidget29AggreationS25Request() {
+        JSONObject response = Requests.sendWidget29AggreationS25Request();
+        System.out.println("widget29AggreationS25 response: " + response);
+
+        basariOraniW29AggreationS25 = 0.0;
+
+        if (response != null) {
+            JSONArray results = response.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                JSONObject resultObj = results.optJSONObject(0);
+                if (resultObj != null) {
+                    JSONArray dataArr = resultObj.optJSONArray("data");
+                    if (dataArr != null && dataArr.length() > 0) {
+                        JSONObject dataObj = dataArr.optJSONObject(0);
+                        if (dataObj != null) {
+                            // Dinamik olarak kolonu yakala
+                            for (String key : dataObj.keySet()) {
+                                if (key.contains("SUM(BASARILI_MUSTERI_SAYISI)")) {
+                                    basariOraniW29AggreationS25 = dataObj.optDouble(key, 0.0);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("Başarı Oranı (W29AggreationS25): %" + String.format("%.2f", basariOraniW29AggreationS25));
+    }
+
+    @Then("The user verify scenario25")
+    public void theUserVerifyScenario25() {
+        System.out.println("(double) basariliZiyaretSayisiW29 /(double) toplamZiyaretSayisiW29: " + (double) basariliZiyaretSayisiW29 /(double) toplamZiyaretSayisiW29);
+        Assert.assertEquals("senaryo 25 değerler farklı",
+                (double) basariliZiyaretSayisiW29 /(double) toplamZiyaretSayisiW29, basariOraniW29AggreationS25,0.01);
+    }
+
+    @Then("The user verify scenario36")
+    public void theUserVerifyScenario36() {
+        Assert.assertEquals("senaryo 36 değerler farklı",
+                sumTotalSalesW45, currentActualW12,0.01);
+    }
+
+    // Fields (step class'ta)
+    Map<String, Double> kalanStokGunByUrunW40 = new LinkedHashMap<>(); // sıralamayı korur (top N gibi)
+    double minKalanStokGunW40 = Double.POSITIVE_INFINITY;
+    double maxKalanStokGunW40 = Double.NEGATIVE_INFINITY;
+    double toplamKalanStokGunW40 = 0.0;
+    int   satirSayisiW40 = 0;
+
+    @Given("The user send widget40 request")
+    public void theUserSendWidget40Request() {
+        JSONObject widget40Json = Requests.sendWidget40Request();
+        System.out.println("widget40Json: " + widget40Json);
+
+        kalanStokGunByUrunW40.clear();
+        minKalanStokGunW40 = Double.POSITIVE_INFINITY;
+        maxKalanStokGunW40 = Double.NEGATIVE_INFINITY;
+        toplamKalanStokGunW40 = 0.0;
+        satirSayisiW40 = 0;
+
+        if (widget40Json != null) {
+            JSONArray results = widget40Json.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject resultObj = results.optJSONObject(i);
+                    if (resultObj == null) continue;
+
+                    JSONArray data = resultObj.optJSONArray("data");
+                    if (data == null || data.length() == 0) continue;
+
+                    for (int j = 0; j < data.length(); j++) {
+                        JSONObject row = data.optJSONObject(j);
+                        if (row == null) continue;
+
+                        String urun = row.optString("Ürün", null);
+                        if (urun == null || urun.isEmpty()) continue;
+
+                        // "Kalan Stok Gün" sayısal değeri
+                        double kalanGun = row.has("Kalan Stok Gün")
+                                ? row.optDouble("Kalan Stok Gün", 0.0)
+                                : 0.0;
+
+                        kalanStokGunByUrunW40.put(urun, kalanGun);
+
+                        // istatistikler
+                        toplamKalanStokGunW40 += kalanGun;
+                        satirSayisiW40++;
+                        if (kalanGun < minKalanStokGunW40) minKalanStokGunW40 = kalanGun;
+                        if (kalanGun > maxKalanStokGunW40) maxKalanStokGunW40 = kalanGun;
+                    }
+                }
+            }
+        }
+
+        // Yazdırma
+        System.out.println("W40 - Ürün bazında Kalan Stok Gün:");
+        kalanStokGunByUrunW40.forEach((k, v) ->
+                System.out.println(" - " + k + " => " + String.format("%.4f", v)));
+
+        if (satirSayisiW40 > 0) {
+            double ortalama = toplamKalanStokGunW40 / satirSayisiW40;
+            System.out.println("Min  Kalan Stok Gün (W40): " + String.format("%.4f", minKalanStokGunW40));
+            System.out.println("Maks Kalan Stok Gün (W40): " + String.format("%.4f", maxKalanStokGunW40));
+            System.out.println("Ort. Kalan Stok Gün  (W40): " + String.format("%.4f", ortalama));
+        }
+
+    }
+
+    // JSON:  "Ürün Kısa Ad"  (String)   →   "Kalan Stok Gün" (Double veya null)
+    public static Map<String, Double> extractUrunKalanStokGunMap(JSONObject w43Resp) {
+        Map<String, Double> map = new LinkedHashMap<>();
+        if (w43Resp == null) return map;
+
+        JSONArray results = w43Resp.optJSONArray("result");
+        if (results == null) return map;
+
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject res = results.optJSONObject(i);
+            if (res == null) continue;
+
+            JSONArray data = res.optJSONArray("data");
+            if (data == null) continue;
+
+            for (int j = 0; j < data.length(); j++) {
+                JSONObject row = data.optJSONObject(j);
+                if (row == null) continue;
+
+                // Ürün adını al (öncelik "Ürün Kısa Ad"; fallback olarak "Ürün")
+                String urun =
+                        row.has("Ürün Kısa Ad") ? row.optString("Ürün Kısa Ad", null)
+                                : row.optString("Ürün", null);
+                if (urun == null || urun.isBlank()) continue;
+
+                Double kalan = null;
+                if (!row.isNull("Kalan Stok Gün")) {
+                    // optDouble null'a 0 döndüğü için önce isNull kontrolü yaptık
+                    kalan = row.optDouble("Kalan Stok Gün", Double.NaN);
+                    if (Double.isNaN(kalan)) kalan = null;
+                }
+
+                // İstersen null değerleri atlamak için şu satırı aç:
+                // if (kalan == null) continue;
+
+                map.put(urun, kalan);
+            }
+        }
+        return map;
+    }
+
+
+
+    Map<String, Double> kalanStokGunByUrunW43AggreationS56 = new LinkedHashMap<>();
+    @Given("The user send widget43AggreationS56 request")
+    public void theUserSendWidget43AggreationS56Request() {
+        JSONObject w43AggreationS56Response = Requests.sendWidget43AggreationS56Request();
+        System.out.println("W43AggreationS56Response: " + w43AggreationS56Response);
+        kalanStokGunByUrunW43AggreationS56 = extractUrunKalanStokGunMap(w43AggreationS56Response);
+    }
+
+    public static boolean compareMaps(Map<String, Double> map1, Map<String, Double> map2) {
+        double epsilon = 0.01; // tolerans değeri
+
+        for (Map.Entry<String, Double> entry : map1.entrySet()) {
+            String key = entry.getKey();
+            Double value1 = entry.getValue();
+            Double value2 = map2.get(key);
+
+            // map2'de key yoksa veya değer null ise
+            if (value2 == null) {
+                return false;
+            }
+
+            // fark toleransın dışındaysa
+            if (Math.abs(value1 - value2) > epsilon) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    public static boolean compareMapsStringString(Map<String, String> map1, Map<String, String> map2) {
+
+        for (Map.Entry<String, String> entry : map1.entrySet()) {
+            String key = entry.getKey();
+            String value1 = entry.getValue();
+            String value2 = map2.get(key);
+
+            if (!value1.equals(value2)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Then("The user verify scenario56")
+    public void theUserVerifyScenario56() {
+        Assert.assertTrue("senaryo 56 değerler farklı",
+                compareMaps(kalanStokGunByUrunW40,kalanStokGunByUrunW43AggreationS56));
+    }
+
+    double toplamTutarW82;
+
+    @Given("The user send widget82 request")
+    public void theUserSendWidget82Request() {
+        JSONObject widget82Json = Requests.sendWidget82Request();
+        System.out.println("widget82Json: " + widget82Json);
+
+        toplamTutarW82 = 0.0;
+
+        if (widget82Json != null) {
+            JSONArray results = widget82Json.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                JSONObject resultObj = results.optJSONObject(0);
+                if (resultObj != null) {
+                    JSONArray data = resultObj.optJSONArray("data");
+                    if (data != null && data.length() > 0) {
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject row = data.optJSONObject(i);
+                            if (row == null) continue;
+
+                            // Önce "Tutar" kolonunu direkt dene
+                            Double val = readAsDouble(row, "Tutar");
+
+                            // Bulunamazsa, anahtarları gezip "tutar" içereni yakala (fallback)
+                            if (val == null) {
+                                String fallbackKey = findKeyContaining(row, "tutar");
+                                if (fallbackKey != null) {
+                                    val = readAsDouble(row, fallbackKey);
+                                }
+                            }
+
+                            if (val != null) {
+                                toplamTutarW82 += val;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("Widget82 — Tutar Toplamı: " + String.format("%,.2f", toplamTutarW82));
+    }
+
+    /** JSON değeri güvenli biçimde double okur (Number/String/null hepsini kaldırır). */
+    private static Double readAsDouble(JSONObject obj, String key) {
+        if (obj == null || key == null || !obj.has(key) || obj.isNull(key)) return null;
+        Object v = obj.opt(key);
+        if (v instanceof Number) return ((Number) v).doubleValue();
+        if (v instanceof String) {
+            try { return Double.parseDouble(((String) v).replace(",", "").trim()); }
+            catch (Exception ignored) {}
+        }
+        return null;
+    }
+
+    /** Objede verilen ifadeyi (case-insensitive) içeren ilk anahtarı bulur. */
+    private static String findKeyContaining(JSONObject obj, String needle) {
+        if (obj == null || needle == null) return null;
+        Iterator<String> it = obj.keys();
+        String n = needle.toLowerCase(Locale.ROOT);
+        while (it.hasNext()) {
+            String k = it.next();
+            if (k != null && k.toLowerCase(Locale.ROOT).contains(n)) return k;
+        }
+        return null;
+    }
+
+    double toplamTutarW85;
+    @Given("The user send widget85 request")
+    public void theUserSendWidget85Request() {
+        JSONObject widget85Json = Requests.sendWidget85Request();
+        System.out.println("widget85Json: " + widget85Json);
+
+        toplamTutarW85 = 0.0;
+
+        if (widget85Json != null) {
+            JSONArray results = widget85Json.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                JSONObject resultObj = results.optJSONObject(0);
+                if (resultObj != null) {
+                    JSONArray data = resultObj.optJSONArray("data");
+                    if (data != null && data.length() > 0) {
+                        JSONObject firstRow = data.optJSONObject(0);
+                        if (firstRow != null && firstRow.has("Tutar")) {
+                            toplamTutarW85 = firstRow.optDouble("Tutar", 0.0);
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("Widget85 - Toplam Tutar: " + String.format("%,.2f", toplamTutarW85));
+    }
+
+
+
+    @Then("The user verify scenario60")
+    public void theUserVerifyScenario60() {
+        Assert.assertEquals("senaryo 60 değerler farklı",
+                toplamTutarW82, toplamTutarW85,0.01);
+    }
+
+    // Map: "01/MM/YYYY"  ->  Toplam Kâr (₺) (aynı aya ait satırlar toplanır)
+    private static final Map<String, Double> w65TarihToplamKar = new LinkedHashMap<>();
+
+    @Given("The user send widget65 request")
+    public void theUserSendWidget65Request() {
+        JSONObject resp = Requests.sendWidget65Request();
+        System.out.println("widget65Json: " + resp);
+
+        w65TarihToplamKar.clear();
+
+        if (resp == null) return;
+
+        JSONArray results = resp.optJSONArray("result");
+        if (results == null || results.length() == 0) return;
+
+        JSONObject result0 = results.optJSONObject(0);
+        if (result0 == null) return;
+
+        JSONArray data = result0.optJSONArray("data");
+        if (data == null || data.length() == 0) return;
+
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject row = data.optJSONObject(i);
+            if (row == null) continue;
+
+            // "Fatura Tarihi" -> "YYYY/MM"
+            String ym = row.optString("Fatura Tarihi", "").trim();
+            if (ym.isEmpty()) continue;
+
+            // "Toplam Kâr (₺)" -> double
+            if (row.isNull("Toplam Kâr (₺)")) continue;
+            double kar = row.optDouble("Toplam Kâr (₺)", Double.NaN);
+            if (Double.isNaN(kar)) continue;
+
+            // YYYY/MM -> 01/MM/YYYY
+            String firstDayKey = toFirstDayOfMonthKey(ym);
+
+            // Aynı aya ait satırlar toplanır
+            w65TarihToplamKar.merge(firstDayKey, kar, Double::sum);
+        }
+
+        // Debug çıktı
+        System.out.println("Widget65 Tarih -> Toplam Kâr Map:");
+        w65TarihToplamKar.forEach((tarih, toplamKar) ->
+                System.out.println(tarih + " → " + String.format(Locale.US, "%.6f", toplamKar)));
+    }
+
+    /**
+     * "YYYY/MM" formatındaki değeri "01/MM/YYYY" olarak döndürür.
+     * Hatalı format gelirse olduğu gibi geri verir.
+     */
+    private static String toFirstDayOfMonthKey(String yearMonth) {
+        try {
+            // Beklenen format: YYYY/MM (örn: 2025/04)
+            String[] parts = yearMonth.split("/");
+            if (parts.length != 2) return yearMonth;
+
+            int year = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+
+            java.time.LocalDate d = java.time.LocalDate.of(year, month, 1);
+            return d.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } catch (Exception e) {
+            // Beklenmedik format/parse hatasında fallback
+            return yearMonth;
+        }
+    }
+
+
+
+
+    // Toplamları tutacağımız map
+    Map<String, Double> w64TarihToplamDegerleri = new LinkedHashMap<>();
+
+    @Given("The user send widget64 request")
+    public void theUserSendWidget64Request() {
+        JSONObject response = Requests.sendWidget64Request();
+        System.out.println("widget64Json: " + response);
+
+        w64TarihToplamDegerleri.clear();
+
+        if (response != null) {
+            JSONArray results = response.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                JSONObject resultObj = results.optJSONObject(0);
+                if (resultObj != null) {
+                    JSONArray data = resultObj.optJSONArray("data");
+                    if (data != null && data.length() > 0) {
+                        // Tarih formatı (grafik form_data'daki "%d/%m/%Y" ile uyumlu)
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("tr", "TR"));
+
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject row = data.optJSONObject(i);
+                            if (row == null) continue;
+
+                            // Epoch millis -> dd/MM/yyyy
+                            double epochMsDouble = row.optDouble("TRHISLEMTARIHI", Double.NaN);
+                            if (Double.isNaN(epochMsDouble)) continue; // tarih yoksa geç
+                            long epochMs = (long) epochMsDouble;
+                            String tarihKey = sdf.format(new Date(epochMs));
+
+                            // TRHISLEMTARIHI dışındaki tüm sayısal kolonları topla
+                            double toplam = 0.0;
+                            for (Iterator<String> it = row.keys(); it.hasNext(); ) {
+                                String key = it.next();
+                                if ("TRHISLEMTARIHI".equals(key)) continue;
+
+                                Object val = row.opt(key);
+                                if (val instanceof Number) {
+                                    toplam += ((Number) val).doubleValue();
+                                }
+                                // null veya sayı olmayanlar otomatikman 0 kabul ediliyor
+                            }
+
+                            w64TarihToplamDegerleri.put(tarihKey, toplam);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Debug: konsola yazdır
+        System.out.println("Widget64 (Tarih → Toplam Değer) Map:");
+        w64TarihToplamDegerleri.forEach((tarih, toplam) ->
+                System.out.println(tarih + " → " + String.format(Locale.US, "%.2f", toplam)));
+    }
+
+
+    @Then("The user verify scenario59")
+    public void theUserVerifyScenario59() {
+        Assert.assertTrue("senaryo 59 değerler farklı",
+                compareMaps(w65TarihToplamKar,w64TarihToplamDegerleri));
+    }
+
+    Map<String, Double> w63TarihVeSegmentToplamMap = new LinkedHashMap<>();
+
+    @Given("The user send widget63 request")
+    public void theUserSendWidget63Request() {
+        JSONObject response = Requests.sendWidget63Request();
+        System.out.println("widget63Json: " + response);
+
+        w63TarihVeSegmentToplamMap.clear();
+
+        if (response == null) return;
+
+        JSONArray results = response.optJSONArray("result");
+        if (results == null || results.length() == 0) return;
+
+        JSONObject resultObj = results.optJSONObject(0);
+        if (resultObj == null) return;
+
+        // Kolon adlarını al: ilk kolon tarih, kalanları segment
+        Set<String> segmentColumns = new LinkedHashSet<>();
+        JSONArray colnames = resultObj.optJSONArray("colnames");
+        if (colnames != null && colnames.length() > 1) {
+            for (int i = 1; i < colnames.length(); i++) {
+                segmentColumns.add(colnames.optString(i));
+            }
+        } else {
+            // Fallback: bilinen segment isimleri
+            segmentColumns.addAll(Arrays.asList("Mass","Premium","Primary","Semi Premium","Standard","Ultra Premium"));
+        }
+
+        JSONArray dataArr = resultObj.optJSONArray("data");
+        if (dataArr == null) return;
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        ZoneId zone = ZoneId.systemDefault(); // gerekirse ZoneId.of("Europe/Istanbul")
+
+        for (int i = 0; i < dataArr.length(); i++) {
+            JSONObject row = dataArr.optJSONObject(i);
+            if (row == null) continue;
+
+            // Tarihi çek (epoch millis double gelebiliyor)
+            double epochMillisDbl = row.optDouble("TRHISLEMTARIHI", Double.NaN);
+            if (Double.isNaN(epochMillisDbl)) continue;
+
+            long epochMillis = (long) epochMillisDbl;
+            String tarih = Instant.ofEpochMilli(epochMillis)
+                    .atZone(zone)
+                    .toLocalDate()
+                    .format(fmt);
+
+            // Segment toplamını hesapla (null/NaN değerleri atla)
+            double sum = 0.0;
+            for (String seg : segmentColumns) {
+                if (!row.has(seg) || row.isNull(seg)) continue;
+                Object v = row.opt(seg);
+                if (v instanceof Number) {
+                    double dv = ((Number) v).doubleValue();
+                    if (!Double.isNaN(dv) && !Double.isInfinite(dv)) {
+                        sum += dv;
+                    }
+                } else {
+                    try {
+                        double dv = Double.parseDouble(String.valueOf(v));
+                        if (!Double.isNaN(dv) && !Double.isInfinite(dv)) sum += dv;
+                    } catch (Exception ignore) {}
+                }
+            }
+
+            w63TarihVeSegmentToplamMap.put(tarih, sum);
+        }
+
+        // Debug
+        System.out.println("W63 Tarih → Segment Toplam Map:");
+        w63TarihVeSegmentToplamMap.forEach((t, s) -> System.out.println(t + " → " + s));
+    }
+
+
+    @Then("The user verify scenario58")
+    public void theUserVerifyScenario58() {
+        Assert.assertTrue("senaryo 58 değerler farklı",
+                compareMaps(w63TarihVeSegmentToplamMap,w64TarihToplamDegerleri));
+    }
+
+    Map<String, Double> markaVeKalanStokGunleriW42 = new LinkedHashMap<>();
+
+    @Given("The user send widget42 request")
+    public void theUserSendWidget42Request() {
+        JSONObject response = Requests.sendWidget42Request();
+        System.out.println("widget42Json: " + response);
+
+        markaVeKalanStokGunleriW42.clear();
+
+        if (response != null) {
+            JSONArray results = response.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                JSONObject resultObj = results.optJSONObject(0);
+                if (resultObj != null) {
+                    JSONArray dataArr = resultObj.optJSONArray("data");
+                    if (dataArr != null && dataArr.length() > 0) {
+                        for (int i = 0; i < dataArr.length(); i++) {
+                            JSONObject row = dataArr.optJSONObject(i);
+                            if (row == null) continue;
+
+                            String marka = row.optString("Marka", "Unknown");
+                            double kalanStokGun = row.optDouble("Kalan Stok Gün", 0.0);
+
+                            // Null veya boş marka kontrolü
+                            if (marka == null || marka.isEmpty()) continue;
+
+                            // Map'e String-Double formatında ekle
+                            markaVeKalanStokGunleriW42.put(marka, kalanStokGun);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Debug amaçlı konsola bastır
+        System.out.println("W42 Marka - Kalan Stok Gün Map (Double versiyon): ");
+        for (Map.Entry<String, Double> entry : markaVeKalanStokGunleriW42.entrySet()) {
+            System.out.println(entry.getKey() + " → " + entry.getValue());
+        }
+    }
+
+
+
+    Map<String, Double> w43markaVeKalanStokGunleriS57 = new LinkedHashMap<>();
+
+    @Given("The user send widget43AggreationS57 request")
+    public void theUserSendWidget43AggreationS57Request() {
+        JSONObject response = Requests.sendWidget43AggreationS57Request();
+        System.out.println("widget43AggreationS57Json: " + response);
+
+        w43markaVeKalanStokGunleriS57.clear();
+
+        if (response != null) {
+            JSONArray resultArray = response.optJSONArray("result");
+            if (resultArray != null && resultArray.length() > 0) {
+                JSONObject resultObj = resultArray.optJSONObject(0);
+                if (resultObj != null) {
+                    JSONArray dataArray = resultObj.optJSONArray("data");
+                    if (dataArray != null && dataArray.length() > 0) {
+                        for (int i = 0; i < dataArray.length(); i++) {
+                            JSONObject row = dataArray.optJSONObject(i);
+                            if (row == null) continue;
+
+                            String marka = row.optString("Marka", "").trim();
+                            if (marka.isEmpty() || row.isNull("Kalan Stok Gün")) continue;
+
+                            double kalanStokGun = row.optDouble("Kalan Stok Gün", 0.0);
+                            w43markaVeKalanStokGunleriS57.put(marka, kalanStokGun);
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("Widget43 Marka - Kalan Stok Gün Map (Double versiyon):");
+        w43markaVeKalanStokGunleriS57.forEach((marka, gun) ->
+                System.out.println(marka + " → " + gun));
+    }
+
+
+    @Then("The user verify scenario57")
+    public void theUserVerifyScenario57() {
+        Assert.assertTrue("senaryo 57 değerler farklı",
+                compareMaps(markaVeKalanStokGunleriW42,w43markaVeKalanStokGunleriS57));
+    }
+
+    String myColumnW3AggreationS10;
+
+    @Given("The user send widget3AggreationS10 request")
+    public void theUserSendWidget3AggreationS10Request() {
+        JSONObject response = Requests.sendWidget3AggreationS10Request();
+        System.out.println("widget3AggreationS10 response: " + response);
+
+        myColumnW3AggreationS10 = null;
+
+        if (response != null) {
+            JSONArray results = response.optJSONArray("result");
+            if (results != null && results.length() > 0) {
+                JSONObject resultObj = results.optJSONObject(0);
+                if (resultObj != null) {
+                    JSONArray dataArr = resultObj.optJSONArray("data");
+                    if (dataArr != null && dataArr.length() > 0) {
+                        JSONObject dataObj = dataArr.optJSONObject(0);
+                        if (dataObj != null) {
+                            // "My column" değerini al
+                            myColumnW3AggreationS10 = dataObj.optString("My column", null);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (myColumnW3AggreationS10 != null) {
+            System.out.println("My Column (W3AggreationS10): " + myColumnW3AggreationS10);
+        } else {
+            System.out.println("My Column değeri bulunamadı (W3AggreationS10).");
+        }
+    }
+
+    String ayTrS10Query;
+    @Given("The user get S10 query")
+    public void theUserGetS10Query() {
+        ayTrS10Query = databaseMethods.getAyTrS10();
     }
 }
