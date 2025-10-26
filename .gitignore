@@ -1,0 +1,64 @@
+
+
+# Default ignored files
+/shelf/
+/workspace.xml
+# ========================================
+# Java / Maven / Selenium / Cucumber Project
+# ========================================
+
+# Maven build output
+target/
+*.class
+*.jar
+*.war
+*.ear
+dependency-reduced-pom.xml
+release.properties
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+workspace.xml
+shelf/
+
+# Eclipse / STS (varsa)
+.project
+.classpath
+.settings/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs and temp
+*.log
+*.tmp
+*.swp
+
+# Reports and test outputs
+**/reports/
+**/report/
+**/test-output/
+**/surefire-reports/
+**/failsafe-reports/
+**/cucumber-html-reports/
+**/extent-report*/
+**/allure-results/
+**/allure-report/
+**/cucumber-report*/
+report-*.html
+overview-*.html
+
+# Other generated files
+*.ser
+*.orig
+*.bak
+
+# ========================================
+# End of .gitignore
+# ========================================
