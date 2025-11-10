@@ -17,9 +17,9 @@ public class Requests {
         // İnsecure client'ı oluştur ve AYNI client üstüne timeoutları uygula (ssl ayarları korunur)
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(2, TimeUnit.SECONDS)
-                .writeTimeout(2, TimeUnit.SECONDS)
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -73,9 +73,9 @@ public class Requests {
         // SSL doğrulamasını kapatan client'ı baz al, timeout'ları ekle
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(4, TimeUnit.SECONDS)
-                .readTimeout(4, TimeUnit.SECONDS)
-                .writeTimeout(4, TimeUnit.SECONDS)
+                .connectTimeout(8, TimeUnit.SECONDS)
+                .readTimeout(8, TimeUnit.SECONDS)
+                .writeTimeout(8, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -566,9 +566,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(6, TimeUnit.SECONDS)
-                .readTimeout(6, TimeUnit.SECONDS)
-                .writeTimeout(6, TimeUnit.SECONDS)
+                .connectTimeout(7, TimeUnit.SECONDS)
+                .readTimeout(7, TimeUnit.SECONDS)
+                .writeTimeout(7, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -1899,248 +1899,259 @@ public class Requests {
                 .retryOnConnectionFailure(true)
                 .build();
 
-        String cookie = ConfigurationReader.getProperty("cookie");
+        String cookie = ConfigurationReader.getProperty("cookie"); // DIA cookie
 
-        String jsonBody = """
+        // DİKKAT: Burada kesinlikle String.format/.formatted kullanılmıyor.
+        String bodyStr = """
+{
+  "datasource": {"id": 375, "type": "table"},
+  "force": false,
+  "queries": [
     {
-      "datasource": {"id":368,"type":"table"},
-      "force": true,
-      "queries": [{
-        "filters": [],
-        "extras": {
-          "time_grain_sqla":"P1D",
-          "having":"",
-          "where":"(TRHISLEMTARIHI = today()) AND (splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1])"
+      "filters": [],
+      "extras": {
+        "time_grain_sqla": "P1D",
+        "having": "",
+        "where": "(TRHISLEMTARIHI >= today() - 1) AND (splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\nLIKE \\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\n      'Marmara'\\n    , 'ı', 'i'), 'İ', 'I')))[1])"
+      },
+      "applied_time_extras": {},
+      "columns": [
+        {
+          "timeGrain": "P1D",
+          "columnType": "BASE_AXIS",
+          "datasourceWarning": false,
+          "expressionType": "SQL",
+          "label": "Column",
+          "sqlExpression": "TRHISLEMTARIHI"
+        }
+      ],
+      "metrics": [
+        {
+          "aggregate": null,
+          "column": null,
+          "datasourceWarning": false,
+          "expressionType": "SQL",
+          "hasCustomLabel": true,
+          "label": "İç Hedef",
+          "optionName": "metric_sghnx7sduc8_lyz8geip0o",
+          "sqlExpression": "CASE WHEN SUM(Distinct DailyTarget) < 0 THEN 0 ELSE SUM(Distinct DailyTarget) END"
         },
-        "applied_time_extras": {},
-        "columns": [{
-          "timeGrain":"P1D",
-          "columnType":"BASE_AXIS",
-          "datasourceWarning":false,
-          "expressionType":"SQL",
-          "label":"Column",
-          "sqlExpression":"TRHISLEMTARIHI"
-        }],
-        "metrics":[
-          {
-            "aggregate":null,
-            "column":null,
-            "datasourceWarning":false,
-            "expressionType":"SQL",
-            "hasCustomLabel":true,
-            "label":"İç Hedef",
-            "optionName":"metric_sghnx7sduc8_lyz8geip0o",
-            "sqlExpression":"CASE WHEN SUM(Distinct DailyTarget) < 0 THEN 0 ELSE SUM(Distinct DailyTarget) END"
+        {
+          "aggregate": "SUM",
+          "column": {
+            "advanced_data_type": null,
+            "changed_on": "2025-09-14T02:58:38.127382",
+            "column_name": "OrdersNHotSales",
+            "created_on": "2025-09-14T02:58:38.127380",
+            "description": null,
+            "expression": null,
+            "extra": "{\\"warning_markdown\\":null}",
+            "filterable": true,
+            "groupby": true,
+            "id": 8399,
+            "is_active": true,
+            "is_dttm": false,
+            "python_date_format": null,
+            "type": "Decimal(38, 14)",
+            "type_generic": 0,
+            "uuid": "29c377c6-6041-4080-9dc6-f631bbff26e5",
+            "verbose_name": null
           },
+          "datasourceWarning": false,
+          "expressionType": "SIMPLE",
+          "hasCustomLabel": true,
+          "label": "Satış (L)",
+          "optionName": "metric_16l610pstum_wchr40urtu",
+          "sqlExpression": null
+        }
+      ],
+      "orderby": [
+        [
           {
-            "aggregate":"SUM",
-            "column":{
-              "advanced_data_type":null,
-              "certification_details":null,
-              "certified_by":null,
-              "column_name":"OrdersNHotSales",
-              "description":null,
-              "expression":null,
-              "extra":"{\\"warning_markdown\\":null}",
-              "filterable":true,
-              "groupby":true,
-              "id":6370,
-              "is_active":true,
-              "is_dttm":false,
-              "python_date_format":null,
-              "type":"Nullable(Decimal(38, 14))",
-              "type_generic":0,
-              "uuid":"dummy-uuid",
-              "verbose_name":null
-            },
-            "datasourceWarning":false,
-            "expressionType":"SIMPLE",
-            "hasCustomLabel":true,
-            "label":"Satış (L)",
-            "optionName":"metric_8h4r3pkwafb_p4ml4u09rpi",
-            "sqlExpression":null
-          }
-        ],
-        "orderby":[[
-          {
-            "aggregate":null,
-            "column":null,
-            "datasourceWarning":false,
-            "expressionType":"SQL",
-            "hasCustomLabel":true,
-            "label":"İç Hedef",
-            "optionName":"metric_sghnx7sduc8_lyz8geip0o",
-            "sqlExpression":"CASE WHEN SUM(Distinct DailyTarget) < 0 THEN 0 ELSE SUM(Distinct DailyTarget) END"
+            "aggregate": null,
+            "column": null,
+            "datasourceWarning": false,
+            "expressionType": "SQL",
+            "hasCustomLabel": true,
+            "label": "İç Hedef",
+            "optionName": "metric_sghnx7sduc8_lyz8geip0o",
+            "sqlExpression": "CASE WHEN SUM(Distinct DailyTarget) < 0 THEN 0 ELSE SUM(Distinct DailyTarget) END"
           },
           false
-        ]],
-        "annotation_layers":[],
-        "row_limit":10000,
-        "series_columns":[],
-        "series_limit":0,
-        "order_desc":true,
-        "url_params":{"dashboard_page_id":"6MVk4sGyvPAe3-_3ccP6g","slice_id":"346"},
-        "custom_params":{},
-        "custom_form_data":{},
-        "time_offsets":[],
-        "post_processing":[
-          {
-            "operation":"pivot",
-            "options":{
-              "index":["Column"],
-              "columns":[],
-              "aggregates":{
-                "İç Hedef":{"operator":"mean"},
-                "Satış (L)":{"operator":"mean"}
-              },
-              "drop_missing_columns":false
-            }
-          },
-          {"operation":"flatten"}
         ]
-      }],
-      "form_data":{
-        "datasource":"368__table",
-        "viz_type":"echarts_timeseries_bar",
-        "slice_id":346,
-        "url_params":{"dashboard_page_id":"6MVk4sGyvPAe3-_3ccP6g","slice_id":"346"},
-        "x_axis":{"datasourceWarning":false,"expressionType":"SQL","label":"Column","sqlExpression":"TRHISLEMTARIHI"},
-        "time_grain_sqla":"P1D",
-        "x_axis_sort_asc":true,
-        "x_axis_sort_series":"name",
-        "x_axis_sort_series_ascending":true,
-        "metrics":[
-          {
-            "aggregate":null,
-            "column":null,
-            "datasourceWarning":false,
-            "expressionType":"SQL",
-            "hasCustomLabel":true,
-            "label":"İç Hedef",
-            "optionName":"metric_sghnx7sduc8_lyz8geip0o",
-            "sqlExpression":"CASE WHEN SUM(Distinct DailyTarget) < 0 THEN 0 ELSE SUM(Distinct DailyTarget) END"
-          },
-          {
-            "aggregate":"SUM",
-            "column":{
-              "advanced_data_type":null,
-              "certification_details":null,
-              "certified_by":null,
-              "column_name":"OrdersNHotSales",
-              "description":null,
-              "expression":null,
-              "extra":"{\\"warning_markdown\\":null}",
-              "filterable":true,
-              "groupby":true,
-              "id":6370,
-              "is_active":true,
-              "is_dttm":false,
-              "python_date_format":null,
-              "type":"Nullable(Decimal(38, 14))",
-              "type_generic":0,
-              "uuid":"dummy-uuid",
-              "verbose_name":null
-            },
-            "datasourceWarning":false,
-            "expressionType":"SIMPLE",
-            "hasCustomLabel":true,
-            "label":"Satış (L)",
-            "optionName":"metric_8h4r3pkwafb_p4ml4u09rpi",
-            "sqlExpression":null
-          }
-        ],
-        "groupby":[],
-        "adhoc_filters":[
-          {
-            "clause":"WHERE",
-            "comparator":null,
-            "datasourceWarning":false,
-            "expressionType":"SQL",
-            "filterOptionName":"filter_4qlcx7z0p6r_g4ndh7e130t",
-            "isExtra":false,
-            "isNew":false,
-            "operator":"TEMPORAL_RANGE",
-            "operatorId":"TEMPORAL_RANGE",
-            "sqlExpression":"TRHISLEMTARIHI = today()",
-            "subject":"TRHISLEMTARIHI"
-          },
-          {
-            "clause":"WHERE",
-            "comparator":null,
-            "datasourceWarning":false,
-            "expressionType":"SQL",
-            "filterOptionName":"filter_900tax7vbbn_0ec9wuhaxphq",
-            "isExtra":false,
-            "isNew":false,
-            "operator":null,
-            "sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]",
-            "subject":null
-          }
-        ],
-        "row_limit":10000,
-        "truncate_metric":true,
-        "show_empty_columns":true,
-        "comparison_type":"values",
-        "annotation_layers":[],
-        "forecastPeriods":10,
-        "forecastInterval":0.8,
-        "orientation":"vertical",
-        "x_axis_title_margin":15,
-        "y_axis_title":"",
-        "y_axis_title_margin":"45",
-        "y_axis_title_position":"Left",
-        "sort_series_type":"name",
-        "sort_series_ascending":true,
-        "color_scheme":"bnbColors",
-        "time_shift_color":true,
-        "show_value":true,
-        "stack":null,
-        "only_total":true,
-        "show_legend":true,
-        "legendType":"scroll",
-        "legendOrientation":"bottom",
-        "x_axis_time_format":"%d/%m/%Y",
-        "xAxisLabelRotation":0,
-        "y_axis_format":"SMART_NUMBER",
-        "truncateYAxis":false,
-        "y_axis_bounds":[null,null],
-        "truncateXAxis":true,
-        "rich_tooltip":true,
-        "showTooltipTotal":true,
-        "tooltipTimeFormat":"%d/%m/%Y",
-        "extra_form_data":{},
-        "force":true,
-        "result_format":"json",
-        "result_type":"full"
+      ],
+      "annotation_layers": [],
+      "row_limit": 10000,
+      "series_columns": [],
+      "series_limit": 0,
+      "order_desc": true,
+      "url_params": {
+        "dashboard_page_id": "kSc6pUD3su3tG4AiF9e_t",
+        "slice_id": "162"
       },
-      "result_format":"json",
-      "result_type":"full"
+      "custom_params": {},
+      "custom_form_data": {},
+      "time_offsets": [],
+      "post_processing": [
+        {
+          "operation": "pivot",
+          "options": {
+            "index": ["Column"],
+            "columns": [],
+            "aggregates": {
+              "İç Hedef": { "operator": "mean" },
+              "Satış (L)": { "operator": "mean" }
+            },
+            "drop_missing_columns": false
+          }
+        },
+        { "operation": "flatten" }
+      ]
     }
-    """;
+  ],
+  "form_data": {
+    "datasource": "375__table",
+    "viz_type": "echarts_timeseries_bar",
+    "slice_id": 162,
+    "x_axis": {
+      "datasourceWarning": false,
+      "expressionType": "SQL",
+      "label": "Column",
+      "sqlExpression": "TRHISLEMTARIHI"
+    },
+    "time_grain_sqla": "P1D",
+    "x_axis_sort_series": "name",
+    "x_axis_sort_series_ascending": true,
+    "metrics": [
+      {
+        "aggregate": null,
+        "column": null,
+        "datasourceWarning": false,
+        "expressionType": "SQL",
+        "hasCustomLabel": true,
+        "label": "İç Hedef",
+        "optionName": "metric_sghnx7sduc8_lyz8geip0o",
+        "sqlExpression": "CASE WHEN SUM(Distinct DailyTarget) < 0 THEN 0 ELSE SUM(Distinct DailyTarget) END"
+      },
+      {
+        "aggregate": "SUM",
+        "column": {
+          "advanced_data_type": null,
+          "changed_on": "2025-09-14T02:58:38.127382",
+          "column_name": "OrdersNHotSales",
+          "created_on": "2025-09-14T02:58:38.127380",
+          "description": null,
+          "expression": null,
+          "extra": "{\\"warning_markdown\\":null}",
+          "filterable": true,
+          "groupby": true,
+          "id": 8399,
+          "is_active": true,
+          "is_dttm": false,
+          "python_date_format": null,
+          "type": "Decimal(38, 14)",
+          "type_generic": 0,
+          "uuid": "29c377c6-6041-4080-9dc6-f631bbff26e5",
+          "verbose_name": null
+        },
+        "datasourceWarning": false,
+        "expressionType": "SIMPLE",
+        "hasCustomLabel": true,
+        "label": "Satış (L)",
+        "optionName": "metric_16l610pstum_wchr40urtu",
+        "sqlExpression": null
+      }
+    ],
+    "groupby": [],
+    "adhoc_filters": [
+      {
+        "expressionType": "SQL",
+        "sqlExpression": "TRHISLEMTARIHI >= today() - 1",
+        "clause": "WHERE",
+        "subject": "TRHISLEMTARIHI",
+        "operator": "TEMPORAL_RANGE",
+        "operatorId": "TEMPORAL_RANGE",
+        "comparator": null,
+        "isExtra": false,
+        "isNew": false,
+        "datasourceWarning": false,
+        "filterOptionName": "filter_4qlcx7z0p6r_g4ndh7e130t"
+      },
+      {
+        "expressionType": "SQL",
+        "sqlExpression": "splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\nLIKE \\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\n      'Marmara'\\n    , 'ı', 'i'), 'İ', 'I')))[1]",
+        "clause": "WHERE",
+        "subject": null,
+        "operator": null,
+        "comparator": null,
+        "isExtra": false,
+        "isNew": false,
+        "datasourceWarning": false,
+        "filterOptionName": "filter_fd9nx1igt07_35ubhujpugz"
+      }
+    ],
+    "row_limit": 10000,
+    "truncate_metric": true,
+    "show_empty_columns": true,
+    "comparison_type": "values",
+    "annotation_layers": [],
+    "forecastPeriods": 10,
+    "forecastInterval": 0.8,
+    "orientation": "vertical",
+    "x_axis_title_margin": 15,
+    "y_axis_title": "",
+    "y_axis_title_margin": "45",
+    "y_axis_title_position": "Left",
+    "sort_series_type": "name",
+    "sort_series_ascending": true,
+    "color_scheme": "bnbColors",
+    "time_shift_color": true,
+    "show_value": true,
+    "stack": null,
+    "only_total": true,
+    "show_legend": true,
+    "legendType": "scroll",
+    "legendOrientation": "bottom",
+    "x_axis_time_format": "%d/%m/%Y",
+    "xAxisLabelRotation": 0,
+    "y_axis_format": "SMART_NUMBER",
+    "truncateYAxis": false,
+    "y_axis_bounds": [null, null],
+    "truncateXAxis": true,
+    "rich_tooltip": true,
+    "showTooltipTotal": true,
+    "tooltipTimeFormat": "%d/%m/%Y",
+    "extra_form_data": {},
+    "force": false,
+    "result_format": "json",
+    "result_type": "full"
+  },
+  "result_format": "json",
+  "result_type": "full"
+}
+""";
+
+        RequestBody body = RequestBody.create(bodyStr, MediaType.parse("application/json"));
 
         Request request = new Request.Builder()
-                .url("https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A346%7D&force=true")
-                .post(RequestBody.create(jsonBody, MediaType.parse("application/json")))
+                .url("https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A162%7D")
+                .post(body)
                 .addHeader("Accept", "application/json")
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Origin", "https://dia-dashboard.efectura.com")
-                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=_VJ-qUmY-eY&dashboard_page_id=6MVk4sGyvPAe3-_3ccP6g&slice_id=346")
-                .addHeader("User-Agent", "Mozilla/5.0")
                 .addHeader("Cookie", cookie)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            String respBody = response.body() != null ? response.body().string() : "";
             if (!response.isSuccessful()) {
-                System.err.println("sendWidget25Request HTTP " + response.code() + " body: " + respBody);
                 throw new IOException("Unexpected code " + response);
             }
-            return new JSONObject(respBody);
+            return new JSONObject(response.body().string());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
 
 
     public static JSONObject sendWidget42Request() {
@@ -3704,7 +3715,6 @@ public class Requests {
         }
     }
 
-
     public static JSONObject sendWidget43Request() {
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
@@ -3717,58 +3727,109 @@ public class Requests {
         String cookie = ConfigurationReader.getProperty("cookie");
 
         String json = """
-    {"datasource":{"id":209,"type":"table"},"force":true,
-     "queries":[{"filters":[{"col":"DISTRIBUTOR_KOD","op":"NOT IN","val":["EDIRNE MAHALO"]}],
-     "extras":{"time_grain_sqla":"P1D","having":"","where":""},"applied_time_extras":{},
-     "columns":[
-        {"expressionType":"SQL","label":"Distribütör Kod","sqlExpression":"DISTRIBUTOR_KOD"},
-        {"expressionType":"SQL","label":"Ürün Kod","sqlExpression":"URUN_KOD"},
-        {"expressionType":"SQL","label":"Ürün Kategori","sqlExpression":"URUN_KATEGORU_ACIKLAMA"},
-        {"expressionType":"SQL","label":"Ürün Tip","sqlExpression":"URUN_TIP_ACIKLAMA"},
-        {"expressionType":"SQL","label":"Ürün Kısa Ad","sqlExpression":"URUN_KISA_AD"},
-        {"expressionType":"SQL","label":"Şişe Stok","sqlExpression":"Stock"},
-        {"expressionType":"SQL","label":"Litre Stok","sqlExpression":"Stock_Liters"},
-        {"expressionType":"SQL","label":"Günlük Ortalama Şişe Satış","sqlExpression":"Est_Total_Sales"},
-        {"expressionType":"SQL","label":"Günlük Ortalama Litre Satış","sqlExpression":"Est_Total_Sales_Liters"},
-        {"expressionType":"SQL","label":"Kalan Stok Gün","sqlExpression":"toFloat64(Stock_Liters)/toFloat64(Est_Total_Sales_Liters)*1.0"}
-     ],
-     "metrics":[],"orderby":[],"annotation_layers":[],"row_limit":100000,"series_limit":0,"order_desc":true,
-     "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","slice_id":"376"},
-     "custom_params":{},"custom_form_data":{},"post_processing":[],"time_offsets":[]}],
-     "form_data":{"datasource":"209__table","viz_type":"table","slice_id":376,
-       "url_params":{"dashboard_page_id":"RQU5lFjUavfRCcebEFYwP","slice_id":"376"},
-       "query_mode":"aggregate",
-       "groupby":[
-         {"expressionType":"SQL","label":"Distribütör Kod","sqlExpression":"DISTRIBUTOR_KOD"},
-         {"expressionType":"SQL","label":"Ürün Kod","sqlExpression":"URUN_KOD"},
-         {"expressionType":"SQL","label":"Ürün Kategori","sqlExpression":"URUN_KATEGORU_ACIKLAMA"},
-         {"expressionType":"SQL","label":"Ürün Tip","sqlExpression":"URUN_TIP_ACIKLAMA"},
-         {"expressionType":"SQL","label":"Ürün Kısa Ad","sqlExpression":"URUN_KISA_AD"},
-         {"expressionType":"SQL","label":"Şişe Stok","sqlExpression":"Stock"},
-         {"expressionType":"SQL","label":"Litre Stok","sqlExpression":"Stock_Liters"},
-         {"expressionType":"SQL","label":"Günlük Ortalama Şişe Satış","sqlExpression":"Est_Total_Sales"},
-         {"expressionType":"SQL","label":"Günlük Ortalama Litre Satış","sqlExpression":"Est_Total_Sales_Liters"},
-         {"expressionType":"SQL","label":"Kalan Stok Gün","sqlExpression":"toFloat64(Stock_Liters)/toFloat64(Est_Total_Sales_Liters)*1.0"}
-       ],
-       "time_grain_sqla":"P1D","temporal_columns_lookup":{},"all_columns":[],"percent_metrics":[],
-       "adhoc_filters":[{"clause":"WHERE","comparator":["EDIRNE MAHALO"],"datasourceWarning":false,
-         "expressionType":"SIMPLE","filterOptionName":"filter_xxpk6dan4db_yrds5ko880b","isExtra":false,"isNew":false,
-         "operator":"NOT IN","operatorId":"NOT_IN","sqlExpression":null,"subject":"DISTRIBUTOR_KOD"}],
-       "order_by_cols":[],"row_limit":"100000","table_timestamp_format":"smart_date","include_search":true,
-       "allow_render_html":true,
-       "column_config":{
-         "Günlük Ortalama Litre Satış":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"},
-         "Günlük Ortalama Şişe Satış":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"},
-         "Kalan Stok Gün":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"},
-         "Litre Stok":{"d3NumberFormat":",.2f","d3SmallNumberFormat":",.2f"}
-       },
-       "show_cell_bars":false,"color_pn":true,"comparison_color_scheme":"Green","conditional_formatting":[],
-       "comparison_type":"values","extra_form_data":{},"force":true,"result_format":"json","result_type":"full"},
-     "result_format":"json","result_type":"full"}
+    {
+      "datasource": { "id": 209, "type": "table" },
+      "force": true,
+      "queries": [
+        {
+          "filters": [
+            { "col": "DISTRIBUTOR_KOD", "op": "NOT IN", "val": ["EDIRNE MAHALO"] }
+          ],
+          "extras": { "time_grain_sqla": "P1D", "having": "", "where": "" },
+          "applied_time_extras": {},
+          "columns": [
+            { "expressionType": "SQL", "label": "Distribütör Kod", "sqlExpression": "DISTRIBUTOR_KOD" },
+            { "expressionType": "SQL", "label": "Ürün Kod",        "sqlExpression": "URUN_KOD" },
+            { "expressionType": "SQL", "label": "Ürün Kategori",   "sqlExpression": "URUN_KATEGORU_ACIKLAMA" },
+            { "expressionType": "SQL", "label": "Ürün Tip",        "sqlExpression": "URUN_TIP_ACIKLAMA" },
+            { "expressionType": "SQL", "label": "Ürün Kısa Ad",    "sqlExpression": "URUN_KISA_AD" },
+            { "expressionType": "SQL", "label": "Şişe Stok",       "sqlExpression": "Stock" },
+            { "expressionType": "SQL", "label": "Litre Stok",      "sqlExpression": "Stock_Liters" },
+            { "expressionType": "SQL", "label": "Günlük Ortalama Şişe Satış",  "sqlExpression": "Est_Total_Sales" },
+            { "expressionType": "SQL", "label": "Günlük Ortalama Litre Satış", "sqlExpression": "Est_Total_Sales_Liters" },
+            { "expressionType": "SQL", "label": "Kalan Stok Gün",  "sqlExpression": "toFloat64(Stock_Liters)/toFloat64(Est_Total_Sales_Liters)*1.0" }
+          ],
+          "metrics": [],
+          "orderby": [
+            ["URUN_TIP_ACIKLAMA", true]
+          ],
+          "annotation_layers": [],
+          "row_limit": 100000,
+          "series_limit": 0,
+          "order_desc": true,
+          "url_params": { "dashboard_page_id": "RQU5lFjUavfRCcebEFYwP", "slice_id": "376" },
+          "custom_params": {},
+          "custom_form_data": {},
+          "post_processing": [],
+          "time_offsets": []
+        }
+      ],
+      "form_data": {
+        "datasource": "209__table",
+        "viz_type": "table",
+        "slice_id": 376,
+        "url_params": { "dashboard_page_id": "RQU5lFjUavfRCcebEFYwP", "slice_id": "376" },
+        "query_mode": "aggregate",
+        "groupby": [
+          { "expressionType": "SQL", "label": "Distribütör Kod", "sqlExpression": "DISTRIBUTOR_KOD" },
+          { "expressionType": "SQL", "label": "Ürün Kod",        "sqlExpression": "URUN_KOD" },
+          { "expressionType": "SQL", "label": "Ürün Kategori",   "sqlExpression": "URUN_KATEGORU_ACIKLAMA" },
+          { "expressionType": "SQL", "label": "Ürün Tip",        "sqlExpression": "URUN_TIP_ACIKLAMA" },
+          { "expressionType": "SQL", "label": "Ürün Kısa Ad",    "sqlExpression": "URUN_KISA_AD" },
+          { "expressionType": "SQL", "label": "Şişe Stok",       "sqlExpression": "Stock" },
+          { "expressionType": "SQL", "label": "Litre Stok",      "sqlExpression": "Stock_Liters" },
+          { "expressionType": "SQL", "label": "Günlük Ortalama Şişe Satış",  "sqlExpression": "Est_Total_Sales" },
+          { "expressionType": "SQL", "label": "Günlük Ortalama Litre Satış", "sqlExpression": "Est_Total_Sales_Liters" },
+          { "expressionType": "SQL", "label": "Kalan Stok Gün",  "sqlExpression": "toFloat64(Stock_Liters)/toFloat64(Est_Total_Sales_Liters)*1.0" }
+        ],
+        "time_grain_sqla": "P1D",
+        "temporal_columns_lookup": {},
+        "all_columns": [],
+        "percent_metrics": [],
+        "adhoc_filters": [
+          {
+            "clause": "WHERE",
+            "comparator": ["EDIRNE MAHALO"],
+            "datasourceWarning": false,
+            "expressionType": "SIMPLE",
+            "filterOptionName": "filter_xxpk6dan4db_yrds5ko880b",
+            "isExtra": false,
+            "isNew": false,
+            "operator": "NOT IN",
+            "operatorId": "NOT_IN",
+            "sqlExpression": null,
+            "subject": "DISTRIBUTOR_KOD"
+          }
+        ],
+        "order_by_cols": [
+          "[\\"URUN_TIP_ACIKLAMA\\", true]"
+        ],
+        "row_limit": "100000",
+        "table_timestamp_format": "smart_date",
+        "include_search": true,
+        "allow_render_html": true,
+        "column_config": {
+          "Günlük Ortalama Litre Satış": { "d3NumberFormat": ",.2f", "d3SmallNumberFormat": ",.2f" },
+          "Günlük Ortalama Şişe Satış":  { "d3NumberFormat": ",.2f", "d3SmallNumberFormat": ",.2f" },
+          "Kalan Stok Gün":              { "d3NumberFormat": ",.2f", "d3SmallNumberFormat": ",.2f" },
+          "Litre Stok":                  { "d3NumberFormat": ",.2f", "d3SmallNumberFormat": ",.2f" }
+        },
+        "show_cell_bars": false,
+        "color_pn": true,
+        "comparison_color_scheme": "Green",
+        "conditional_formatting": [],
+        "comparison_type": "values",
+        "extra_form_data": {},
+        "force": true,
+        "result_format": "json",
+        "result_type": "full"
+      },
+      "result_format": "json",
+      "result_type": "full"
+    }
     """;
 
         RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
-
         Request request = new Request.Builder()
                 .url("https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A376%7D&force=true")
                 .post(body)
@@ -3788,6 +3849,8 @@ public class Requests {
             return null;
         }
     }
+
+
 
     public static JSONObject sendWidget94Request() {
         OkHttpClient client = InsecureHttp.newClient()
@@ -4449,14 +4512,18 @@ public class Requests {
       "queries": [
         {
           "filters": [],
-          "extras": { "having": "", "where": "" },
+          "extras": {
+            "having": "",
+            "where": ""
+          },
           "applied_time_extras": {},
           "columns": [
             "URUN_TIP_ACIKLAMA",
             "num_distributors_with_so"
           ],
           "orderby": [
-            ["num_distributors_with_so", false]
+            ["num_distributors_with_so", false],
+            ["URUN_TIP_ACIKLAMA", true]
           ],
           "annotation_layers": [],
           "row_limit": 10,
@@ -4489,7 +4556,10 @@ public class Requests {
         ],
         "percent_metrics": [],
         "adhoc_filters": [],
-        "order_by_cols": ["[\\"num_distributors_with_so\\", false]"],
+        "order_by_cols": [
+          "[\\"num_distributors_with_so\\", false]",
+          "[\\"URUN_TIP_ACIKLAMA\\", true]"
+        ],
         "row_limit": 10,
         "table_timestamp_format": "smart_date",
         "include_search": false,
@@ -4516,7 +4586,6 @@ public class Requests {
     """;
 
         RequestBody body = RequestBody.create(bodyStr, JSON);
-
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
@@ -4537,6 +4606,9 @@ public class Requests {
             return null;
         }
     }
+
+
+
 
     public static JSONObject sendWidget31Request() {
         String cookie = ConfigurationReader.getProperty("cookie");
@@ -5286,8 +5358,11 @@ public class Requests {
                 .build();
 
         String cookie = ConfigurationReader.getProperty("cookie");
+        // İçinde bulunduğumuz yıl/ay
+        int currentYear  = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
 
-        String body = """
+        String template = """
     {
       "datasource":{"id":330,"type":"table"},
       "force":false,
@@ -5295,8 +5370,8 @@ public class Requests {
         {
           "filters":[
             {"col":"ProductQuality","op":"IN","val":["Ultra Premium","Premium","Semi Premium"]},
-            {"col":"FISCALYEAR","op":"IN","val":[2025]},
-            {"col":"FISCALMONTH","op":"IN","val":[10]}
+            {"col":"FISCALYEAR","op":"IN","val":[${YEAR}]},
+            {"col":"FISCALMONTH","op":"IN","val":[${MONTH}]}
           ],
           "extras":{
             "time_grain_sqla":"P1D",
@@ -5383,6 +5458,10 @@ public class Requests {
       "result_type":"full"
     }
     """;
+
+        String body = template
+                .replace("${YEAR}", String.valueOf(currentYear))
+                .replace("${MONTH}", String.valueOf(currentMonth));
 
         Request request = new Request.Builder()
                 .url(url)
@@ -7188,9 +7267,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
+                .connectTimeout(4, TimeUnit.SECONDS)
+                .readTimeout(4, TimeUnit.SECONDS)
+                .writeTimeout(4, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -7302,9 +7381,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -9489,9 +9568,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
+                .connectTimeout(4, TimeUnit.SECONDS)
+                .readTimeout(4, TimeUnit.SECONDS)
+                .writeTimeout(4, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 

@@ -67,91 +67,114 @@ public class WidgetsStepDefs extends BaseStep {
 
     double currentActualW12;
     double currentTargetW12;
+
     @Given("The user send widget12 request")
     public void theUserSendWidget12Request() throws IOException {
         JSONObject w12JsonBody = Requests.sendWidget12Request();
-
         System.out.println("w12JsonBody: " + w12JsonBody);
 
-//        // İlk result içindeki data array'ine eriş
-//        JSONArray dataArray = w12JsonBody
-//                .getJSONArray("result")
-//                .getJSONObject(0)
-//                .getJSONArray("data");
+        currentActualW12 = 0.0;
+        currentTargetW12 = 0.0;
 
-        // Ana "result" dizisini al
-        JSONArray resultArray = w12JsonBody.getJSONArray("result");
+        if (w12JsonBody == null) return;
 
-        // İkinci result objesini al (index 1)
-        JSONObject secondResult = resultArray.getJSONObject(1);
+        JSONArray results = w12JsonBody.optJSONArray("result");
+        if (results == null || results.length() == 0) return;
 
-        // "data" dizisini al
-        JSONArray dataArray = secondResult.getJSONArray("data");
+        // === 1) En güncel "Gerçekleşme"yi bul ===
+        String actualKey = "Gerçekleşme";
+        Double latestActual = null;
+        long latestActualMonth = Long.MIN_VALUE;
 
-        // FISCALMONTH değerlerini tutacak liste
-        List<Long> fiscalMonths = new ArrayList<>();
+        for (int r = 0; r < results.length(); r++) {
+            JSONObject block = results.optJSONObject(r);
+            if (block == null) continue;
 
-
-        for (int i = 0; i < dataArray.length(); i++) {
-            JSONObject obj = dataArray.getJSONObject(i);
-            if (obj.has("FISCALMONTH")) {
-                String pValue = BrowserUtils.getPValueFromFiscalMonth(obj.getLong("FISCALMONTH"));
-                if (pValue.equals(currentMonth)) {
-                    currentActualW12 = obj.getDouble("Gerçekleşme");
-                    System.out.println("fiscal month değeri güncel ay: " + obj.getLong("FISCALMONTH"));
-                    break; // eşleşeni bulunca döngüyü bitiriyoruz
-                }
-            }
-        }
-        System.out.println("currentActual: " + currentActualW12);
-
-        JSONArray results = w12JsonBody.getJSONArray("result");
-        // 1) "İç Hedef" metrikli bloğu bul
-        JSONObject icHedefBlock = null;
-        String icHedefKey = "İç Hedef";
-        for (int i = 0; i < results.length(); i++) {
-            JSONObject block = results.getJSONObject(i);
+            // Bu blok "Gerçekleşme" kolonu içeriyor mu?
             JSONArray colnames = block.optJSONArray("colnames");
             if (colnames == null) continue;
 
-            // Bu blokta "İç Hedef" kolonu var mı?
+            boolean hasActual = false;
             for (int c = 0; c < colnames.length(); c++) {
-                if (icHedefKey.equals(colnames.optString(c))) {
-                    icHedefBlock = block;
+                if (actualKey.equals(colnames.optString(c))) {
+                    hasActual = true;
                     break;
                 }
             }
-            if (icHedefBlock != null) break;
-        }
+            if (!hasActual) continue;
 
-        currentTargetW12 = 0.0;
+            // Data'yı tara ve en büyük FISCALMONTH'u seç
+            JSONArray data = block.optJSONArray("data");
+            if (data == null) continue;
 
-        if (icHedefBlock != null) {
-            JSONArray dataArray2 = icHedefBlock.optJSONArray("data");
-            if (dataArray != null) {
-                for (int i = 0; i < dataArray2.length(); i++) {
-                    JSONObject obj = dataArray2.getJSONObject(i);
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject row = data.optJSONObject(i);
+                if (row == null) continue;
 
-                    // FISCALMONTH epoch ms double dönebiliyor → long'a çek
-                    if (obj.has("FISCALMONTH") && obj.has(icHedefKey) && !obj.isNull(icHedefKey)) {
-                        long epochMs = (long) obj.getDouble("FISCALMONTH");
-                        String pValue = BrowserUtils.getPValueFromFiscalMonth(epochMs);
+                if (!row.has("FISCALMONTH") || !row.has(actualKey) || row.isNull(actualKey)) continue;
 
-                        if (pValue.equals(currentMonth)) {
-                            currentTargetW12 = obj.optDouble(icHedefKey, 0.0);
-                            System.out.println("İç Hedef - güncel ay FISCALMONTH: " + epochMs);
-                            break; // eşleşen ayı bulduk
-                        }
-                    }
+                // Superset/ClickHouse bazen ms'i double döndürüyor → long'a çevir
+                long fm = (long) row.optDouble("FISCALMONTH", -1);
+                if (fm > latestActualMonth) {
+                    latestActualMonth = fm;
+                    latestActual = row.optDouble(actualKey, 0.0);
                 }
             }
-        } else {
-            System.out.println("Uyarı: Response içinde 'İç Hedef' metrikli bir blok bulunamadı.");
         }
 
-        System.out.println("currentTarget (İç Hedef): " + currentTargetW12);
+        if (latestActual != null) {
+            currentActualW12 = latestActual;
+            System.out.println("En güncel Gerçekleşme ay (FISCALMONTH): " + latestActualMonth);
+            System.out.println("currentActualW12: " + currentActualW12);
+        } else {
+            System.out.println("Uyarı: 'Gerçekleşme' kolonu bulunan blokta veri bulunamadı.");
+        }
 
+        // === 2) En güncel "İç Hedef"i bul ===
+        String targetKey = "İç Hedef";
+        Double latestTarget = null;
+        long latestTargetMonth = Long.MIN_VALUE;
 
+        for (int r = 0; r < results.length(); r++) {
+            JSONObject block = results.optJSONObject(r);
+            if (block == null) continue;
+
+            JSONArray colnames = block.optJSONArray("colnames");
+            if (colnames == null) continue;
+
+            boolean hasTarget = false;
+            for (int c = 0; c < colnames.length(); c++) {
+                if (targetKey.equals(colnames.optString(c))) {
+                    hasTarget = true;
+                    break;
+                }
+            }
+            if (!hasTarget) continue;
+
+            JSONArray data = block.optJSONArray("data");
+            if (data == null) continue;
+
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject row = data.optJSONObject(i);
+                if (row == null) continue;
+
+                if (!row.has("FISCALMONTH") || !row.has(targetKey) || row.isNull(targetKey)) continue;
+
+                long fm = (long) row.optDouble("FISCALMONTH", -1);
+                if (fm > latestTargetMonth) {
+                    latestTargetMonth = fm;
+                    latestTarget = row.optDouble(targetKey, 0.0);
+                }
+            }
+        }
+
+        if (latestTarget != null) {
+            currentTargetW12 = latestTarget;
+            System.out.println("En güncel İç Hedef ay (FISCALMONTH): " + latestTargetMonth);
+            System.out.println("currentTargetW12: " + currentTargetW12);
+        } else {
+            System.out.println("Uyarı: 'İç Hedef' kolonu bulunan blokta veri bulunamadı.");
+        }
     }
 
     @Then("The user verify actuals")
@@ -477,6 +500,7 @@ public class WidgetsStepDefs extends BaseStep {
     @Given("The user send widget24 request")
     public void theUserSendWidget24Request() throws IOException {
         JSONObject w24JsonBody = Requests.sendWidget24Request();
+        System.out.println("w24JsonBody: " + w24JsonBody);
 
         toplamIcHedefW24       = sumMetricFromResults(w24JsonBody, "İç Hedef");
         toplamGerceklesmeW24   = sumMetricFromResults(w24JsonBody, "Gerçekleşme");
@@ -1016,11 +1040,16 @@ public class WidgetsStepDefs extends BaseStep {
             }
         }
 
+        urunVeStockOutSayilariW43 = databaseMethods.getUrunVeStockOutSayilariW43();
+        stockOutCountW43 = databaseMethods.getStockOutSumW43();
+
         System.out.println("Toplam Litre Stok W43: " + toplamLitreStokW43);
         System.out.println("Toplam Günlük Ortalama Litre Satış W43: " + toplamGunlukOrtalamaLitreSatisW43);
 
-        urunVeStockOutSayilariW43 = databaseMethods.getUrunVeStockOutSayilariW43();
-        stockOutCountW43 = databaseMethods.getStockOutSumW43();
+        for (Map.Entry<String, Integer> entry : urunVeStockOutSayilariW43.entrySet()) {
+            System.out.println(entry.getKey() + " = " + entry.getValue());
+        }
+
     }
 
 
@@ -1811,6 +1840,7 @@ public class WidgetsStepDefs extends BaseStep {
     }
 
     double guncelMarkaToplamiW22;
+
     @Given("The user send widget22 request")
     public void theUserSendWidget22Request() {
         JSONObject w22JsonBody = Requests.sendWidget22Request();
@@ -1818,42 +1848,68 @@ public class WidgetsStepDefs extends BaseStep {
 
         guncelMarkaToplamiW22 = 0.0;
 
-        if (w22JsonBody != null) {
-            JSONArray results = w22JsonBody.optJSONArray("result");
-            if (results != null && results.length() > 0) {
-                JSONObject block0 = results.optJSONObject(0);
-                if (block0 != null) {
-                    JSONArray data = block0.optJSONArray("data");
-                    if (data != null && data.length() > 0) {
-                        // En güncel (en büyük TRHISLEMTARIHI) satırı bul
-                        JSONObject latestRow = null;
-                        double maxTs = -1;
-                        for (int i = 0; i < data.length(); i++) {
-                            JSONObject row = data.optJSONObject(i);
-                            if (row == null) continue;
-                            double ts = row.optDouble("TRHISLEMTARIHI", -1);
-                            if (ts > maxTs) {
-                                maxTs = ts;
-                                latestRow = row;
-                            }
-                        }
+        if (w22JsonBody == null) {
+            System.out.println("W22: JSON null döndü");
+            return;
+        }
 
-                        // Bulunan satırdaki marka kolonlarını topla (TRHISLEMTARIHI hariç)
-                        if (latestRow != null) {
-                            Iterator<String> it = latestRow.keys();
-                            while (it.hasNext()) {
-                                String key = it.next();
-                                if ("TRHISLEMTARIHI".equals(key)) continue;
-                                // null, NaN vs. durumlarında 0.0 döner
-                                guncelMarkaToplamiW22 += latestRow.optDouble(key, 0.0);
-                            }
-                        }
+        JSONArray results = w22JsonBody.optJSONArray("result");
+        if (results == null || results.length() == 0) {
+            System.out.println("W22: result boş");
+            return;
+        }
+
+        JSONObject block0 = results.optJSONObject(0);
+        if (block0 == null) {
+            System.out.println("W22: result[0] yok");
+            return;
+        }
+
+        JSONArray data = block0.optJSONArray("data");
+        if (data == null || data.length() == 0) {
+            System.out.println("W22: data boş");
+            return;
+        }
+
+        // Europe/Istanbul’a göre içinde bulunduğumuz ayın başlangıcını ms (epoch) olarak al
+        long startOfThisMonthMs = java.time.LocalDate.now(java.time.ZoneId.of("Europe/Istanbul"))
+                .withDayOfMonth(1)
+                .atStartOfDay(java.time.ZoneId.of("Europe/Istanbul"))
+                .toInstant()
+                .toEpochMilli();
+
+        // Bu defa "en güncel satır" yerine, "bu ay ve sonrası" tüm satırları toplayacağız
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject row = data.optJSONObject(i);
+            if (row == null) continue;
+
+            // TRHISLEMTARIHI ms cinsinden geliyor (örn: 1730419200000.0). Güvenli biçimde oku.
+            double tsDouble = row.optDouble("TRHISLEMTARIHI", -1);
+            long ts = (tsDouble >= 0) ? (long) tsDouble : -1L;
+            if (ts < startOfThisMonthMs) {
+                continue; // içinde bulunduğumuz aydan önceki satırlar elensin
+            }
+
+            // Bu satırda TRHISLEMTARIHI dışındaki tüm sayısal brand kolonlarını topla
+            java.util.Iterator<String> it = row.keys();
+            while (it.hasNext()) {
+                String key = it.next();
+                if ("TRHISLEMTARIHI".equals(key)) continue;
+
+                // Sadece sayısal değerleri al (null/NaN -> 0 kabul)
+                Object val = row.opt(key);
+                if (val instanceof Number) {
+                    double d = ((Number) val).doubleValue();
+                    if (!Double.isNaN(d) && !Double.isInfinite(d)) {
+                        guncelMarkaToplamiW22 += d;
                     }
+                } else {
+                    // Bazı durumlarda null/string gelebilir; yok say
                 }
             }
         }
 
-        System.out.println("Güncel marka toplamı (W22): " + guncelMarkaToplamiW22);
+        System.out.println("Güncel (bu ay ve sonrası) marka toplamı (W22): " + guncelMarkaToplamiW22);
     }
 
     double rakiDegeriW15Aggregation;
