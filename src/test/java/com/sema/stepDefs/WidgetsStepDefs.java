@@ -3198,7 +3198,7 @@ public class WidgetsStepDefs extends BaseStep {
     double odemeTutariToplamW83;
     double lastGecikmeGunW83;
     @Given("The user send widget83 request")
-    public void theUserSendWidget83Request() {
+    public void theUserSendWidget83Request() throws Exception {
         JSONObject w83JsonObjectResponse = Requests.sendWidget83Request();
         System.out.println("w83JsonObjectResponse: " + w83JsonObjectResponse);
 
@@ -3241,7 +3241,7 @@ public class WidgetsStepDefs extends BaseStep {
 
     double ortGecikmeGunW92AggrS66;
     @Given("The user send widget92AggreationS66 request")
-    public void theUserSendWidget92AggreationS66Request() {
+    public void theUserSendWidget92AggreationS66Request() throws IOException {
         JSONObject w92AggrS66Response = Requests.sendWidget92AggreationS66Request();
         System.out.println("w92AggrS66Response: " + w92AggrS66Response);
 

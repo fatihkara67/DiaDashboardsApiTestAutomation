@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Requests {
@@ -10576,7 +10577,6 @@ public class Requests {
         }
     }
 
-    // --- WIDGET 83: Request ---
     public static JSONObject sendWidget83Request() {
         final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1949%7D";
 
@@ -10590,59 +10590,363 @@ public class Requests {
 
         String cookie = ConfigurationReader.getProperty("cookie");
 
-        String body = "{\n" +
-                "  \"datasource\": {\"id\": 346, \"type\": \"table\"},\n" +
-                "  \"force\": false,\n" +
-                "  \"queries\": [\n" +
-                "    {\n" +
-                "      \"filters\": [],\n" +
-                "      \"extras\": {\"time_grain_sqla\": \"P1M\", \"having\": \"\", \"where\": \"(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS)\"},\n" +
-                "      \"applied_time_extras\": {},\n" +
-                "      \"columns\": [{\"timeGrain\": \"P1M\", \"columnType\": \"BASE_AXIS\", \"expressionType\": \"SQL\", \"label\": \"PayDate\", \"sqlExpression\": \"COALESCE(PayDate, toDate('1970-01-01'))\"}],\n" +
-                "      \"metrics\": [{\"aggregate\": \"SUM\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Ödeme Tutarı\", \"column\": {\"column_name\": \"AylikOdemeTutari\"}}],\n" +
-                "      \"row_limit\": 1000,\n" +
-                "      \"post_processing\": [\n" +
-                "        {\"operation\": \"pivot\", \"options\": {\"index\": [\"PayDate\"], \"columns\": [], \"aggregates\": {\"Ödeme Tutarı\": {\"operator\": \"mean\"}}, \"drop_missing_columns\": true}},\n" +
-                "        {\"operation\": \"flatten\"}\n" +
-                "      ],\n" +
-                "      \"orderby\": [[{\"aggregate\": \"SUM\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Ödeme Tutarı\", \"column\": {\"column_name\": \"AylikOdemeTutari\"}}, false]]\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"filters\": [],\n" +
-                "      \"extras\": {\"time_grain_sqla\": \"P1M\", \"having\": \"\", \"where\": \"(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS)\"},\n" +
-                "      \"applied_time_extras\": {},\n" +
-                "      \"columns\": [{\"timeGrain\": \"P1M\", \"columnType\": \"BASE_AXIS\", \"expressionType\": \"SQL\", \"label\": \"PayDate\", \"sqlExpression\": \"COALESCE(PayDate, toDate('1970-01-01'))\"}],\n" +
-                "      \"metrics\": [{\"aggregate\": \"AVG\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Gecikme Gün\", \"column\": {\"column_name\": \"OrtalamaGecikmeGunu\"}}],\n" +
-                "      \"row_limit\": 10000,\n" +
-                "      \"post_processing\": [\n" +
-                "        {\"operation\": \"pivot\", \"options\": {\"index\": [\"PayDate\"], \"columns\": [], \"aggregates\": {\"Gecikme Gün\": {\"operator\": \"mean\"}}, \"drop_missing_columns\": true}},\n" +
-                "        {\"operation\": \"flatten\"}\n" +
-                "      ],\n" +
-                "      \"orderby\": [[{\"aggregate\": \"AVG\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Gecikme Gün\", \"column\": {\"column_name\": \"OrtalamaGecikmeGunu\"}}, false]]\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"form_data\": {\n" +
-                "    \"datasource\": \"346__table\",\n" +
-                "    \"viz_type\": \"mixed_timeseries\",\n" +
-                "    \"slice_id\": 1949,\n" +
-                "    \"x_axis\": {\"expressionType\": \"SQL\", \"label\": \"PayDate\", \"sqlExpression\": \"COALESCE(PayDate, toDate('1970-01-01'))\"},\n" +
-                "    \"time_grain_sqla\": \"P1M\",\n" +
-                "    \"metrics\": [{\"aggregate\": \"SUM\", \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": true, \"label\": \"Ödeme Tutarı\", \"column\": {\"column_name\": \"AylikOdemeTutari\"}}],\n" +
-                "    \"adhoc_filters\": [{\"clause\": \"WHERE\", \"expressionType\": \"SQL\", \"operator\": \"TEMPORAL_RANGE\", \"subject\": \"PayDate\", \"sqlExpression\": \"PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS\"}],\n" +
-                "    \"result_format\": \"json\",\n" +
-                "    \"result_type\": \"full\"\n" +
-                "  },\n" +
-                "  \"result_format\": \"json\",\n" +
-                "  \"result_type\": \"full\"\n" +
-                "}";
+        String body = """
+            {
+              "datasource": {
+                "id": 346,
+                "type": "table"
+              },
+              "force": false,
+              "queries": [
+                {
+                  "filters": [],
+                  "extras": {
+                    "time_grain_sqla": "P1M",
+                    "having": "",
+                    "where": "(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS AND PayDate < toStartOfMonth(today()) + INTERVAL 1 MONTHS)"
+                  },
+                  "applied_time_extras": {},
+                  "columns": [
+                    {
+                      "timeGrain": "P1M",
+                      "columnType": "BASE_AXIS",
+                      "datasourceWarning": false,
+                      "expressionType": "SQL",
+                      "label": "PayDate",
+                      "sqlExpression": "COALESCE(PayDate, toDate('1970-01-01'))"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "aggregate": "SUM",
+                      "column": {
+                        "advanced_data_type": null,
+                        "certification_details": null,
+                        "certified_by": null,
+                        "column_name": "AylikOdemeTutari",
+                        "description": null,
+                        "expression": null,
+                        "filterable": true,
+                        "groupby": true,
+                        "id": 7412,
+                        "is_certified": false,
+                        "is_dttm": false,
+                        "python_date_format": null,
+                        "type": "Decimal(38, 2)",
+                        "type_generic": 0,
+                        "verbose_name": null,
+                        "warning_markdown": null
+                      },
+                      "datasourceWarning": false,
+                      "expressionType": "SIMPLE",
+                      "hasCustomLabel": true,
+                      "label": "Ödeme Tutarı",
+                      "optionName": "metric_r3y07js11j_2quwmjz2mwu",
+                      "sqlExpression": null
+                    }
+                  ],
+                  "annotation_layers": [],
+                  "row_limit": 1000,
+                  "series_columns": [],
+                  "series_limit": 0,
+                  "url_params": {
+                    "form_data_key": "L55qFe4rBvc",
+                    "slice_id": "1949"
+                  },
+                  "custom_params": {},
+                  "custom_form_data": {},
+                  "time_offsets": [],
+                  "post_processing": [
+                    {
+                      "operation": "pivot",
+                      "options": {
+                        "index": [
+                          "PayDate"
+                        ],
+                        "columns": [],
+                        "aggregates": {
+                          "Ödeme Tutarı": {
+                            "operator": "mean"
+                          }
+                        },
+                        "drop_missing_columns": true
+                      }
+                    },
+                    {
+                      "operation": "flatten"
+                    }
+                  ],
+                  "orderby": [
+                    [
+                      {
+                        "aggregate": "SUM",
+                        "column": {
+                          "advanced_data_type": null,
+                          "certification_details": null,
+                          "certified_by": null,
+                          "column_name": "AylikOdemeTutari",
+                          "description": null,
+                          "expression": null,
+                          "filterable": true,
+                          "groupby": true,
+                          "id": 7412,
+                          "is_certified": false,
+                          "is_dttm": false,
+                          "python_date_format": null,
+                          "type": "Decimal(38, 2)",
+                          "type_generic": 0,
+                          "verbose_name": null,
+                          "warning_markdown": null
+                        },
+                        "datasourceWarning": false,
+                        "expressionType": "SIMPLE",
+                        "hasCustomLabel": true,
+                        "label": "Ödeme Tutarı",
+                        "optionName": "metric_r3y07js11j_2quwmjz2mwu",
+                        "sqlExpression": null
+                      },
+                      false
+                    ]
+                  ]
+                },
+                {
+                  "filters": [],
+                  "extras": {
+                    "time_grain_sqla": "P1M",
+                    "having": "",
+                    "where": "(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS AND PayDate < toStartOfMonth(today()) + INTERVAL 1 MONTHS)"
+                  },
+                  "applied_time_extras": {},
+                  "columns": [
+                    {
+                      "timeGrain": "P1M",
+                      "columnType": "BASE_AXIS",
+                      "datasourceWarning": false,
+                      "expressionType": "SQL",
+                      "label": "PayDate",
+                      "sqlExpression": "COALESCE(PayDate, toDate('1970-01-01'))"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "aggregate": "AVG",
+                      "column": {
+                        "advanced_data_type": null,
+                        "certification_details": null,
+                        "certified_by": null,
+                        "column_name": "OrtalamaGecikmeGunu",
+                        "description": null,
+                        "expression": null,
+                        "filterable": true,
+                        "groupby": true,
+                        "id": 7414,
+                        "is_certified": false,
+                        "is_dttm": false,
+                        "python_date_format": null,
+                        "type": "Nullable(Float64)",
+                        "type_generic": null,
+                        "verbose_name": null,
+                        "warning_markdown": null
+                      },
+                      "datasourceWarning": false,
+                      "expressionType": "SIMPLE",
+                      "hasCustomLabel": true,
+                      "label": "Gecikme Gün",
+                      "optionName": "metric_4mnitv8bl9_nva9y1anho",
+                      "sqlExpression": null
+                    }
+                  ],
+                  "annotation_layers": [],
+                  "row_limit": 10000,
+                  "series_columns": [],
+                  "series_limit": 0,
+                  "url_params": {
+                    "form_data_key": "L55qFe4rBvc",
+                    "slice_id": "1949"
+                  },
+                  "custom_params": {},
+                  "custom_form_data": {},
+                  "time_offsets": [],
+                  "post_processing": [
+                    {
+                      "operation": "pivot",
+                      "options": {
+                        "index": [
+                          "PayDate"
+                        ],
+                        "columns": [],
+                        "aggregates": {
+                          "Gecikme Gün": {
+                            "operator": "mean"
+                          }
+                        },
+                        "drop_missing_columns": true
+                      }
+                    },
+                    {
+                      "operation": "flatten"
+                    }
+                  ],
+                  "orderby": [
+                    [
+                      {
+                        "aggregate": "AVG",
+                        "column": {
+                          "advanced_data_type": null,
+                          "certification_details": null,
+                          "certified_by": null,
+                          "column_name": "OrtalamaGecikmeGunu",
+                          "description": null,
+                          "expression": null,
+                          "filterable": true,
+                          "groupby": true,
+                          "id": 7414,
+                          "is_certified": false,
+                          "is_dttm": false,
+                          "python_date_format": null,
+                          "type": "Nullable(Float64)",
+                          "type_generic": null,
+                          "verbose_name": null,
+                          "warning_markdown": null
+                        },
+                        "datasourceWarning": false,
+                        "expressionType": "SIMPLE",
+                        "hasCustomLabel": true,
+                        "label": "Gecikme Gün",
+                        "optionName": "metric_4mnitv8bl9_nva9y1anho",
+                        "sqlExpression": null
+                      },
+                      false
+                    ]
+                  ]
+                }
+              ],
+              "form_data": {
+                "datasource": "346__table",
+                "viz_type": "mixed_timeseries",
+                "slice_id": 1949,
+                "url_params": {
+                  "form_data_key": "L55qFe4rBvc",
+                  "slice_id": "1949"
+                },
+                "x_axis": {
+                  "datasourceWarning": false,
+                  "expressionType": "SQL",
+                  "label": "PayDate",
+                  "sqlExpression": "COALESCE(PayDate, toDate('1970-01-01'))"
+                },
+                "time_grain_sqla": "P1M",
+                "metrics": [
+                  {
+                    "aggregate": "SUM",
+                    "column": {
+                      "advanced_data_type": null,
+                      "certification_details": null,
+                      "certified_by": null,
+                      "column_name": "AylikOdemeTutari",
+                      "description": null,
+                      "expression": null,
+                      "filterable": true,
+                      "groupby": true,
+                      "id": 7412,
+                      "is_certified": false,
+                      "is_dttm": false,
+                      "python_date_format": null,
+                      "type": "Decimal(38, 2)",
+                      "type_generic": 0,
+                      "verbose_name": null,
+                      "warning_markdown": null
+                    },
+                    "datasourceWarning": false,
+                    "expressionType": "SIMPLE",
+                    "hasCustomLabel": true,
+                    "label": "Ödeme Tutarı",
+                    "optionName": "metric_r3y07js11j_2quwmjz2mwu",
+                    "sqlExpression": null
+                  }
+                ],
+                "groupby": [],
+                "adhoc_filters": [
+                  {
+                    "clause": "WHERE",
+                    "comparator": null,
+                    "datasourceWarning": false,
+                    "expressionType": "SQL",
+                    "filterOptionName": "filter_4kdxz17w2ml_v73ireqxyk",
+                    "isExtra": false,
+                    "isNew": false,
+                    "operator": "TEMPORAL_RANGE",
+                    "sqlExpression": "PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS AND PayDate < toStartOfMonth(today()) + INTERVAL 1 MONTHS",
+                    "subject": "PayDate"
+                  }
+                ],
+                "order_desc": true,
+                "row_limit": 1000,
+                "truncate_metric": true,
+                "comparison_type": "values",
+                "annotation_layers": [],
+                "x_axis_title_margin": 15,
+                "y_axis_title": "Ödeme Tutarı",
+                "y_axis_title_margin": "40",
+                "y_axis_title_position": "Left",
+                "color_scheme": "supersetColors",
+                "time_shift_color": true,
+                "seriesType": "bar",
+                "stack": false,
+                "area": false,
+                "show_value": true,
+                "opacity": 0.2,
+                "markerEnabled": true,
+                "markerSize": 6,
+                "yAxisIndex": 0,
+                "seriesTypeB": "middle",
+                "show_valueB": true,
+                "opacityB": 0.2,
+                "markerEnabledB": true,
+                "markerSizeB": 10,
+                "yAxisIndexB": 1,
+                "minorTicks": false,
+                "show_legend": true,
+                "legendType": "scroll",
+                "legendOrientation": "bottom",
+                "x_axis_time_format": "smart_date",
+                "xAxisLabelRotation": 45,
+                "rich_tooltip": true,
+                "showTooltipTotal": true,
+                "tooltipTimeFormat": "smart_date",
+                "truncateXAxis": true,
+                "truncateYAxis": true,
+                "y_axis_bounds": [
+                  1,
+                  null
+                ],
+                "y_axis_format": "SMART_NUMBER",
+                "logAxis": true,
+                "y_axis_bounds_secondary": [
+                  1,
+                  null
+                ],
+                "y_axis_format_secondary": "SMART_NUMBER",
+                "currency_format_secondary": {},
+                "yAxisTitleSecondary": "Gecikme Gün",
+                "logAxisSecondary": false,
+                "extra_form_data": {},
+                "force": false,
+                "result_format": "json",
+                "result_type": "full"
+              },
+              "result_format": "json",
+              "result_type": "full"
+            }
+            """;
 
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Accept", "application/json")
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr-TR;q=0.8,tr;q=0.7")
                 .addHeader("Origin", "https://dia-dashboard.efectura.com")
-                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=mMQSZ1SMdy0&dashboard_page_id=GulxjbioGz-6_xA0Jptak&slice_id=1949")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=L55qFe4rBvc&slice_id=1949")
                 .addHeader("User-Agent", "Mozilla/5.0")
                 .addHeader("Cookie", cookie)
                 .post(RequestBody.create(body, MediaType.parse("application/json")))
@@ -10660,6 +10964,175 @@ public class Requests {
             return null;
         }
     }
+
+
+
+
+    public static JSONObject sendWidget92AggreationS66Request() throws IOException {
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1957%7D";
+
+        OkHttpClient client = InsecureHttp.newClient()
+                .newBuilder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String cookie = ConfigurationReader.getProperty("cookie"); // config'den al
+
+        String body = """
+        {
+          "datasource": {"id": 346, "type": "table"},
+          "force": false,
+          "queries": [
+            {
+              "filters": [
+                {"col": "PayDate", "op": "TEMPORAL_RANGE", "val": "No filter"}
+              ],
+              "extras": {
+                "having": "",
+                "where": "(PayDate >= toStartOfMonth(today()) AND PayDate < toStartOfMonth(today()) + INTERVAL 1 MONTHS)"
+              },
+              "applied_time_extras": {},
+              "columns": [],
+              "metrics": [
+                {
+                  "aggregate": "AVG",
+                  "column": {
+                    "advanced_data_type": null,
+                    "certification_details": null,
+                    "certified_by": null,
+                    "column_name": "OrtalamaGecikmeGunu",
+                    "description": null,
+                    "expression": null,
+                    "filterable": true,
+                    "groupby": true,
+                    "id": 7414,
+                    "is_certified": false,
+                    "is_dttm": false,
+                    "python_date_format": null,
+                    "type": "Nullable(Float64)",
+                    "type_generic": null,
+                    "verbose_name": null,
+                    "warning_markdown": null
+                  },
+                  "datasourceWarning": false,
+                  "expressionType": "SIMPLE",
+                  "hasCustomLabel": true,
+                  "label": "Ort. Gecikme Gün",
+                  "optionName": "metric_ogdokbt8jzd_fdie6e916up",
+                  "sqlExpression": null
+                }
+              ],
+              "annotation_layers": [],
+              "series_limit": 0,
+              "order_desc": true,
+              "url_params": {
+                "dashboard_page_id": "GulxjbioGz-6_xA0Jptak",
+                "form_data_key": "xg2opFTudg4",
+                "save_action": "overwrite",
+                "slice_id": "1957"
+              },
+              "custom_params": {},
+              "custom_form_data": {}
+            }
+          ],
+          "form_data": {
+            "datasource": "346__table",
+            "viz_type": "big_number_total",
+            "slice_id": 1957,
+            "url_params": {
+              "dashboard_page_id": "GulxjbioGz-6_xA0Jptak",
+              "form_data_key": "xg2opFTudg4",
+              "save_action": "overwrite",
+              "slice_id": "1957"
+            },
+            "metric": {
+              "aggregate": "AVG",
+              "column": {
+                "advanced_data_type": null,
+                "certification_details": null,
+                "certified_by": null,
+                "column_name": "OrtalamaGecikmeGunu",
+                "description": null,
+                "expression": null,
+                "filterable": true,
+                "groupby": true,
+                "id": 7414,
+                "is_certified": false,
+                "is_dttm": false,
+                "python_date_format": null,
+                "type": "Nullable(Float64)",
+                "type_generic": null,
+                "verbose_name": null,
+                "warning_markdown": null
+              },
+              "datasourceWarning": false,
+              "expressionType": "SIMPLE",
+              "hasCustomLabel": true,
+              "label": "Ort. Gecikme Gün",
+              "optionName": "metric_ogdokbt8jzd_fdie6e916up",
+              "sqlExpression": null
+            },
+            "adhoc_filters": [
+              {
+                "expressionType": "SQL",
+                "sqlExpression": "PayDate >= toStartOfMonth(today()) AND PayDate < toStartOfMonth(today()) + INTERVAL 1 MONTHS",
+                "clause": "WHERE",
+                "subject": null,
+                "operator": null,
+                "comparator": null,
+                "isExtra": false,
+                "isNew": false,
+                "datasourceWarning": false,
+                "filterOptionName": "filter_p3c7tjwlrg_degth8mpmxa"
+              },
+              {
+                "expressionType": "SIMPLE",
+                "subject": "PayDate",
+                "operator": "TEMPORAL_RANGE",
+                "comparator": "No filter",
+                "clause": "WHERE",
+                "sqlExpression": null,
+                "isExtra": false,
+                "isNew": false,
+                "datasourceWarning": false,
+                "filterOptionName": "filter_k4dcbph7nu_7itggvr7dri"
+              }
+            ],
+            "subheader": "Ort. Gecikme Gün",
+            "header_font_size": 0.4,
+            "subheader_font_size": 0.15,
+            "y_axis_format": "SMART_NUMBER",
+            "time_format": "smart_date",
+            "conditional_formatting": [],
+            "extra_form_data": {},
+            "force": false,
+            "result_format": "json",
+            "result_type": "full"
+          },
+          "result_format": "json",
+          "result_type": "full"
+        }
+        """;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(RequestBody.create(body, MediaType.parse("application/json")))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Cookie", cookie)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected HTTP " + response.code() + " - " + response.message());
+            }
+            String respBody = response.body() != null ? response.body().string() : "{}";
+            return new JSONObject(respBody);
+        }
+    }
+
 
 
     // --- WIDGET 93: Request ---
@@ -10760,108 +11233,7 @@ public class Requests {
         }
     }
 
-    // --- WIDGET 92: Request (Ort. Gecikme Gün) ---
-    public static JSONObject sendWidget92AggreationS66Request() {
-        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1957%7D";
 
-        OkHttpClient client = InsecureHttp.newClient()
-                .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)
-                .build();
-
-        String cookie = ConfigurationReader.getProperty("cookie");
-
-        String body = "{"
-                + "\"datasource\":{\"id\":346,\"type\":\"table\"},"
-                + "\"force\":false,"
-                + "\"queries\":[{"
-                + "  \"filters\":[{\"col\":\"PayDate\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No filter\"}],"
-                + "  \"extras\":{\"having\":\"\",\"where\":\"(PayDate >= toStartOfMonth(today()))\"},"
-                + "  \"applied_time_extras\":{},"
-                + "  \"columns\":[],"
-                + "  \"metrics\":[{"
-                + "     \"aggregate\":\"AVG\","
-                + "     \"column\":{"
-                + "        \"column_name\":\"OrtalamaGecikmeGunu\",\"id\":7414,"
-                + "        \"type\":\"Nullable(Float64)\",\"filterable\":true,\"groupby\":true"
-                + "     },"
-                + "     \"datasourceWarning\":false,"
-                + "     \"expressionType\":\"SIMPLE\","
-                + "     \"hasCustomLabel\":true,"
-                + "     \"label\":\"Ort. Gecikme Gün\","
-                + "     \"optionName\":\"metric_ogdokbt8jzd_fdie6e916up\","
-                + "     \"sqlExpression\":null"
-                + "  }],"
-                + "  \"annotation_layers\":[],"
-                + "  \"series_limit\":0,"
-                + "  \"order_desc\":true,"
-                + "  \"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"form_data_key\":\"xg2opFTudg4\",\"slice_id\":\"1957\"},"
-                + "  \"custom_params\":{},"
-                + "  \"custom_form_data\":{}"
-                + "}],"
-                + "\"form_data\":{"
-                + "  \"datasource\":\"346__table\","
-                + "  \"viz_type\":\"big_number_total\","
-                + "  \"slice_id\":1957,"
-                + "  \"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"form_data_key\":\"xg2opFTudg4\",\"slice_id\":\"1957\"},"
-                + "  \"metric\":{"
-                + "     \"aggregate\":\"AVG\","
-                + "     \"column\":{"
-                + "        \"column_name\":\"OrtalamaGecikmeGunu\",\"id\":7414,"
-                + "        \"type\":\"Nullable(Float64)\",\"filterable\":true,\"groupby\":true"
-                + "     },"
-                + "     \"datasourceWarning\":false,"
-                + "     \"expressionType\":\"SIMPLE\","
-                + "     \"hasCustomLabel\":true,"
-                + "     \"label\":\"Ort. Gecikme Gün\","
-                + "     \"optionName\":\"metric_ogdokbt8jzd_fdie6e916up\","
-                + "     \"sqlExpression\":null"
-                + "  },"
-                + "  \"adhoc_filters\":["
-                + "     {\"expressionType\":\"SQL\",\"sqlExpression\":\"PayDate >= toStartOfMonth(today())\",\"clause\":\"WHERE\"},"
-                + "     {\"expressionType\":\"SIMPLE\",\"subject\":\"PayDate\",\"operator\":\"TEMPORAL_RANGE\",\"comparator\":\"No filter\",\"clause\":\"WHERE\"}"
-                + "  ],"
-                + "  \"subheader\":\"Ort. Gecikme Gün\","
-                + "  \"header_font_size\":0.4,"
-                + "  \"subheader_font_size\":0.15,"
-                + "  \"y_axis_format\":\"SMART_NUMBER\","
-                + "  \"time_format\":\"smart_date\","
-                + "  \"extra_form_data\":{},"
-                + "  \"force\":false,"
-                + "  \"result_format\":\"json\","
-                + "  \"result_type\":\"full\""
-                + "},"
-                + "\"result_format\":\"json\","
-                + "\"result_type\":\"full\""
-                + "}";
-
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("Accept", "application/json")
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
-                .addHeader("Origin", "https://dia-dashboard.efectura.com")
-                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=xg2opFTudg4&dashboard_page_id=GulxjbioGz-6_xA0Jptak&slice_id=1957")
-                .addHeader("User-Agent", "Mozilla/5.0")
-                .addHeader("Cookie", cookie)
-                .post(RequestBody.create(body, MediaType.parse("application/json")))
-                .build();
-
-        try (Response resp = client.newCall(request).execute()) {
-            if (!resp.isSuccessful()) {
-                String err = resp.body() != null ? resp.body().string() : "";
-                throw new IOException("Unexpected code " + resp.code() + " - " + err);
-            }
-            String respStr = resp.body() != null ? resp.body().string() : "{}";
-            return new JSONObject(respStr);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     // --- WIDGET 88: Request (slice_id=1954, Big Number) ---
     public static JSONObject sendWidget88Request() {
