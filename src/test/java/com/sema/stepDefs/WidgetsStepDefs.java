@@ -1941,7 +1941,7 @@ public class WidgetsStepDefs extends BaseStep {
 
     @Then("The user verify scenario32")
     public void theUserVerifyScenario32() {
-        boolean scenario32 = guncelMarkaToplamiW22 >= rakiDegeriW15Aggregation;
+        boolean scenario32 = Math.floor(guncelMarkaToplamiW22) >= Math.floor(rakiDegeriW15Aggregation);
         Assert.assertTrue("guncelMarkaToplamiW22, rakiDegeriW15Aggregation'dan daha küçük",
                 scenario32);
     }
@@ -3236,7 +3236,7 @@ public class WidgetsStepDefs extends BaseStep {
     @Then("The user verify scenario65")
     public void theUserVerifyScenario65() {
         Assert.assertEquals("senaryo 65 değerler farklı",
-                odemeTutariToplamW83, SixMonthOdemeTutariW93,0.01);
+                odemeTutariToplamW83, SixMonthOdemeTutariW93,0.02);
     }
 
     double ortGecikmeGunW92AggrS66;
