@@ -11021,9 +11021,8 @@ public class Requests {
 
 
 
-    // --- WIDGET 93: Request ---
     public static JSONObject sendWidget93Request() {
-        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1958%7D&force=true";
+        final String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A1958%7D";
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
@@ -11035,64 +11034,112 @@ public class Requests {
 
         String cookie = ConfigurationReader.getProperty("cookie");
 
-        String body = "{"
-                + "\"datasource\":{\"id\":346,\"type\":\"table\"},"
-                + "\"force\":true,"
-                + "\"queries\":[{"
-                + "  \"filters\":[{\"col\":\"PayDate\",\"op\":\"TEMPORAL_RANGE\",\"val\":\"No filter\"}],"
-                + "  \"extras\":{\"having\":\"\",\"where\":\"(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS)\"},"
-                + "  \"applied_time_extras\":{},"
-                + "  \"columns\":[],"
-                + "  \"metrics\":[{"
-                + "     \"aggregate\":null,"
-                + "     \"column\":null,"
-                + "     \"datasourceWarning\":false,"
-                + "     \"expressionType\":\"SQL\","
-                + "     \"hasCustomLabel\":true,"
-                + "     \"label\":\"6 Aylık Ödeme Tutarı\","
-                + "     \"optionName\":\"metric_c123aomdklf_1qzkwhbmfkq\","
-                + "     \"sqlExpression\":\"SUM(AylikOdemeTutari)\""
-                + "  }],"
-                + "  \"annotation_layers\":[],"
-                + "  \"series_limit\":0,"
-                + "  \"order_desc\":true,"
-                + "  \"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"slice_id\":\"1958\"},"
-                + "  \"custom_params\":{},"
-                + "  \"custom_form_data\":{}"
-                + "}],"
-                + "\"form_data\":{"
-                + "  \"datasource\":\"346__table\","
-                + "  \"viz_type\":\"big_number_total\","
-                + "  \"slice_id\":1958,"
-                + "  \"url_params\":{\"dashboard_page_id\":\"GulxjbioGz-6_xA0Jptak\",\"slice_id\":\"1958\"},"
-                + "  \"metric\":{"
-                + "     \"aggregate\":null,"
-                + "     \"column\":null,"
-                + "     \"datasourceWarning\":false,"
-                + "     \"expressionType\":\"SQL\","
-                + "     \"hasCustomLabel\":true,"
-                + "     \"label\":\"6 Aylık Ödeme Tutarı\","
-                + "     \"optionName\":\"metric_c123aomdklf_1qzkwhbmfkq\","
-                + "     \"sqlExpression\":\"SUM(AylikOdemeTutari)\""
-                + "  },"
-                + "  \"adhoc_filters\":["
-                + "     {\"clause\":\"WHERE\",\"expressionType\":\"SQL\",\"sqlExpression\":\"PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS\"},"
-                + "     {\"clause\":\"WHERE\",\"expressionType\":\"SIMPLE\",\"operator\":\"TEMPORAL_RANGE\",\"subject\":\"PayDate\",\"comparator\":\"No filter\"}"
-                + "  ],"
-                + "  \"subheader\":\"6 Aylık Ödeme Tutarı\","
-                + "  \"header_font_size\":0.4,"
-                + "  \"subheader_font_size\":0.15,"
-                + "  \"y_axis_format\":\"SMART_NUMBER\","
-                + "  \"time_format\":\"smart_date\","
-                + "  \"conditional_formatting\":[],"
-                + "  \"extra_form_data\":{},"
-                + "  \"force\":true,"
-                + "  \"result_format\":\"json\","
-                + "  \"result_type\":\"full\""
-                + "},"
-                + "\"result_format\":\"json\","
-                + "\"result_type\":\"full\""
-                + "}";
+        String body = """
+            {
+              "datasource": {
+                "id": 346,
+                "type": "table"
+              },
+              "force": false,
+              "queries": [
+                {
+                  "filters": [
+                    {
+                      "col": "PayDate",
+                      "op": "TEMPORAL_RANGE",
+                      "val": "No filter"
+                    }
+                  ],
+                  "extras": {
+                    "having": "",
+                    "where": "(PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS AND PayDate < toStartOfMonth(today()) + INTERVAL 1 MONTHS)"
+                  },
+                  "applied_time_extras": {},
+                  "columns": [],
+                  "metrics": [
+                    {
+                      "aggregate": null,
+                      "column": null,
+                      "datasourceWarning": false,
+                      "expressionType": "SQL",
+                      "hasCustomLabel": true,
+                      "label": "6 Aylık Ödeme Tutarı",
+                      "optionName": "metric_c123aomdklf_1qzkwhbmfkq",
+                      "sqlExpression": "SUM(AylikOdemeTutari)"
+                    }
+                  ],
+                  "annotation_layers": [],
+                  "series_limit": 0,
+                  "order_desc": true,
+                  "url_params": {
+                    "dashboard_page_id": "GulxjbioGz-6_xA0Jptak",
+                    "form_data_key": "Gs2uJC95KIY",
+                    "slice_id": "1958"
+                  },
+                  "custom_params": {},
+                  "custom_form_data": {}
+                }
+              ],
+              "form_data": {
+                "datasource": "346__table",
+                "viz_type": "big_number_total",
+                "slice_id": 1958,
+                "url_params": {
+                  "dashboard_page_id": "GulxjbioGz-6_xA0Jptak",
+                  "form_data_key": "Gs2uJC95KIY",
+                  "slice_id": "1958"
+                },
+                "metric": {
+                  "aggregate": null,
+                  "column": null,
+                  "datasourceWarning": false,
+                  "expressionType": "SQL",
+                  "hasCustomLabel": true,
+                  "label": "6 Aylık Ödeme Tutarı",
+                  "optionName": "metric_c123aomdklf_1qzkwhbmfkq",
+                  "sqlExpression": "SUM(AylikOdemeTutari)"
+                },
+                "adhoc_filters": [
+                  {
+                    "expressionType": "SQL",
+                    "sqlExpression": "PayDate >= toStartOfMonth(today()) - INTERVAL 6 MONTHS AND PayDate < toStartOfMonth(today()) + INTERVAL 1 MONTHS",
+                    "clause": "WHERE",
+                    "subject": null,
+                    "operator": null,
+                    "comparator": null,
+                    "isExtra": false,
+                    "isNew": false,
+                    "datasourceWarning": false,
+                    "filterOptionName": "filter_p3c7tjwlrg_degth8mpmxa"
+                  },
+                  {
+                    "expressionType": "SIMPLE",
+                    "subject": "PayDate",
+                    "operator": "TEMPORAL_RANGE",
+                    "comparator": "No filter",
+                    "clause": "WHERE",
+                    "sqlExpression": null,
+                    "isExtra": false,
+                    "isNew": false,
+                    "datasourceWarning": false,
+                    "filterOptionName": "filter_krtcqzti8z_wopittlwmyj"
+                  }
+                ],
+                "subheader": "6 Aylık Ödeme Tutarı",
+                "header_font_size": 0.4,
+                "subheader_font_size": 0.15,
+                "y_axis_format": "SMART_NUMBER",
+                "time_format": "smart_date",
+                "conditional_formatting": [],
+                "extra_form_data": {},
+                "force": false,
+                "result_format": "json",
+                "result_type": "full"
+              },
+              "result_format": "json",
+              "result_type": "full"
+            }
+            """;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -11118,6 +11165,7 @@ public class Requests {
             return null;
         }
     }
+
 
 
 
