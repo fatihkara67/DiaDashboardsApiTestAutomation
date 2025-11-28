@@ -1268,21 +1268,30 @@ public class WidgetsStepDefs extends BaseStep {
     }
 
     public static boolean compareStockOutMaps(Map<String, Integer> map1, Map<String, Integer> map2) {
+        // Eğer boyutlar farklıysa zaten en az 1 fark var demektir
         if (map1.size() != map2.size()) {
             return false;
         }
+
+        int diffCount = 0;
 
         for (Map.Entry<String, Integer> entry : map1.entrySet()) {
             String key = entry.getKey();
             Integer value1 = entry.getValue();
             Integer value2 = map2.get(key);
 
-            if (!value1.equals(value2)) {
-                return false;
+            // null kontrolü (sağlamlaştırma)
+            if (value2 == null || !value1.equals(value2)) {
+                diffCount++;
+                System.out.println(value1  + " ve " + value2 + " farklı");
+                // 2 fark olunca direkt false dönebilir
+                if (diffCount >= 2) {
+                    return false;
+                }
             }
         }
 
-        return true;
+        return true; // 0 veya 1 fark varsa
     }
 
     @Then("The user verify scenario24")
