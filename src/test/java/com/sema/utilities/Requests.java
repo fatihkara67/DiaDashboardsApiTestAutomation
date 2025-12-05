@@ -74,9 +74,9 @@ public class Requests {
         // SSL doğrulamasını kapatan client'ı baz al, timeout'ları ekle
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(8, TimeUnit.SECONDS)
-                .readTimeout(8, TimeUnit.SECONDS)
-                .writeTimeout(8, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -567,9 +567,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(7, TimeUnit.SECONDS)
-                .readTimeout(7, TimeUnit.SECONDS)
-                .writeTimeout(7, TimeUnit.SECONDS)
+                .connectTimeout(9, TimeUnit.SECONDS)
+                .readTimeout(9, TimeUnit.SECONDS)
+                .writeTimeout(9, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -4781,9 +4781,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -6717,9 +6717,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
-                .readTimeout(timeoutValue, TimeUnit.SECONDS)
-                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -7154,9 +7154,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(4, TimeUnit.SECONDS)
-                .readTimeout(4, TimeUnit.SECONDS)
-                .writeTimeout(4, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -9754,9 +9754,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
@@ -10250,9 +10250,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .readTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
