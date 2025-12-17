@@ -9455,9 +9455,9 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(4, TimeUnit.SECONDS)
-                .readTimeout(4, TimeUnit.SECONDS)
-                .writeTimeout(4, TimeUnit.SECONDS)
+                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
+                .readTimeout(timeoutValue, TimeUnit.SECONDS)
+                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
