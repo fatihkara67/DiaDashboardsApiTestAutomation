@@ -1950,9 +1950,10 @@ public class WidgetsStepDefs extends BaseStep {
 
     @Then("The user verify scenario32")
     public void theUserVerifyScenario32() {
+
         boolean scenario32 = Math.floor(guncelMarkaToplamiW22) >= Math.floor(rakiDegeriW15Aggregation);
-        Assert.assertTrue("guncelMarkaToplamiW22, rakiDegeriW15Aggregation'dan daha küçük",
-                scenario32);
+        Assert.assertTrue(Math.round(guncelMarkaToplamiW22) + " - " + Math.floor(rakiDegeriW15Aggregation) +
+                        "\nguncelMarkaToplamiW22, rakiDegeriW15Aggregation'dan daha küçük", scenario32);
     }
 
     double toplamZiyaretIcHedefW33;
