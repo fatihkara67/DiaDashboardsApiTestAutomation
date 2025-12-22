@@ -78,18 +78,28 @@ public class databaseMethods {
     }
 
     public static int getStockOutSumW43() {
-        final String query = " SELECT\n" +
-                " `Distribütör`,\n" +
+        final String query = "SELECT\n" +
+                "  `Distribütör`,\n" +
                 "  count() AS c\n" +
                 "FROM\n" +
                 "(\n" +
                 "  SELECT\n" +
                 "    DISTRIBUTOR_KOD        AS `Distribütör`,\n" +
                 "    URUN_KATEGORU_ACIKLAMA AS `Ürün Kategori`,\n" +
-                "    sum(toFloat64(ifNull(Stock_Liters, 0)))                          AS `stok_sum`,\n" +
-                "    sum(greatest(0., toFloat64(ifNull(Est_Total_Sales_Liters, 0))))  AS `est_sum`\n" +
+                "    SUM(CAST(COALESCE(Stock_Liters, 0) AS FLOAT))                        AS `stok_sum`,\n" +
+                "    SUM(\n" +
+                "       CAST(\n" +
+                "         CASE\n" +
+                "           WHEN COALESCE(Est_Total_Sales_Liters, 0) < 0\n" +
+                "               THEN 0\n" +
+                "               ELSE COALESCE(Est_Total_Sales_Liters, 0)\n" +
+                "         END\n" +
+                "         AS FLOAT\n" +
+                "       )\n" +
+                "    ) * 1.0  AS `est_sum`\n" +
                 "  FROM my_database.EstSalesAndCurrStocks\n" +
-                "  WHERE DISTRIBUTOR_KOD IN ('ASYA KAYIKCI','ADIYAMAN DATA','AGRI TANRIVERDI','ANKARA GRAM','ANKARA LACIN',\n" +
+                "  WHERE DISTRIBUTOR_KOD IN (\n" +
+                "    'ASYA KAYIKCI','ADIYAMAN DATA','AGRI TANRIVERDI','ANKARA GRAM','ANKARA LACIN',\n" +
                 "    'ANTALYA ANDA','ANTALYA ANKA','ANTALYA INCI','ARTVIN KESKIN','ASYA DOGUS',\n" +
                 "    'AYDIN PIRIM','BAYIR ACARLAR','BODRUM PIRIM','BURSA RIT','CAGAN',\n" +
                 "    'CANAKKALE BAYRAKTAR','DENIZLI BIZIMYAKI','DIYARBAKIR HNR','DUNYA ZOGULDAK',\n" +
@@ -99,13 +109,17 @@ public class databaseMethods {
                 "    'MALATYA OZSAH','MANISA CANTAY','MANISA CANTAY 2','MARDIN SECEM','MERSIN ALFA',\n" +
                 "    'MERSIN SGM','MUGLA ACARLAR','NEVSEHIR ONUR','ORDU GURESCIOGLU','OSMANIYE MARSAS',\n" +
                 "    'SAKARYA KOSEOGLU','SAMSUN TANRIVERDI','SIVAS SES','TRAKYA ERZA','URFA UCKOK',\n" +
-                "    'USAK BIZIMYAKI','YALOVA KUZEYNAM','CORUM TANRIVERDI')\n" +
-                "    AND DISTRIBUTOR_KOD NOT IN ('EDIRNE MAHALO')\n" +
-                "  GROUP BY `Distribütör`, `Ürün Kategori`\n" +
+                "    'USAK BIZIMYAKI','YALOVA KUZEYNAM','CORUM TANRIVERDI'\n" +
+                "  )\n" +
+                "  AND DISTRIBUTOR_KOD NOT IN ('EDIRNE MAHALO')\n" +
+                "  GROUP BY\n" +
+                "    `Distribütör`,\n" +
+                "    `Ürün Kategori`\n" +
                 ")\n" +
                 "WHERE `stok_sum` / nullIf(`est_sum`, 0) < 10\n" +
                 "GROUP BY `Distribütör`\n" +
-                "ORDER BY c desc LIMIT 10;";
+                "ORDER BY c DESC\n" +
+                "LIMIT 10;";
 
         int stockOutCount = 0;
 
