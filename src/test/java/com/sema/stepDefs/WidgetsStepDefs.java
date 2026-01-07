@@ -684,6 +684,8 @@ public class WidgetsStepDefs extends BaseStep {
             }
         }
 
+        gunlukGerekliToplamW47 = Double.max(0,gunlukGerekliToplamW47);
+
         System.out.println("gunlukGerekliToplamW47: " + gunlukGerekliToplamW47);
 
 
