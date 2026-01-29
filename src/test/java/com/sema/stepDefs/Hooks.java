@@ -24,14 +24,14 @@ public class Hooks {
     }
     @After
     public static void tearDown(Scenario scenario) {
-        if (scenario.isFailed()) {
-            TakesScreenshot takesScreenshot = (TakesScreenshot) Driver.getDriver();
-            byte[] image = takesScreenshot.getScreenshotAs(OutputType.BYTES);
-            scenario.attach(image, "image/png", scenario.getName());
-            logger.error("Test scenario :: {} :: Failed", scenario.getName());
-        } else {
-            logger.info("Test scenario :: {} :: Passed", scenario.getName());
-        }
+//        if (scenario.isFailed()) {
+//            TakesScreenshot takesScreenshot = (TakesScreenshot) Driver.getDriver();
+//            byte[] image = takesScreenshot.getScreenshotAs(OutputType.BYTES);
+//            scenario.attach(image, "image/png", scenario.getName());
+//            logger.error("Test scenario :: {} :: Failed", scenario.getName());
+//        } else {
+//            logger.info("Test scenario :: {} :: Passed", scenario.getName());
+//        }
         Driver.closeDriver();
 
         try {

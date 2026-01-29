@@ -2967,7 +2967,8 @@ public class WidgetsStepDefs extends BaseStep {
         gunlukOrtGercekToplamW50 = getGunlukOrtGercekToplamiFromW50(w50);
         icHedefToplamW50 = getTotalIcHedefW50(w50);
         gerceklesmeToplamW50 = getTotalGerceklesme(w50);
-        gunlukHedefToplamW50 = getTotalGunlukHedef(w50);
+//        gunlukHedefToplamW50 = getTotalGunlukHedef(w50);
+        gunlukHedefToplamW50 = Double.max(0,getTotalGunlukHedef(w50));
         System.out.println("W50 Günlük Ort. Gerç. Toplamı: " + gunlukOrtGercekToplamW50);
         System.out.println("W50 IcHedef Toplamı: " + icHedefToplamW50);
         System.out.println("W50 Gerçekleşme Toplamı: " + gerceklesmeToplamW50);
