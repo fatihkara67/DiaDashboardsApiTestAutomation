@@ -12,6 +12,11 @@ Feature: Widget2 Scenarios
 #    Given The user send widget101 request
 #    Then The user verify scenario14
 #
+#  Scenario: Scenario 15
+#    Given The user send widget26 request
+#    Given The user get Scenario15 query
+#    Then The user verify scenario15
+#
 #  Scenario: Scenario 25
 #    Given The user send widget29 request
 #    Given The user send widget29AggreationS25 request
