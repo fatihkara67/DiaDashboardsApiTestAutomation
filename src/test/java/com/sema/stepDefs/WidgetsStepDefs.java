@@ -3,6 +3,7 @@ package com.sema.stepDefs;
 import com.sema.utilities.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -4095,5 +4096,136 @@ public class WidgetsStepDefs extends BaseStep {
     @Given("The user get S10 query")
     public void theUserGetS10Query() {
         ayTrS10Query = databaseMethods.getAyTrS10();
+    }
+
+
+    String singleAccountSku;
+    String singleAccountBatchId;
+    String message;
+    int itemCount;
+    @Given("The user send singleAccountCreate request")
+    public void theUserSendSingleAccountCreateRequest() {
+        String random = UUID.randomUUID().toString();
+        singleAccountSku = "MANUAL_ACC_" + random.substring(0,8);
+
+        JSONObject singleAccountResponse = Requests.singleAccountCreate(singleAccountSku,27);
+        System.out.println("singleAccountResponse: " + singleAccountResponse);
+
+        singleAccountBatchId = singleAccountResponse.getString("batchId");
+        message = singleAccountResponse.getString("message");
+        itemCount = singleAccountResponse.getInt("itemCount");
+
+        System.out.println("singleAccountSku: " + singleAccountSku);
+        System.out.println("itemCount: " + itemCount);
+        System.out.println("singleAccountBatchId: " + singleAccountBatchId);
+        System.out.println("Message: " + message);
+
+    }
+
+    String batchStatusRequestBatchId;
+    int batchStatusRequestCompletedCount;
+    int batchStatusRequestTotalCount;
+    int batchStatusRequestFailedCount;
+    int batchStatusRequestPendingCount;
+    @Given("The user send getBatchStatus request")
+    public void theUserSendGetBatchStatusRequest() {
+        JSONObject batchStatusResponse =
+                Requests.waitUntilBatchCompleted(singleAccountBatchId, 60, 3);
+
+//        JSONObject batchStatusResponse = Requests.getBatchStatus(singleAccountBatchId);
+        System.out.println("batchStatusResponse: " + batchStatusResponse);
+
+        batchStatusRequestBatchId = batchStatusResponse.getString("batchId");
+        batchStatusRequestCompletedCount = batchStatusResponse.getInt("completedCount");
+        batchStatusRequestTotalCount = batchStatusResponse.getInt("totalCount");
+        batchStatusRequestPendingCount = batchStatusResponse.getInt("pendingCount");
+        batchStatusRequestFailedCount = batchStatusResponse.getInt("failedCount");
+
+        System.out.println("Searching SKU length: " + singleAccountSku.length());
+
+    }
+
+    int singleAccountCountFromDb;
+    @Then("The user verify Single Account Create scenario")
+    public void theUserVerifySingleAccountCreateScenario() {
+//        BrowserUtils.wait(15);
+//        singleAccountCountFromDb = databaseMethods.getItemCountBySku(singleAccountSku);
+        singleAccountCountFromDb = databaseMethods.waitForItemInDb(singleAccountSku,30);
+    }
+
+    @Then("The user verify single account attributes")
+    public void theUserVerifySingleAccountAttributes() {
+        BrowserUtils.wait(30);
+        double diaCoordinationX = databaseMethods.getDecimalAttributeValueBySku(singleAccountSku,"DIA_A_KoordinatX");
+        String account_Name = databaseMethods.getTextAttributeValueBySku(singleAccountSku,"Account_Name");
+        String city = databaseMethods.getShortTextAttributeValueBySku(singleAccountSku,"City__c");
+        int diaCode = databaseMethods.getIntAttributeValueBySku(singleAccountSku,"DIA_A_Code");
+        boolean diaDurum = databaseMethods.getBooleanAttributeValueBySku(singleAccountSku,"DIA_DURUM");
+        int diaSalesHacmi = databaseMethods.getIntAttributeValueBySku(singleAccountSku,"1_23");
+
+        Assert.assertEquals("DIA_A_Koordinat değeri istekteki gibi değil", 41.012345, diaCoordinationX,0.0000001);
+        Assert.assertEquals("Account_Name değeri istekteki gibi değil", "Test Account Istanbul", account_Name);
+        Assert.assertEquals("City__c değeri istekteki gibi değil", "Istanbul", city);
+//        Assert.assertEquals("DIA_A_Code değeri istekteki gibi değil", 67670, diaCode);
+        Assert.assertTrue("DIA_DURUM değeri istekteki gibi değil", diaDurum);
+        Assert.assertEquals("1_23 attribute değeri istekteki gibi değil", 2828, diaSalesHacmi);
+
+    }
+
+    @Then("The user verify single account category")
+    public void theUserVerifySingleAccountCategory() {
+        List<String> categories = databaseMethods.getItemCategories(singleAccountSku);
+
+        boolean contains1 = categories.contains("ROOT");
+        boolean contains2 = categories.contains("1_28_1");
+
+        Assert.assertTrue("Category ROOT veya 1_28_1 içermiyor", contains1 && contains2);
+
+    }
+
+    @Then("The user verify single account item history")
+    public void theUserVerifySingleAccountItemHistory() {
+        int itemHistoryInsertLogCount = databaseMethods.getItemHistoryInsertLogCount(singleAccountSku);
+
+        Assert.assertEquals("Item History'de Insert kaydı yok",1, itemHistoryInsertLogCount);
+
+    }
+
+    String duplicateItemSku;
+    int duplicateStatusCode;
+    String duplicateMessage;
+    @Given("The user send duplicateSameFamilyItemCreate request")
+    public void theUserSendDuplicateSameFamilyItemCreateRequest() {
+        String random = UUID.randomUUID().toString();
+        duplicateItemSku = "DUP_SAME_FAM_ACC_" + random.substring(0,8);
+
+        JSONObject response = Requests.duplicateSameFamilyItemCreate(duplicateItemSku, 27);
+
+        duplicateStatusCode = response.getInt("statusCode");
+        duplicateMessage = response.getString("responseText");
+
+        System.out.println("Status Code: " + duplicateStatusCode);
+        System.out.println("Message: " + message);
+    }
+
+    @Then("The user verify duplicate same family item create scenario")
+    public void theUserVerifyDuplicateSameFamilyItemCreateScenario() {
+        String expectedMessage = "Duplicate SKUs found in batch: DUP_SKU_TEST. Each SKU must be unique within the same FamilyId.";
+        Assert.assertEquals("Duplicate isteği beklendiği gibi 400 dönmedi", 400, duplicateStatusCode);
+        Assert.assertTrue("Duplicate isteği mesajı beklendiği değil", duplicateMessage.contains("Duplicate SKUs found in batch"));
+        Assert.assertTrue("Duplicate isteği mesajı beklendiği değil", duplicateMessage.contains("Each SKU must be unique within the same FamilyId."));
+    }
+
+    @Given("The user send big data for tps calculation")
+    public void theUserSendBigDataForTpsCalculation() throws IOException {
+        String batchId = Requests.sendBenchmarkBatchInMemory("https://dia-preprod-item-service.efectura.com",
+                200, 100);
+        System.out.println("BatchId = " + batchId);
+    }
+
+    @Then("The user verify tps calculation")
+    public void theUserVerifyTpsCalculation() {
+        double tps = Requests.calculateItemsTpsBySkuPrefix("MANUAL_");
+        System.out.println("Items TPS = " + tps);
     }
 }

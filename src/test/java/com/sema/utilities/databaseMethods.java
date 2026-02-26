@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class databaseMethods {
@@ -645,4 +647,264 @@ public class databaseMethods {
         return ayTrS10;
 
     }
+
+    public static int getItemCountBySku(String itemSku) {
+        String query = "SELECT COUNT(*) AS itemCount FROM dbo.Items WHERE SKU = '" + itemSku + "'";
+
+//        System.out.println("Executing query: " + query);
+
+        int itemCount = 0;
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_PREPROD_SQLSERVER, DbConfigs.DB_USERNAME, DbConfigs.DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                itemCount = rs.getInt("itemCount");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println("-----\nitemCount: " + itemCount + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return itemCount;
+    }
+
+
+    public static int waitForItemInDb(String sku, int timeoutSeconds) {
+        long start = System.currentTimeMillis();
+        int count = 0;
+
+        while ((System.currentTimeMillis() - start) < timeoutSeconds * 1000) {
+
+            count = getItemCountBySku(sku);
+
+            if (count > 0) {
+                return count;
+            }
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        return count;
+    }
+
+
+    public static double getDecimalAttributeValueBySku(String itemSku, String decimalAttributeCode) {
+        String query = "SELECT iv.ValueDecimal as Value\n" +
+                "FROM ItemValues iv\n" +
+                "JOIN Attributes a ON iv.AttributeId = a.Id\n" +
+                "JOIN Items i ON iv.ItemId = i.Id\n" +
+                "WHERE i.SKU = '" + itemSku + "'\n" +
+                "  AND a.Code = '" + decimalAttributeCode + "';";
+
+        System.out.println("Executing query: " + query);
+
+        double attributeValue = 0.0;
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_PREPROD_SQLSERVER, DbConfigs.DB_USERNAME, DbConfigs.DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                System.out.println("rs.next() içine girdi");
+                attributeValue = rs.getDouble("Value");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println(decimalAttributeCode + " attributeValue: " + attributeValue + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attributeValue;
+
+    }
+
+    public static String getTextAttributeValueBySku(String itemSku, String textAttributeCode) {
+
+        String query = "SELECT iv.ValueString\n" +
+                "FROM ItemValues iv\n" +
+                "JOIN Attributes a ON iv.AttributeId = a.Id\n" +
+                "JOIN Items i ON iv.ItemId = i.Id\n" +
+                "WHERE i.SKU = '" + itemSku + "'\n" +
+                "  AND a.Code = '" + textAttributeCode + "';";
+
+        System.out.println("Executing query: " + query);
+
+        String attributeValue = "";
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_PREPROD_SQLSERVER, DbConfigs.DB_USERNAME, DbConfigs.DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                attributeValue = rs.getString("ValueString");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println(textAttributeCode + " attributeValue: " + attributeValue + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attributeValue;
+
+    }
+
+    public static int getIntAttributeValueBySku(String itemSku, String intAttributeCode) {
+        String query = "SELECT iv.ValueInt\n" +
+                "FROM ItemValues iv\n" +
+                "JOIN Attributes a ON iv.AttributeId = a.Id\n" +
+                "JOIN Items i ON iv.ItemId = i.Id\n" +
+                "WHERE i.SKU = '" + itemSku + "'\n" +
+                "  AND a.Code = '" + intAttributeCode + "';";
+
+        System.out.println("Executing query: " + query);
+
+        int attributeValue = 0;
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_PREPROD_SQLSERVER, DbConfigs.DB_USERNAME, DbConfigs.DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                attributeValue = rs.getInt("ValueInt");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println(intAttributeCode + " attributeValue: " + attributeValue + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attributeValue;
+    }
+
+    public static String getShortTextAttributeValueBySku(String itemSku, String shortTextAttributeCode) {
+        String query = "SELECT iv.ValueShortString\n" +
+                "FROM ItemValues iv\n" +
+                "JOIN Attributes a ON iv.AttributeId = a.Id\n" +
+                "JOIN Items i ON iv.ItemId = i.Id\n" +
+                "WHERE i.SKU = '" + itemSku + "'\n" +
+                "  AND a.Code = '" + shortTextAttributeCode + "';";
+
+        System.out.println("Executing query: " + query);
+
+        String attributeValue = "";
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_PREPROD_SQLSERVER, DbConfigs.DB_USERNAME, DbConfigs.DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                attributeValue = rs.getString("ValueShortString");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println(shortTextAttributeCode + " attributeValue: " + attributeValue + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attributeValue;
+    }
+
+    public static boolean getBooleanAttributeValueBySku(String itemSku, String boolAttributeCode) {
+        String query = "SELECT iv.ValueBool\n" +
+                "FROM ItemValues iv\n" +
+                "JOIN Attributes a ON iv.AttributeId = a.Id\n" +
+                "JOIN Items i ON iv.ItemId = i.Id\n" +
+                "WHERE i.SKU = '" + itemSku + "'\n" +
+                "  AND a.Code = '" + boolAttributeCode + "';";
+
+        System.out.println("Executing query: " + query);
+
+        boolean attributeValue = false;
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_PREPROD_SQLSERVER, DbConfigs.DB_USERNAME, DbConfigs.DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                attributeValue = rs.getBoolean("ValueBool");
+            }
+
+            // İsteğe bağlı: log
+            System.out.println(boolAttributeCode + " attributeValue: " + attributeValue + "\n-----");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attributeValue;
+    }
+
+    public static List<String> getItemCategories(String singleAccountSku) {
+        String query1 = "SELECT c.Code\n" +
+                "FROM CategoryItems ci\n" +
+                "JOIN Categories c ON c.Id = ci.Category_Id\n" +
+                "WHERE ci.Item_Id = (SELECT Id FROM Items WHERE SKU='MANUAL_ACC_4fbc2406');";
+
+        List<String> categories = new ArrayList<>();
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_PREPROD_SQLSERVER, DbConfigs.DB_USERNAME, DbConfigs.DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query1)) {
+            while (rs.next()) {
+                categories.add(rs.getString("Code"));
+            }
+
+            // İsteğe bağlı: log
+            System.out.println("categories: " + categories);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categories;
+
+    }
+
+    public static int getItemHistoryInsertLogCount(String singleAccountSku) {
+
+        String query = "SELECT COUNT(*)\n" +
+                "FROM ItemHistories h\n" +
+                "JOIN Items i ON h.ObjId = i.Id\n" +
+                "WHERE i.SKU IN ('" + singleAccountSku + "')\n" +
+                "  AND h.Type = 0;";
+
+        int logCount = 0;
+
+        try (Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_PREPROD_SQLSERVER, DbConfigs.DB_USERNAME, DbConfigs.DB_PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                logCount = rs.getInt(1);
+            }
+
+            // İsteğe bağlı: log
+            System.out.println("ItemHistory Insert Log Count: " + logCount);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return logCount;
+    }
+
+
+
 }

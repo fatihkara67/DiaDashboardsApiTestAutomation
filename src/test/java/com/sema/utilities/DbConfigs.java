@@ -13,4 +13,7 @@ public class DbConfigs {
     public static final String DIA_CLICKHOUSE_PASSWORD = "6KQlSamV4D2x7T9179STCK";
     public static final String DIA_CLICKHOUSE = "jdbc:clickhouse://212.68.49.250:8180/default";
 
+
+    public static final String DIA_PREPROD_SQLSERVER = "jdbc:sqlserver://server12.efectura.com:1433;databaseName=DIA_PREPROD;encrypt=true;trustServerCertificate=true;";
+
 }
