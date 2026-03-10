@@ -4130,7 +4130,7 @@ public class WidgetsStepDefs extends BaseStep {
     @Given("The user send getBatchStatus request")
     public void theUserSendGetBatchStatusRequest() {
         JSONObject batchStatusResponse =
-                Requests.waitUntilBatchCompleted(singleAccountBatchId, 60, 3);
+                Requests.waitUntilBatchCompleted(singleAccountBatchId, 120, 3);
 
 //        JSONObject batchStatusResponse = Requests.getBatchStatus(singleAccountBatchId);
         System.out.println("batchStatusResponse: " + batchStatusResponse);
@@ -4140,9 +4140,6 @@ public class WidgetsStepDefs extends BaseStep {
         batchStatusRequestTotalCount = batchStatusResponse.getInt("totalCount");
         batchStatusRequestPendingCount = batchStatusResponse.getInt("pendingCount");
         batchStatusRequestFailedCount = batchStatusResponse.getInt("failedCount");
-
-        System.out.println("Searching SKU length: " + singleAccountSku.length());
-
     }
 
     int singleAccountCountFromDb;
@@ -4216,16 +4213,92 @@ public class WidgetsStepDefs extends BaseStep {
         Assert.assertTrue("Duplicate isteği mesajı beklendiği değil", duplicateMessage.contains("Each SKU must be unique within the same FamilyId."));
     }
 
+    Requests.BatchCreateResult r;
+
     @Given("The user send big data for tps calculation")
     public void theUserSendBigDataForTpsCalculation() throws IOException {
-        String batchId = Requests.sendBenchmarkBatchInMemory("https://dia-preprod-item-service.efectura.com",
+//        String batchId = Requests.sendBenchmarkBatchInMemory(baseUrl,
+//                200, 100);
+
+        r = Requests.sendBenchmarkBatchInMemoryWithSkus(baseUrl,
                 200, 100);
-        System.out.println("BatchId = " + batchId);
+
+        System.out.println("BatchId = " + r.batchId);
+        singleAccountBatchId = r.batchId;
+        System.out.println("Account Skus: " + r.accountSkus.size() + " Route Skus: " + r.routeSkus.size());
+        System.out.println("Account Skus: " + r.accountSkus + "\nRoute Skus: " + r.routeSkus);
     }
 
+    String baseUrl = "https://dia-preprod-item-service.efectura.com";
     @Then("The user verify tps calculation")
     public void theUserVerifyTpsCalculation() {
+        BrowserUtils.wait(35);
         double tps = Requests.calculateItemsTpsBySkuPrefix("MANUAL_");
         System.out.println("Items TPS = " + tps);
+
+        double tpsItemValues = Requests.calculateItemValuesTpsBySkuPrefix("MANUAL_");
+        System.out.println("Items Values TPS = " + tpsItemValues);
+    }
+
+    @Given("The user upsert request for the created items")
+    public void theUserUpsertRequestForTheCreatedItems() throws IOException {
+        JSONObject responseJson = Requests.sendBulkUpsertForCreatedAccounts(baseUrl, r.accountSkus);
+        System.out.println("Upsert Response: " + responseJson);
+
+        String upsertBatchId = responseJson.optString("batchId", null);
+        System.out.println("BatchId: " + upsertBatchId);
+
+        Requests.waitUntilBatchCompleted(upsertBatchId, 180, 5);
+    }
+
+    @Then("The user verify item history")
+    public void theUserVerifyItemHistory() {
+         BrowserUtils.wait(20);
+        int itemHistoryUpsertLogCount = databaseMethods.getItemHistoryUpsertLogCount("MANUAL_");
+
+        Assert.assertEquals("Item History'de Insert kaydı yok",300, itemHistoryUpsertLogCount);
+    }
+
+    @Given("The user send upsert request for the created account")
+    public void theUserSendUpsertRequestForTheCreatedAccount() {
+        JSONObject upsertResponse = Requests.singleAccountCreate2(singleAccountSku,27);
+        System.out.println("upsertResponse: " + upsertResponse);
+
+        singleAccountBatchId = upsertResponse.getString("batchId");
+        message = upsertResponse.getString("message");
+        itemCount = upsertResponse.getInt("itemCount");
+
+        System.out.println("singleAccountSku: " + singleAccountSku);
+        System.out.println("itemCount: " + itemCount);
+        System.out.println("singleAccountBatchId: " + singleAccountBatchId);
+        System.out.println("Message: " + message);
+    }
+
+    @Then("The user verify single account attribute")
+    public void theUserVerifySingleAccountAttribute() {
+        BrowserUtils.wait(30);
+        String account_Name = databaseMethods.getTextAttributeValueBySku(singleAccountSku,"Account_Name");
+        Assert.assertEquals("Account_Name değeri istekteki gibi değil", "Updated Test Account Istanbul", account_Name);
+    }
+
+    @Given("The user send upsert request for created items")
+    public void theUserSendUpsertRequestForCreatedItems() throws IOException {
+        for (int i = 0; i < 200; i++) {
+            Requests.singleAccountCreate2(r.accountSkus.get(i),27);
+        }
+
+        for (int i = 0; i < 100; i++) {
+            Requests.singleAccountCreate2(r.routeSkus.get(i),27);
+        }
+
+
+        JSONObject singleAccountResponse = Requests.singleAccountCreate(singleAccountSku,27);
+
+        Requests.sendBulkUpsert(r.accountSkus, baseUrl);
+        Requests.sendBulkUpsert(r.routeSkus, baseUrl);
+
+
+
+
     }
 }

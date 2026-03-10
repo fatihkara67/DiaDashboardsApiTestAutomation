@@ -5,22 +5,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
-import java.util.Objects;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.time.Instant;
 import java.util.Random;
 
 public class Requests {
@@ -4504,6 +4495,7 @@ public class Requests {
     }
 
     public static JSONObject sendWidget99Request() {
+
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
                 .connectTimeout(5, TimeUnit.SECONDS)
@@ -4517,87 +4509,95 @@ public class Requests {
         String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A533%7D";
 
         MediaType JSON = MediaType.parse("application/json");
+
         String bodyStr = """
+{
+  "datasource": {
+    "id": 221,
+    "type": "table"
+  },
+  "force": false,
+  "queries": [
     {
-      "datasource": { "id": 221, "type": "table" },
-      "force": false,
-      "queries": [
-        {
-          "filters": [],
-          "extras": {
-            "having": "",
-            "where": ""
-          },
-          "applied_time_extras": {},
-          "columns": [
-            "URUN_TIP_ACIKLAMA",
-            "num_distributors_with_so"
-          ],
-          "orderby": [
-            ["num_distributors_with_so", false],
-            ["URUN_TIP_ACIKLAMA", true]
-          ],
-          "annotation_layers": [],
-          "row_limit": 10,
-          "series_limit": 0,
-          "order_desc": true,
-          "url_params": {
-            "dashboard_page_id": "S4uuQtRPAZQdnwSbZK06f",
-            "slice_id": "533"
-          },
-          "custom_params": {},
-          "custom_form_data": {},
-          "post_processing": [],
-          "time_offsets": []
-        }
-      ],
-      "form_data": {
-        "datasource": "221__table",
-        "viz_type": "table",
-        "slice_id": 533,
-        "url_params": {
-          "dashboard_page_id": "S4uuQtRPAZQdnwSbZK06f",
-          "slice_id": "533"
-        },
-        "query_mode": "raw",
-        "groupby": [],
-        "temporal_columns_lookup": {},
-        "all_columns": [
-          "URUN_TIP_ACIKLAMA",
-          "num_distributors_with_so"
-        ],
-        "percent_metrics": [],
-        "adhoc_filters": [],
-        "order_by_cols": [
-          "[\\"num_distributors_with_so\\", false]",
-          "[\\"URUN_TIP_ACIKLAMA\\", true]"
-        ],
-        "row_limit": 10,
-        "table_timestamp_format": "smart_date",
-        "include_search": false,
-        "allow_rearrange_columns": false,
-        "allow_render_html": true,
-        "column_config": {
-          "StockOut": { "horizontalAlign": "right" }
-        },
-        "show_cell_bars": false,
-        "align_pn": false,
-        "color_pn": false,
-        "comparison_color_scheme": "Green",
-        "conditional_formatting": [],
-        "comparison_type": "values",
-        "extra_form_data": {},
-        "force": false,
-        "result_format": "json",
-        "result_type": "full",
-        "include_time": false
+      "filters": [],
+      "extras": {
+        "having": "",
+        "where": ""
       },
-      "result_format": "json",
-      "result_type": "full"
+      "applied_time_extras": {},
+      "columns": [
+        "URUN_TIP_ACIKLAMA",
+        "num_distributors_with_so"
+      ],
+      "orderby": [
+        ["num_distributors_with_so", false]
+      ],
+      "annotation_layers": [],
+      "row_limit": 10,
+      "series_limit": 0,
+      "order_desc": true,
+      "url_params": {
+        "dashboard_page_id": "S4uuQtRPAZQdnwSbZK06f",
+        "form_data_key": "rWTUzNMcWZg",
+        "slice_id": "533"
+      },
+      "custom_params": {},
+      "custom_form_data": {},
+      "post_processing": [],
+      "time_offsets": []
     }
-    """;
+  ],
+  "form_data": {
+    "datasource": "221__table",
+    "viz_type": "table",
+    "slice_id": 533,
+    "url_params": {
+      "dashboard_page_id": "S4uuQtRPAZQdnwSbZK06f",
+      "form_data_key": "rWTUzNMcWZg",
+      "slice_id": "533"
+    },
+    "query_mode": "raw",
+    "groupby": [],
+    "temporal_columns_lookup": {},
+    "all_columns": [
+      "URUN_TIP_ACIKLAMA",
+      "num_distributors_with_so"
+    ],
+    "percent_metrics": [],
+    "adhoc_filters": [],
+    "order_by_cols": [
+      "[\\"num_distributors_with_so\\", false]"
+    ],
+    "order_desc": true,
+    "row_limit": 10,
+    "server_page_length": 10,
+    "table_timestamp_format": "smart_date",
+    "include_search": false,
+    "allow_rearrange_columns": false,
+    "allow_render_html": true,
+    "column_config": {
+      "StockOut": {
+        "horizontalAlign": "right"
+      }
+    },
+    "show_cell_bars": false,
+    "align_pn": false,
+    "color_pn": false,
+    "comparison_color_scheme": "Green",
+    "conditional_formatting": [],
+    "extra_form_data": {},
+    "force": false,
+    "result_format": "json",
+    "result_type": "full",
+    "include_time": false
+  },
+  "result_format": "json",
+  "result_type": "full"
+}
+""";
 
         RequestBody body = RequestBody.create(bodyStr, JSON);
+
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
@@ -4607,12 +4607,15 @@ public class Requests {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
+
             if (!response.isSuccessful()) {
                 String respBody = response.body() != null ? response.body().string() : "";
                 throw new IOException("Unexpected code " + response.code() + " - " + respBody);
             }
+
             String resp = response.body() != null ? response.body().string() : "{}";
             return new JSONObject(resp);
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -12386,6 +12389,233 @@ public class Requests {
         }
     }
 
+    public static JSONObject singleAccountCreate2(String sku, int familyId) {
+
+        OkHttpClient client = InsecureHttp.newClient(); // Senin standart yapı
+
+        try {
+
+            JSONObject attribute1 = new JSONObject()
+                    .put("Value", 67671)
+                    .put("Type", "Number")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "DIA_A_Code")
+                    .put("Id", 4131);
+
+            JSONObject attribute2 = new JSONObject()
+                    .put("Value", "Updated Test Account Istanbul")
+                    .put("Type", "Text")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "Account_Name")
+                    .put("Id", 4429);
+
+            JSONObject attribute3 = new JSONObject()
+                    .put("Value", "UpdatedIst")
+                    .put("Type", "Short Text")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "City__c")
+                    .put("Id", 4176);
+
+            JSONObject attribute4 = new JSONObject()
+                    .put("Value", "Updated Kadikoy Mah. 123 Sok No:5")
+                    .put("Type", "Text")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "Address__c")
+                    .put("Id", 4271);
+
+            JSONObject attribute5 = new JSONObject()
+                    .put("Value", "5551234568")
+                    .put("Type", "Text")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "IYS_Phone__c")
+                    .put("Id", 4332);
+
+            JSONObject attribute6 = new JSONObject()
+                    .put("Value", "1")
+                    .put("Type", "Bool")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "DIA_DURUM")
+                    .put("Id", 4729);
+
+            JSONObject attribute7 = new JSONObject()
+                    .put("Value", "true")
+                    .put("Type", "Bool")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "RAF_FLAG")
+                    .put("Id", 4695);
+
+            JSONObject attribute8 = new JSONObject()
+                    .put("Value", "41.012346")
+                    .put("Type", "Number")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "DIA_A_KoordinatX")
+                    .put("Id", 4134);
+
+            JSONObject attribute9 = new JSONObject()
+                    .put("Value", "29.123457")
+                    .put("Type", "Number")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "DIA_A_KoordinatY")
+                    .put("Id", 4135);
+
+            JSONObject attribute10 = new JSONObject()
+                    .put("Value", "101")
+                    .put("Type", "Number")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "DIA_A_Distkod")
+                    .put("Id", 4132);
+
+            JSONObject attribute11 = new JSONObject()
+                    .put("Value", "900002")
+                    .put("Type", "Number")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "DIA_A_ERPKOD")
+                    .put("Id", 4133);
+
+            JSONObject attribute12 = new JSONObject()
+                    .put("Value", "4")
+                    .put("Type", "Simple Select")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "1_23")
+                    .put("Id", 4242);
+
+            JSONObject attribute13 = new JSONObject()
+                    .put("Value", "50000.00")
+                    .put("Type", "Number")
+                    .put("UpsertAttributeOption", false)
+                    .put("Code", "Current_Credit_Limit__c")
+                    .put("Id", 4080);
+
+            JSONArray attributes = new JSONArray()
+                    .put(attribute1)
+                    .put(attribute2)
+                    .put(attribute3)
+                    .put(attribute4)
+                    .put(attribute5)
+                    .put(attribute6)
+                    .put(attribute7)
+                    .put(attribute8)
+                    .put(attribute9)
+                    .put(attribute10)
+                    .put(attribute11)
+                    .put(attribute12)
+                    .put(attribute13);
+
+            JSONArray categories = new JSONArray()
+                    .put(new JSONObject().put("Code", "ROOT"))
+                    .put(new JSONObject().put("Code", "1_28_1"));
+
+            JSONObject itemRequest = new JSONObject()
+                    .put("queueEnabled", true)
+                    .put("SKU", sku)
+                    .put("SKUColumnName", "LNGKOD")
+                    .put("SKUAttribute", false)
+                    .put("SKUAssociationAttribute", false)
+                    .put("SendItemEvent", false)
+                    .put("SendItemEventOnUpdate", false)
+                    .put("FamilyId", familyId)
+                    .put("Attributes", attributes)
+                    .put("Categories", categories)
+                    .put("Id", 0);
+
+            JSONArray itemRequests = new JSONArray().put(itemRequest);
+
+            JSONObject requestBodyJson = new JSONObject()
+                    .put("itemRequests", itemRequests);
+
+            RequestBody body = RequestBody.create(
+                    requestBodyJson.toString(),
+                    MediaType.parse("application/json")
+            );
+
+            Request request = new Request.Builder()
+                    .url("https://dia-preprod-item-service.efectura.com/api/Entity/CreateEntityBatchBackground")
+                    .post(body)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            String responseBody = response.body().string();
+            System.out.println(requestBodyJson);
+            System.out.println(request);
+
+            return new JSONObject(responseBody);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static JSONObject attrObj(String code, int id, String type, Object value) {
+        return new JSONObject()
+                .put("Value", value)
+                .put("Type", type)
+                .put("UpsertAttributeOption", false)
+                .put("Code", code)
+                .put("Id", id);
+    }
+
+
+
+
+    private static JSONObject generateAccountUpsertItemBulk(String sku) {
+        Integer diaCode = ACCOUNT_CODE_BY_SKU.get(sku);
+        if (diaCode == null) {
+            throw new RuntimeException("DIA_A_Code not found for sku: " + sku + " (create sırasında map’e eklenmemiş)");
+        }
+
+        JSONObject item = new JSONObject()
+                .put("queueEnabled", true)
+                .put("SKU", sku)
+                .put("SKUColumnName", "LNGKOD")
+                .put("SKUAttribute", false)
+                .put("SKUAssociationAttribute", false)
+                .put("SendItemEvent", false)
+                .put("SendItemEventOnUpdate", false)
+                .put("FamilyId", 27)
+                .put("Categories", new JSONArray()
+                        .put(new JSONObject().put("Code", "ROOT"))
+                        .put(new JSONObject().put("Code", "1_28_1")))
+                .put("Id", 0);
+
+        JSONArray attrs = new JSONArray()
+                .put(attrObj("DIA_A_Code", 4131, "Number", diaCode)) // ✅ aynı kalıyor
+                .put(attrObj("Account_Name", 4429, "Text", "Updated Test Account " + RND.nextInt(9999))) // ✅ değişiyor
+                .put(attrObj("City__c", 4176, "Short Text", "UpdatedIst"))
+                .put(attrObj("Address__c", 4271, "Text", "Updated Address " + RND.nextInt(999)));
+
+        item.put("Attributes", attrs);
+        return item;
+    }
+
+
+    public static JSONObject sendBulkUpsertForCreatedAccounts(String baseUrl,
+                                                              java.util.List<String> accountSkus) throws IOException {
+
+        OkHttpClient client = InsecureHttp.newClient();
+
+        JSONArray items = new JSONArray();
+        for (String sku : accountSkus) {
+            items.put(generateAccountUpsertItemBulk(sku));
+        }
+
+        JSONObject payload = new JSONObject().put("itemRequests", items);
+
+        Request request = new Request.Builder()
+                .url(baseUrl + "/api/Entity/CreateEntityBatchBackground")
+                .post(RequestBody.create(payload.toString(), JSON))
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            String body = response.body() != null ? response.body().string() : "";
+            if (!response.isSuccessful()) throw new IOException("HTTP " + response.code() + " Body: " + body);
+            return new JSONObject(body);
+        }
+    }
+
 
 
     public static JSONObject singleAccountCreate(String sku, int familyId) {
@@ -12757,6 +12987,208 @@ public class Requests {
         }
     }
 
+
+    public static JSONObject sendUpsertForCreatedItems(String baseUrl,
+                                                       java.util.List<String> accountSkus,
+                                                       java.util.List<String> routeSkus) throws IOException {
+
+        OkHttpClient client = InsecureHttp.newClient();
+
+        JSONArray items = new JSONArray();
+
+        // Accounts upsert
+        for (String sku : accountSkus) {
+            items.put(generateAccountUpsertItem(sku));
+        }
+
+        // Routes upsert
+        for (String sku : routeSkus) {
+            items.put(generateRouteUpsertItem(sku));
+        }
+
+        JSONObject payload = new JSONObject()
+                .put("itemRequests", items)
+                .put("StartDate", Instant.now().toString())
+                .put("EndDate", Instant.now().plusSeconds(3600).toString());
+
+        Request request = new Request.Builder()
+                .url(baseUrl + "/api/Entity/CreateEntityBatchBackground")
+                .post(RequestBody.create(payload.toString(), JSON))
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+
+            String body = response.body() != null ? response.body().string() : "";
+
+            if (!response.isSuccessful()) {
+                throw new IOException("HTTP " + response.code() + " Body: " + body);
+            }
+
+            System.out.println(payload);
+            System.out.println(request);
+            System.out.println(response);
+
+            // Direkt JSON olarak parse edip dönüyoruz
+            return new JSONObject(body);
+        }
+    }
+
+
+    private static JSONObject generateAccountUpsertItem(String sku) {
+        // Same SKU => upsert/update
+        JSONObject item = new JSONObject()
+                .put("queueEnabled", true)
+                .put("UseExistingFile", false)
+                .put("SKU", sku)
+                .put("SKUColumnName", "LNGKOD")
+                .put("SKUAttribute", false)
+                .put("SKUAssociationAttribute", false)
+                .put("SendItemEvent", false)
+                .put("SendItemEventOnUpdate", false)
+                .put("FamilyId", 27)
+                .put("Categories", new JSONArray()
+                        .put(new JSONObject().put("Code", "ROOT"))
+                        .put(new JSONObject().put("Code", "1_28_1")))
+                .put("Id", 0);
+
+        // Update edilecek alanlar (örnek)
+        JSONArray attrs = new JSONArray()
+                // SKU column genelde DIA_A_Code ile eşleştiriliyor; senin sistemde böyle
+                .put(attr("DIA_A_Code", 4131, "Number", "67670"))
+                .put(attr("Account_Name", 4429, "Text", "UPDATED Bench Account " + RND.nextInt(9999)))
+                .put(attr("City__c", 4176, "Short Text", pick(new String[]{"ISTANBUL", "ANKARA", "IZMIR"})))
+                .put(attr("DIA_DURUM", 4729, "Bool", (RND.nextBoolean() ? "1" : "0")))
+                .put(attr("RAF_FLAG", 4695, "Bool", (RND.nextBoolean() ? "true" : "false")))
+                .put(attr("MENU_FLAG", 4696, "Bool", (RND.nextBoolean() ? "1" : "0")))
+                .put(attr("Current_Credit_Limit__c", 4080, "Number",
+                        String.valueOf(10_000 + RND.nextInt(90_000)) + ".00"));
+
+        item.put("Attributes", attrs);
+        return item;
+    }
+
+    private static JSONObject generateRouteUpsertItem(String sku) {
+        JSONObject item = new JSONObject()
+                .put("queueEnabled", true)
+                .put("SKU", sku)
+                .put("SKUColumnName", "TXTRUTGRUPAD")
+                .put("SKUAttribute", false)
+                .put("SKUAssociationAttribute", false)
+                .put("SendItemEvent", false)
+                .put("SendItemEventOnUpdate", false)
+                .put("FamilyId", 200)
+                .put("Categories", new JSONArray().put(new JSONObject().put("Code", "ROOT")))
+                .put("Id", 0);
+
+        JSONArray attrs = new JSONArray()
+                .put(attr("ROTA_LNGSTKOD", 4682, "Number", String.valueOf(1000 + RND.nextInt(9000))))
+                .put(attr("ROTA_LNGDISTKOD", 4676, "Number", String.valueOf(100 + RND.nextInt(900))))
+                // route adı aynı SKU kalsın ama attribute değerlerini değiştiriyoruz
+                .put(attr("ROTA_TXTRUTGRUPAD", 4681, "Short Text", sku))
+                .put(attr("ROTA_TXTREFERANS", 4679, "Short Text", "UPD_REF_" + RND.nextInt(9999)));
+
+        item.put("Attributes", attrs);
+        return item;
+    }
+
+
+    static List<JSONObject> createdJsonObj = new java.util.ArrayList<>();
+    private static final java.util.Map<String, Integer> ACCOUNT_CODE_BY_SKU = new java.util.HashMap<>();
+    public static BatchCreateResult sendBenchmarkBatchInMemoryWithSkus(String baseUrl, int accountCount, int routeCount) throws IOException {
+        OkHttpClient client = InsecureHttp.newClient();
+
+        JSONArray items = new JSONArray();
+        java.util.List<String> accSkus = new java.util.ArrayList<>();
+        java.util.List<String> routeSkus = new java.util.ArrayList<>();
+        java.util.List<JSONObject> createdJsonObj = new java.util.ArrayList<>();
+        int diaCode = 60000 + RND.nextInt(30000);
+
+        for (int i = 0; i < accountCount; i++) {
+            JSONObject acc = generateAccountItem();
+            createdJsonObj.add(acc);
+            accSkus.add(acc.getString("SKU"));
+            ACCOUNT_CODE_BY_SKU.put(acc.getString("SKU"), diaCode);
+            items.put(acc);
+        }
+
+        for (int i = 0; i < routeCount; i++) {
+            JSONObject rte = generateRouteItem();
+            createdJsonObj.add(rte);
+            routeSkus.add(rte.getString("SKU"));
+            items.put(rte);
+        }
+
+        JSONObject payload = new JSONObject()
+                .put("itemRequests", items)
+                .put("StartDate", Instant.now().toString())
+                .put("EndDate", Instant.now().plusSeconds(3600).toString());
+
+        Request request = new Request.Builder()
+                .url(baseUrl + "/api/Entity/CreateEntityBatchBackground")
+                .post(RequestBody.create(payload.toString(), JSON))
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            String body = response.body() != null ? response.body().string() : "";
+            if (!response.isSuccessful()) throw new IOException("HTTP " + response.code() + " Body: " + body);
+
+            String batchId = safeGetBatchId(body);
+            if (batchId == null || batchId.isBlank()) throw new IOException("batchId not found in response: " + body);
+
+            return new BatchCreateResult(batchId, accSkus, routeSkus);
+        }
+    }
+
+    public static void sendBulkUpsert(List<String> s, String baseUrl) throws IOException {
+        OkHttpClient client = InsecureHttp.newClient();
+
+        JSONArray items = new JSONArray();
+
+        java.util.List<JSONObject> createdJsonObj = new java.util.ArrayList<>();
+        int diaCode = 60000 + RND.nextInt(30000);
+
+        for (int i = 0; i < s.size(); i++) {
+            JSONObject acc = generateAccountItem();
+            items.put(acc);
+        }
+
+
+        JSONObject payload = new JSONObject()
+                .put("itemRequests", items)
+                .put("StartDate", Instant.now().toString())
+                .put("EndDate", Instant.now().plusSeconds(3600).toString());
+
+        Request request = new Request.Builder()
+                .url(baseUrl + "/api/Entity/CreateEntityBatchBackground")
+                .post(RequestBody.create(payload.toString(), JSON))
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            String body = response.body() != null ? response.body().string() : "";
+            if (!response.isSuccessful()) throw new IOException("HTTP " + response.code() + " Body: " + body);
+
+            String batchId = safeGetBatchId(body);
+            if (batchId == null || batchId.isBlank()) throw new IOException("batchId not found in response: " + body);
+
+//            return new BatchCreateResult(batchId, accSkus, routeSkus);
+        }
+
+
+    }
+
+    public static class BatchCreateResult {
+        public final String batchId;
+        public final java.util.List<String> accountSkus;
+        public final java.util.List<String> routeSkus;
+
+        public BatchCreateResult(String batchId, java.util.List<String> accountSkus, java.util.List<String> routeSkus) {
+            this.batchId = batchId;
+            this.accountSkus = accountSkus;
+            this.routeSkus = routeSkus;
+        }
+    }
+
+
     // -------------------- Item Generators --------------------
 
     private static JSONObject generateAccountItem() {
@@ -12799,8 +13231,71 @@ public class Requests {
         return item;
     }
 
+    private static JSONObject generateUpsertAccountItem(String sku) {
+        String phone = "5" + (RND.nextInt(10)) + (RND.nextInt(10)) + String.format("%07d", Math.abs(RND.nextInt()) % 10_000_000);
+
+        JSONObject item = new JSONObject()
+                .put("queueEnabled", true)
+                .put("UseExistingFile", false)
+                .put("SKU", sku)
+                .put("SKUColumnName", "LNGKOD")
+                .put("SKUAttribute", false)
+                .put("SKUAssociationAttribute", false)
+                .put("SendItemEvent", false)
+                .put("SendItemEventOnUpdate", false)
+                .put("FamilyId", 27)
+                .put("Categories", new JSONArray()
+                        .put(new JSONObject().put("Code", "ROOT"))
+                        .put(new JSONObject().put("Code", "1_28_1")))
+                .put("Id", 0);
+
+        JSONArray attrs = new JSONArray()
+                .put(attr("DIA_A_Code", 4131, "Number", sku))
+                .put(attr("Account_Name", 4429, "Text", "Updated Bench Account " + RND.nextInt(9999)))
+                .put(attr("City__c", 4176, "Short Text", pick(new String[]{"ISTANBUL", "ANKARA", "IZMIR"})))
+                .put(attr("Address__c", 4271, "Text", "Test Address " + RND.nextInt(999)))
+                .put(attr("IYS_Phone__c", 4332, "Text", phone))
+                .put(attr("Mobile__c", 4340, "Text", phone))
+                .put(attr("DIA_DURUM", 4729, "Bool", "1"))
+                .put(attr("RAF_FLAG", 4695, "Bool", "true"))
+                .put(attr("MENU_FLAG", 4696, "Bool", "0"))
+                .put(attr("DIA_A_KoordinatX", 4134, "Number", "41.0" + String.format("%04d", RND.nextInt(9999))))
+                .put(attr("DIA_A_KoordinatY", 4135, "Number", "28." + RND.nextInt(10) + String.format("%04d", RND.nextInt(9999))))
+                .put(attr("DIA_A_Distkod", 4132, "Number", String.valueOf(100 + RND.nextInt(900))))
+                .put(attr("DIA_A_ERPKOD", 4133, "Number", String.valueOf(900000 + RND.nextInt(9000))))
+                .put(attr("1_23", 4242, "Simple Select", "4"))
+                .put(attr("Current_Credit_Limit__c", 4080, "Number", String.valueOf(10_000 + RND.nextInt(90_000)) + ".00"));
+
+        item.put("Attributes", attrs);
+        return item;
+    }
+
     private static JSONObject generateRouteItem() {
         String sku = "MANUAL_R_" + System.currentTimeMillis() + "_" + Math.abs(RND.nextInt());
+
+        JSONObject item = new JSONObject()
+                .put("queueEnabled", true)
+                .put("SKU", sku)
+                .put("SKUColumnName", "TXTRUTGRUPAD")
+                .put("SKUAttribute", false)
+                .put("SKUAssociationAttribute", false)
+                .put("SendItemEvent", false)
+                .put("SendItemEventOnUpdate", false)
+                .put("FamilyId", 200)
+                .put("Categories", new JSONArray().put(new JSONObject().put("Code", "ROOT")))
+                .put("Id", 0);
+
+        JSONArray attrs = new JSONArray()
+                .put(attr("ROTA_LNGSTKOD", 4682, "Number", String.valueOf(RND.nextInt(9999))))
+                .put(attr("ROTA_LNGDISTKOD", 4676, "Number", String.valueOf(RND.nextInt(999))))
+                .put(attr("ROTA_TXTRUTGRUPAD", 4681, "Short Text", sku))
+                .put(attr("ROTA_TXTREFERANS", 4679, "Short Text", "REF_" + RND.nextInt(9999)));
+
+        item.put("Attributes", attrs);
+        return item;
+    }
+
+    private static JSONObject generateUpsertRouteItem(String sku) {
 
         JSONObject item = new JSONObject()
                 .put("queueEnabled", true)
@@ -12895,6 +13390,53 @@ public class Requests {
     }
 
 
+
+    public static double calculateItemValuesTpsBySkuPrefix(String skuPrefix) {
+
+        String query =
+                "SELECT MIN(iv.CreatedOn) as MinTime, " +
+                        "       MAX(iv.CreatedOn) as MaxTime, " +
+                        "       COUNT(*) as TotalCount " +
+                        "FROM ItemValues iv " +
+                        "JOIN Items i ON iv.ItemId = i.Id " +
+                        "WHERE i.SKU LIKE '" + skuPrefix + "%'";
+
+        try (java.sql.Connection conn = DatabaseManager.getConnection(
+                DbConfigs.DIA_PREPROD_SQLSERVER,
+                DbConfigs.DB_USERNAME,
+                DbConfigs.DB_PASSWORD);
+             java.sql.Statement stmt = conn.createStatement();
+             java.sql.ResultSet rs = stmt.executeQuery(query)) {
+
+            if (rs.next()) {
+                java.sql.Timestamp minTime = rs.getTimestamp("MinTime");
+                java.sql.Timestamp maxTime = rs.getTimestamp("MaxTime");
+                int totalCount = rs.getInt("TotalCount");
+
+                if (minTime == null || maxTime == null || totalCount == 0) {
+                    throw new RuntimeException("No ItemValues found for prefix: " + skuPrefix);
+                }
+
+                long durationMs = maxTime.getTime() - minTime.getTime();
+                if (durationMs <= 0) {
+                    throw new RuntimeException("Duration is zero/negative. durationMs=" + durationMs);
+                }
+
+                double tps = totalCount / (durationMs / 1000.0);
+
+                System.out.println("ItemValues Total=" + totalCount +
+                        " durationMs=" + durationMs +
+                        " TPS=" + tps);
+
+                return tps;
+            }
+
+            throw new RuntimeException("No result returned for prefix: " + skuPrefix);
+
+        } catch (Exception e) {
+            throw new RuntimeException("ItemValues TPS calculation failed", e);
+        }
+    }
 
 
 

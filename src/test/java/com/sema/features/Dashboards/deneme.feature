@@ -5,7 +5,7 @@ Feature: Widget2 Scenarios
 
 #12,33,35,38,39
 
-#31
+#29
 
   Scenario: Scenario 14
     Given The user send widget25 request
@@ -50,13 +50,18 @@ Feature: Widget2 Scenarios
 
   Scenario: Single Account Create
     Given The user send singleAccountCreate request
-#    Given The user send getBatchStatus request
-#    Then The user verify Single Account Create scenario
-#    Then The user verify single account attributes
+    Given The user send getBatchStatus request
+    Then The user verify Single Account Create scenario
+    Then The user verify single account attributes
 #    Then The user verify single account category
 #    Then The user verify single account item history
+#    Given The user send upsert request for the created account
+#    Then The user verify single account attribute
 #    Given The user send duplicateSameFamilyItemCreate request
 #    Then The user verify duplicate same family item create scenario
     Given The user send big data for tps calculation
     Given The user send getBatchStatus request
     Then The user verify tps calculation
+    Given The user upsert request for the created items
+    Given The user send upsert request for created items
+    Then The user verify item history
