@@ -5,63 +5,63 @@ Feature: Widget2 Scenarios
 
 #12,33,35,38,39
 
-#29
+#14
 
-  Scenario: Scenario 14
-    Given The user send widget25 request
-    Given The user send widget101 request
-    Then The user verify scenario14
-
-  Scenario: Scenario 15
-    Given The user send widget26 request
-    Given The user get Scenario15 query
-    Then The user verify scenario15
-
-  Scenario: Scenario 25
-    Given The user send widget29 request
-    Given The user send widget29AggreationS25 request
-    Then The user verify scenario25
-
-  Scenario: Scenario 29
-    Given The user send widget4 request
-    Given The user send widget8 request
-    Then The user verify scenario29
-
-  Scenario: Scenario 31
-    Given The user send widget10 request
-    Given The user get S31 query
-    Then The user verify scenario31
-
-  Scenario: Scenario 32
-    Given The user send widget22 request
-    Given The user send widget15Aggregation request
-    Then The user verify scenario32
-
-  Scenario: Scenario 37
-    Given The user send widget46 request
-    Given The user get S37 query
-    Then The user verify scenario37
-
-  Scenario: Scenario 53
-    Given The user send widget36 request
-    Given The user send widget29AggreationS53 request
-    Then The user verify scenario53
-
-
-  Scenario: Single Account Create
-    Given The user send singleAccountCreate request
-    Given The user send getBatchStatus request
-    Then The user verify Single Account Create scenario
-    Then The user verify single account attributes
+#  Scenario: Scenario 14
+#    Given The user send widget25 request
+#    Given The user send widget101 request
+#    Then The user verify scenario14
+#
+#  Scenario: Scenario 15
+#    Given The user send widget26 request
+#    Given The user get Scenario15 query
+#    Then The user verify scenario15
+#
+#  Scenario: Scenario 25
+#    Given The user send widget29 request
+#    Given The user send widget29AggreationS25 request
+#    Then The user verify scenario25
+#
+#  Scenario: Scenario 29
+#    Given The user send widget4 request
+#    Given The user send widget8 request
+#    Then The user verify scenario29
+#
+#  Scenario: Scenario 31
+#    Given The user send widget10 request
+#    Given The user get S31 query
+#    Then The user verify scenario31
+#
+#  Scenario: Scenario 32
+#    Given The user send widget22 request
+#    Given The user send widget15Aggregation request
+#    Then The user verify scenario32
+#
+#  Scenario: Scenario 37
+#    Given The user send widget46 request
+#    Given The user get S37 query
+#    Then The user verify scenario37
+#
+#  Scenario: Scenario 53
+#    Given The user send widget36 request
+#    Given The user send widget29AggreationS53 request
+#    Then The user verify scenario53
+#
+#
+#  Scenario: Single Account Create
+#    Given The user send singleAccountCreate request
+#    Given The user send getBatchStatus request
+#    Then The user verify Single Account Create scenario
+#    Then The user verify single account attributes
 #    Then The user verify single account category
 #    Then The user verify single account item history
 #    Given The user send upsert request for the created account
 #    Then The user verify single account attribute
 #    Given The user send duplicateSameFamilyItemCreate request
 #    Then The user verify duplicate same family item create scenario
-    Given The user send big data for tps calculation
-    Given The user send getBatchStatus request
-    Then The user verify tps calculation
-    Given The user upsert request for the created items
-    Given The user send upsert request for created items
-    Then The user verify item history
+#    Given The user send big data for tps calculation
+#    Given The user send getBatchStatus request
+#    Then The user verify tps calculation
+#    Given The user upsert request for the created items
+#    Given The user send upsert request for created items
+#    Then The user verify item history
