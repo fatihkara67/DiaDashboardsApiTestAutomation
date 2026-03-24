@@ -422,12 +422,22 @@ public class databaseMethods {
     }
 
     public static int getCountDistinctDistCodeS21() {
-        String query = "select\n" +
+        String query2 = "select\n" +
                 "        COUNT(DISTINCT DIST_CODE) AS countDistinctDistCode\n" +
                 "from\n" +
                 "        my_database.MEY_TR_T_WRH_STOCK_HISTORY_CRM mttwshc\n" +
                 "WHERE\n" +
                 "        DIST_CODE IN ('ASYA KAYIKCI', 'ADIYAMAN DATA', 'AGRI TANRIVERDI', 'ANKARA GRAM', 'ANKARA LACIN', 'ANTALYA ANDA', 'ANTALYA ANKA', 'ANTALYA INCI', 'ARTVIN KESKIN', 'ASYA DOGUS', 'AYDIN PIRIM', 'BAYIR ACARLAR', 'BODRUM PIRIM', 'BURSA RIT', 'CAGAN', 'CANAKKALE BAYRAKTAR', 'DENIZLI BIZIMYAKI', 'DIYARBAKIR HNR', 'DUNYA ZOGULDAK', 'ELAZIG POLAT', 'GAZIANTEP EKER', 'ISPARTA CANTAYLAR', 'ISTANBUL DOGUS', 'ISTANBUL GURPA', 'ISTANBUL KAYIKCI', 'ISTANBUL OZYIGIT', 'ISTANBUL PIRIM', 'IZMIR GURPA', 'IZMIR PIRIM', 'KARAMAN ALFA', 'KASTAMONU LACIN', 'KAYSERI 4GEN', 'KIRSEHIR YUKSELLER', 'KOCAELI GULENER', 'MALATYA OZSAH', 'MANISA CANTAY', 'MANISA CANTAY 2', 'MARDIN SECEM', 'MERSIN ALFA', 'MERSIN SGM', 'MUGLA ACARLAR', 'NEVSEHIR ONUR', 'ORDU GURESCIOGLU', 'OSMANIYE MARSAS', 'SAKARYA KOSEOGLU', 'SAMSUN TANRIVERDI', 'SIVAS SES', 'TRAKYA ERZA', 'URFA UCKOK', 'USAK BIZIMYAKI', 'YALOVA KUZEYNAM', 'CORUM TANRIVERDI')";
+
+
+        String query = "select\n" +
+                "        COUNT(DISTINCT DIST_CODE) as countDistinctDistCode\n" +
+                "from\n" +
+                "        my_database.MEY_TR_T_WRH_STOCK_HISTORY_CRM mttwshc\n" +
+                "WHERE\n" +
+                "        DIST_CODE IN (select * from my_database.ActiveDistributors)";
+
+
         int countDistCode = 0;
 
         try (Connection conn = DatabaseManager.getConnection(
