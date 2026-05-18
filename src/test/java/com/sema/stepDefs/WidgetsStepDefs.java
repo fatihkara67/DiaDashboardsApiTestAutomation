@@ -42,7 +42,8 @@ public class WidgetsStepDefs extends BaseStep {
             JSONObject obj = dataArray.getJSONObject(i);
             if (currentMonth.equals(obj.getString("PMonth"))) {
                 // F26 değerini al
-                fValueW11 = obj.getDouble(currentYear);
+                //fValueW11 = obj.getDouble(currentYear);
+                fValueW11 = obj.optDouble(currentYear, 0.0);
                 System.out.println(currentMonth + " - " + currentYear  + " değeri: " + fValueW11);
                 break;
             }
@@ -212,11 +213,18 @@ public class WidgetsStepDefs extends BaseStep {
             JSONObject obj = dataArray.getJSONObject(i);
             String segment = obj.getString("URUN_KALITE_SEGMENT_ACIKLAMA");
 
+//            if ("Diğer".equals(segment)) {
+//                digerSatisW13 = obj.getDouble("Satış (L)");
+//            } else if ("Prem".equals(segment)) {
+//                premSatisW13 = obj.getDouble("Satış (L)");
+//            }
+
             if ("Diğer".equals(segment)) {
-                digerSatisW13 = obj.getDouble("Satış (L)");
+                digerSatisW13 = obj.optDouble("Satış (L)", 0.0);
             } else if ("Prem".equals(segment)) {
-                premSatisW13 = obj.getDouble("Satış (L)");
+                premSatisW13 = obj.optDouble("Satış (L)", 0.0);
             }
+
         }
 
         System.out.println("Diğer satış (L): " + digerSatisW13);
