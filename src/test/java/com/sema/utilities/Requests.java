@@ -27,10 +27,10 @@ public class Requests {
                 .retryOnConnectionFailure(true)
                 .build();
 
-        String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A520%7D";
+        String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A520%7D&force=true";
 
         String jsonBody = """
-        {"datasource":{"id":363,"type":"table"},"force":false,"queries":[{"filters":[],"extras":{"having":"","where":"(splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n     ifNull(BM, '')\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]) AND (FYear != 'F70')"},"applied_time_extras":{},"columns":[{"columnType":"BASE_AXIS","sqlExpression":"PMonth","label":"PMonth","expressionType":"SQL"},"FYear"],"metrics":[{"aggregate":"SUM","column":{"advanced_data_type":null,"changed_on":"2025-08-13T11:08:02.809236","column_name":"Total_Sales","created_on":"2025-08-13T11:08:02.809234","description":null,"expression":null,"extra":null,"filterable":true,"groupby":true,"id":7727,"is_active":true,"is_dttm":false,"python_date_format":null,"type":"Nullable(Float64)","type_generic":null,"uuid":"08272fe5-7f25-4bcf-9a29-142afb182750","verbose_name":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":false,"label":"SUM(Total_Sales)","optionName":"metric_tmvqdjfadn_d3d7wkalor","sqlExpression":null}],"orderby":[[{"aggregate":"SUM","column":{"advanced_data_type":null,"changed_on":"2025-08-13T11:08:02.809236","column_name":"Total_Sales","created_on":"2025-08-13T11:08:02.809234","description":null,"expression":null,"extra":null,"filterable":true,"groupby":true,"id":7727,"is_active":true,"is_dttm":false,"python_date_format":null,"type":"Nullable(Float64)","type_generic":null,"uuid":"08272fe5-7f25-4bcf-9a29-142afb182750","verbose_name":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":false,"label":"SUM(Total_Sales)","optionName":"metric_tmvqdjfadn_d3d7wkalor","sqlExpression":null},false]],"annotation_layers":[],"row_limit":10000,"series_columns":["FYear"],"series_limit":0,"order_desc":true,"url_params":{"dashboard_page_id":"1J1r34hZDTtlUqPdX77xx","form_data_key":"P4Dat7A69PU","slice_id":"520"},"custom_params":{},"custom_form_data":{},"time_offsets":[],"post_processing":[{"operation":"pivot","options":{"index":["PMonth"],"columns":["FYear"],"aggregates":{"SUM(Total_Sales)":{"operator":"mean"}},"drop_missing_columns":false}},{"operation":"rename","options":{"columns":{"SUM(Total_Sales)":null},"level":0,"inplace":true}},{"operation":"flatten"}]}],"form_data":{"datasource":"363__table","viz_type":"echarts_timeseries_bar","slice_id":520,"url_params":{"dashboard_page_id":"1J1r34hZDTtlUqPdX77xx","form_data_key":"P4Dat7A69PU","slice_id":"520"},"x_axis":"PMonth","x_axis_sort_asc":true,"x_axis_sort_series":"name","x_axis_sort_series_ascending":true,"metrics":[{"aggregate":"SUM","column":{"advanced_data_type":null,"changed_on":"2025-08-13T11:08:02.809236","column_name":"Total_Sales","created_on":"2025-08-13T11:08:02.809234","description":null,"expression":null,"extra":null,"filterable":true,"groupby":true,"id":7727,"is_active":true,"is_dttm":false,"python_date_format":null,"type":"Nullable(Float64)","type_generic":null,"uuid":"08272fe5-7f25-4bcf-9a29-142afb182750","verbose_name":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":false,"label":"SUM(Total_Sales)","optionName":"metric_tmvqdjfadn_d3d7wkalor","sqlExpression":null}],"groupby":["FYear"],"adhoc_filters":[{"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_v7qdt44x07_y9ua8i9av7q","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n     ifNull(BM, '')\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]","subject":null},{"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_8lfoijnhno9_n3rsdaj8nme","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"FYear != 'F70'","subject":null}],"order_desc":true,"row_limit":10000,"truncate_metric":true,"show_empty_columns":true,"comparison_type":"values","annotation_layers":[],"forecastPeriods":10,"forecastInterval":0.8,"orientation":"vertical","x_axis_title":"Aylar","x_axis_title_margin":30,"y_axis_title":"Litre","y_axis_title_margin":30,"y_axis_title_position":"Left","sort_series_type":"name","sort_series_ascending":true,"color_scheme":"d3Category20","time_shift_color":true,"show_value":false,"stack":null,"only_total":true,"minorTicks":false,"show_legend":true,"legendType":"scroll","legendOrientation":"bottom","x_axis_time_format":"smart_date","xAxisLabelRotation":0,"y_axis_format":"SMART_NUMBER","logAxis":false,"minorSplitLine":false,"truncateYAxis":false,"y_axis_bounds":[null,null],"truncateXAxis":true,"rich_tooltip":true,"showTooltipTotal":true,"tooltipSortByMetric":true,"tooltipTimeFormat":"smart_date","extra_form_data":{},"force":false,"result_format":"json","result_type":"results"},"result_format":"json","result_type":"results"}
+        {"datasource":{"id":363,"type":"table"},"force":true,"queries":[{"filters":[],"extras":{"having":"","where":"(splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n     ifNull(BM, '')\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]) AND (FYear != 'F70') AND (BM ILIKE 'Marmara%')"},"applied_time_extras":{},"columns":[{"columnType":"BASE_AXIS","sqlExpression":"PMonth","label":"PMonth","expressionType":"SQL"},"FYear"],"metrics":[{"aggregate":"SUM","column":{"advanced_data_type":null,"changed_on":"2025-08-13T11:08:02.809236","column_name":"Total_Sales","created_on":"2025-08-13T11:08:02.809234","description":null,"expression":null,"extra":null,"filterable":true,"groupby":true,"id":7727,"is_active":true,"is_dttm":false,"python_date_format":null,"type":"Nullable(Float64)","type_generic":null,"uuid":"08272fe5-7f25-4bcf-9a29-142afb182750","verbose_name":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":false,"label":"SUM(Total_Sales)","optionName":"metric_tmvqdjfadn_d3d7wkalor","sqlExpression":null}],"orderby":[[{"aggregate":"SUM","column":{"advanced_data_type":null,"changed_on":"2025-08-13T11:08:02.809236","column_name":"Total_Sales","created_on":"2025-08-13T11:08:02.809234","description":null,"expression":null,"extra":null,"filterable":true,"groupby":true,"id":7727,"is_active":true,"is_dttm":false,"python_date_format":null,"type":"Nullable(Float64)","type_generic":null,"uuid":"08272fe5-7f25-4bcf-9a29-142afb182750","verbose_name":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":false,"label":"SUM(Total_Sales)","optionName":"metric_tmvqdjfadn_d3d7wkalor","sqlExpression":null},false]],"annotation_layers":[],"row_limit":10000,"series_columns":["FYear"],"series_limit":0,"order_desc":true,"url_params":{"dashboard_page_id":"1J1r34hZDTtlUqPdX77xx","form_data_key":"P4Dat7A69PU","slice_id":"520"},"custom_params":{},"custom_form_data":{},"time_offsets":[],"post_processing":[{"operation":"pivot","options":{"index":["PMonth"],"columns":["FYear"],"aggregates":{"SUM(Total_Sales)":{"operator":"mean"}},"drop_missing_columns":false}},{"operation":"rename","options":{"columns":{"SUM(Total_Sales)":null},"level":0,"inplace":true}},{"operation":"flatten"}]}],"form_data":{"datasource":"363__table","viz_type":"echarts_timeseries_bar","slice_id":520,"url_params":{"dashboard_page_id":"1J1r34hZDTtlUqPdX77xx","form_data_key":"P4Dat7A69PU","slice_id":"520"},"x_axis":"PMonth","x_axis_sort_asc":true,"x_axis_sort_series":"name","x_axis_sort_series_ascending":true,"metrics":[{"aggregate":"SUM","column":{"advanced_data_type":null,"changed_on":"2025-08-13T11:08:02.809236","column_name":"Total_Sales","created_on":"2025-08-13T11:08:02.809234","description":null,"expression":null,"extra":null,"filterable":true,"groupby":true,"id":7727,"is_active":true,"is_dttm":false,"python_date_format":null,"type":"Nullable(Float64)","type_generic":null,"uuid":"08272fe5-7f25-4bcf-9a29-142afb182750","verbose_name":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":false,"label":"SUM(Total_Sales)","optionName":"metric_tmvqdjfadn_d3d7wkalor","sqlExpression":null}],"groupby":["FYear"],"adhoc_filters":[{"expressionType":"SQL","sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n     ifNull(BM, '')\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]","clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_v7qdt44x07_y9ua8i9av7q"},{"expressionType":"SQL","sqlExpression":"FYear != 'F70'","clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_8lfoijnhno9_n3rsdaj8nme"},{"expressionType":"SQL","sqlExpression":"BM ILIKE 'Marmara%'","clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_iyj1vxgedx_uz2kfswcjvs"}],"order_desc":true,"row_limit":10000,"truncate_metric":true,"show_empty_columns":true,"comparison_type":"values","annotation_layers":[],"forecastPeriods":10,"forecastInterval":0.8,"orientation":"vertical","x_axis_title":"Aylar","x_axis_title_margin":30,"y_axis_title":"Litre","y_axis_title_margin":30,"y_axis_title_position":"Left","sort_series_type":"name","sort_series_ascending":true,"color_scheme":"d3Category20","time_shift_color":true,"show_value":false,"stack":null,"only_total":true,"minorTicks":false,"show_legend":true,"legendType":"scroll","legendOrientation":"bottom","x_axis_time_format":"smart_date","xAxisLabelRotation":0,"y_axis_format":"SMART_NUMBER","logAxis":false,"minorSplitLine":false,"truncateYAxis":false,"y_axis_bounds":[null,null],"truncateXAxis":true,"rich_tooltip":true,"showTooltipTotal":true,"tooltipSortByMetric":true,"tooltipTimeFormat":"smart_date","extra_form_data":{},"force":true,"result_format":"json","result_type":"results"},"result_format":"json","result_type":"results"}
         """;
 
         RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
@@ -39,7 +39,7 @@ public class Requests {
                 .url(url)
                 .post(body)
                 .addHeader("Accept", "application/json")
-                .addHeader("Accept-Language", "en-US,en;q=0.9,tr-TR;q=0.8,tr;q=0.7")
+                .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
                 .addHeader("Connection", "keep-alive")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Origin", "https://dia-dashboard.efectura.com")
@@ -51,7 +51,7 @@ public class Requests {
                 .addHeader("Sec-Fetch-Dest", "empty")
                 .addHeader("Sec-Fetch-Mode", "same-origin")
                 .addHeader("Sec-Fetch-Site", "same-origin")
-                .addHeader("X-CSRFToken", "")
+                .addHeader("X-CSRFToken;", "")
                 .addHeader("Cookie", cookie)
                 .build();
 
@@ -74,6 +74,11 @@ public class Requests {
 
         throw new IOException("Failed to get response after " + maxRetries + " attempts", lastException);
     }
+
+
+
+
+
 
     public static JSONObject sendWidget12Request() throws IOException {
         String cookie = ConfigurationReader.getProperty("cookie");
@@ -260,204 +265,16 @@ public class Requests {
 
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
-                .readTimeout(timeoutValue, TimeUnit.SECONDS)
-                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
-        String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A522%7D";
+        String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A522%7D&force=true";
 
-        // DİKKAT: where/sqlExpression içindeki satır sonları \\r\\n veya \\n olarak KAÇIŞLI yazıldı.
         String jsonBody = """
-        {
-          "datasource": { "id": 330, "type": "table" },
-          "force": false,
-          "queries": [
-            {
-              "filters": [],
-              "extras": {
-                "having": "",
-                "where": "(makeDate(FISCALYEAR,FISCALMONTH,1) >= \\r\\n    if(toMonth(now()) >= 7,\\r\\n       addMonths(date_trunc('year', now()), 6),\\r\\n       addMonths(date_trunc('year', now()), -6))\\r\\n) AND (splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1])"
-              },
-              "applied_time_extras": {},
-              "columns": [
-                { "columnType": "BASE_AXIS", "datasourceWarning": false, "expressionType": "SQL", "label": "Ürün Kategori", "sqlExpression": "'Ürün Kategori'" },
-                "ProductCat"
-              ],
-              "metrics": [
-                {
-                  "aggregate": null,
-                  "column": null,
-                  "datasourceWarning": false,
-                  "expressionType": "SQL",
-                  "hasCustomLabel": true,
-                  "label": "Satış (L)",
-                  "optionName": "metric_ectan2zdvy8_i6hm2sfdptq",
-                  "sqlExpression": "SUM(Total_Sales)"
-                }
-              ],
-              "orderby": [
-                [
-                  {
-                    "aggregate": null,
-                    "column": null,
-                    "datasourceWarning": false,
-                    "expressionType": "SQL",
-                    "hasCustomLabel": false,
-                    "label": "SUM(Total_Sales)",
-                    "optionName": "metric_en6j3hwfkxk_g9klffngsog",
-                    "sqlExpression": "SUM(Total_Sales)"
-                  },
-                  false
-                ]
-              ],
-              "annotation_layers": [],
-              "row_limit": 10000,
-              "series_columns": ["ProductCat"],
-              "series_limit": 0,
-              "series_limit_metric": {
-                "aggregate": null,
-                "column": null,
-                "datasourceWarning": false,
-                "expressionType": "SQL",
-                "hasCustomLabel": false,
-                "label": "SUM(Total_Sales)",
-                "optionName": "metric_en6j3hwfkxk_g9klffngsog",
-                "sqlExpression": "SUM(Total_Sales)"
-              },
-              "order_desc": true,
-              "url_params": { "slice_id": "522" },
-              "custom_params": {},
-              "custom_form_data": {},
-              "time_offsets": [],
-              "post_processing": [
-                {
-                  "operation": "pivot",
-                  "options": {
-                    "index": ["Ürün Kategori"],
-                    "columns": ["ProductCat"],
-                    "aggregates": {
-                      "Satış (L)": { "operator": "mean" }
-                    },
-                    "drop_missing_columns": false
-                  }
-                },
-                {
-                  "operation": "rename",
-                  "options": {
-                    "columns": { "Satış (L)": null },
-                    "level": 0,
-                    "inplace": true
-                  }
-                },
-                { "operation": "flatten" }
-              ]
-            }
-          ],
-          "form_data": {
-            "datasource": "330__table",
-            "viz_type": "echarts_timeseries_bar",
-            "slice_id": 522,
-            "url_params": { "slice_id": "522" },
-            "x_axis": {
-              "datasourceWarning": false,
-              "expressionType": "SQL",
-              "label": "Ürün Kategori",
-              "sqlExpression": "'Ürün Kategori'"
-            },
-            "x_axis_sort_asc": true,
-            "x_axis_sort_series": "name",
-            "x_axis_sort_series_ascending": true,
-            "metrics": [
-              {
-                "aggregate": null,
-                "column": null,
-                "datasourceWarning": false,
-                "expressionType": "SQL",
-                "hasCustomLabel": true,
-                "label": "Satış (L)",
-                "optionName": "metric_ectan2zdvy8_i6hm2sfdptq",
-                "sqlExpression": "SUM(Total_Sales)"
-              }
-            ],
-            "groupby": ["ProductCat"],
-            "adhoc_filters": [
-              {
-                "clause": "WHERE",
-                "comparator": null,
-                "datasourceWarning": false,
-                "expressionType": "SQL",
-                "filterOptionName": "filter_ixgownj8ei_hecuhtjs62",
-                "isExtra": false,
-                "isNew": false,
-                "operator": "TEMPORAL_RANGE",
-                "sqlExpression": "makeDate(FISCALYEAR,FISCALMONTH,1) >= \\r\\n    if(toMonth(now()) >= 7,\\r\\n       addMonths(date_trunc('year', now()), 6),\\r\\n       addMonths(date_trunc('year', now()), -6))\\r\\n",
-                "subject": "TRHISLEMTARIHI"
-              },
-              {
-                "clause": "WHERE",
-                "comparator": null,
-                "datasourceWarning": false,
-                "expressionType": "SQL",
-                "filterOptionName": "filter_f4bm6lm48t9_x4e3xz5c7zg",
-                "isExtra": false,
-                "isNew": false,
-                "operator": null,
-                "sqlExpression": "splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]",
-                "subject": null
-              }
-            ],
-            "timeseries_limit_metric": {
-              "aggregate": null,
-              "column": null,
-              "datasourceWarning": false,
-              "expressionType": "SQL",
-              "hasCustomLabel": false,
-              "label": "SUM(Total_Sales)",
-              "optionName": "metric_en6j3hwfkxk_g9klffngsog",
-              "sqlExpression": "SUM(Total_Sales)"
-            },
-            "order_desc": true,
-            "row_limit": 10000,
-            "truncate_metric": true,
-            "show_empty_columns": true,
-            "comparison_type": "values",
-            "annotation_layers": [],
-            "forecastPeriods": 10,
-            "forecastInterval": 0.8,
-            "orientation": "vertical",
-            "x_axis_title_margin": 15,
-            "y_axis_title": "",
-            "y_axis_title_margin": "45",
-            "y_axis_title_position": "Left",
-            "sort_series_type": "sum",
-            "color_scheme": "bnbColors",
-            "time_shift_color": true,
-            "show_value": true,
-            "only_total": true,
-            "show_legend": true,
-            "legendType": "scroll",
-            "legendOrientation": "bottom",
-            "legendMargin": 40,
-            "x_axis_time_format": "smart_date",
-            "xAxisLabelRotation": 0,
-            "y_axis_format": "SMART_NUMBER",
-            "logAxis": false,
-            "y_axis_bounds": [null, null],
-            "truncateXAxis": true,
-            "rich_tooltip": true,
-            "showTooltipTotal": true,
-            "tooltipSortByMetric": false,
-            "tooltipTimeFormat": "%d/%m/%Y",
-            "extra_form_data": {},
-            "force": false,
-            "result_format": "json",
-            "result_type": "full"
-          },
-          "result_format": "json",
-          "result_type": "full"
-        }
+        {"datasource":{"id":330,"type":"table"},"force":true,"queries":[{"filters":[],"extras":{"having":"","where":"(makeDate(FISCALYEAR,FISCALMONTH,1) >= \\r\\n    if(toMonth(now()) >= 7,\\r\\n       addMonths(date_trunc('year', now()), 6),\\r\\n       addMonths(date_trunc('year', now()), -6))\\r\\n) AND (splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      ifNull(BM, '')\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]) AND (ROTA NOT ILIKE '%LZM%') AND (BM ILIKE 'Marmara%')"},"applied_time_extras":{},"columns":[{"columnType":"BASE_AXIS","datasourceWarning":false,"expressionType":"SQL","label":"Ürün Kategori","sqlExpression":"'Ürün Kategori'"},"ProductCat"],"metrics":[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Satış (L)","optionName":"metric_ectan2zdvy8_i6hm2sfdptq","sqlExpression":"SUM(Total_Sales)"}],"orderby":[[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":false,"label":"SUM(Total_Sales)","optionName":"metric_en6j3hwfkxk_g9klffngsog","sqlExpression":"SUM(Total_Sales)"},false]],"annotation_layers":[],"row_limit":10000,"series_columns":["ProductCat"],"series_limit":0,"series_limit_metric":{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":false,"label":"SUM(Total_Sales)","optionName":"metric_en6j3hwfkxk_g9klffngsog","sqlExpression":"SUM(Total_Sales)"},"order_desc":true,"url_params":{"dashboard_page_id":"1J1r34hZDTtlUqPdX77xx","form_data_key":"XMGz08xYW1g","slice_id":"522"},"custom_params":{},"custom_form_data":{},"time_offsets":[],"post_processing":[{"operation":"pivot","options":{"index":["Ürün Kategori"],"columns":["ProductCat"],"aggregates":{"Satış (L)":{"operator":"mean"}},"drop_missing_columns":false}},{"operation":"rename","options":{"columns":{"Satış (L)":null},"level":0,"inplace":true}},{"operation":"flatten"}]}],"form_data":{"datasource":"330__table","viz_type":"echarts_timeseries_bar","slice_id":522,"url_params":{"dashboard_page_id":"1J1r34hZDTtlUqPdX77xx","form_data_key":"XMGz08xYW1g","slice_id":"522"},"x_axis":{"datasourceWarning":false,"expressionType":"SQL","label":"Ürün Kategori","sqlExpression":"'Ürün Kategori'"},"x_axis_sort_series":"name","x_axis_sort_series_ascending":true,"metrics":[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Satış (L)","optionName":"metric_ectan2zdvy8_i6hm2sfdptq","sqlExpression":"SUM(Total_Sales)"}],"groupby":["ProductCat"],"adhoc_filters":[{"expressionType":"SQL","sqlExpression":"makeDate(FISCALYEAR,FISCALMONTH,1) >= \\r\\n    if(toMonth(now()) >= 7,\\r\\n       addMonths(date_trunc('year', now()), 6),\\r\\n       addMonths(date_trunc('year', now()), -6))\\r\\n","clause":"WHERE","subject":"TRHISLEMTARIHI","operator":"TEMPORAL_RANGE","comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_ixgownj8ei_hecuhtjs62"},{"expressionType":"SQL","sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      ifNull(BM, '')\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]","clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_f4bm6lm48t9_x4e3xz5c7zg"},{"expressionType":"SQL","sqlExpression":"ROTA NOT ILIKE '%LZM%'","clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_mb6vdltun4g_ym4wxjhngc"},{"expressionType":"SQL","sqlExpression":"BM ILIKE 'Marmara%'","clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_bhnb52wffbk_xgkfnxfltv"}],"timeseries_limit_metric":{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":false,"label":"SUM(Total_Sales)","optionName":"metric_en6j3hwfkxk_g9klffngsog","sqlExpression":"SUM(Total_Sales)"},"order_desc":true,"row_limit":10000,"truncate_metric":true,"show_empty_columns":true,"comparison_type":"values","annotation_layers":[],"forecastPeriods":10,"forecastInterval":0.8,"orientation":"vertical","x_axis_title_margin":15,"y_axis_title":"","y_axis_title_margin":"45","y_axis_title_position":"Left","sort_series_type":"sum","color_scheme":"bnbColors","time_shift_color":true,"show_value":true,"only_total":true,"show_legend":true,"legendType":"scroll","legendOrientation":"bottom","legendMargin":40,"x_axis_time_format":"smart_date","xAxisLabelRotation":0,"y_axis_format":"SMART_NUMBER","logAxis":false,"y_axis_bounds":[null,null],"truncateXAxis":true,"rich_tooltip":true,"showTooltipTotal":true,"tooltipSortByMetric":false,"tooltipTimeFormat":"%d/%m/%Y","extra_form_data":{},"force":true,"result_format":"json","result_type":"results"},"result_format":"json","result_type":"results"}
         """;
 
         RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
@@ -466,62 +283,58 @@ public class Requests {
                 .url(url)
                 .post(body)
                 .addHeader("Accept", "application/json")
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
                 .addHeader("Connection", "keep-alive")
+                .addHeader("Content-Type", "application/json")
                 .addHeader("Origin", "https://dia-dashboard.efectura.com")
-                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=Vr4C6hVEdI4&slice_id=522")
-                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")
-                // cURL'de header ismi gerçekten 'X-CSRFToken;' (noktalı virgüllü). Aynısını gönderelim:
-                .addHeader("X-CSRFToken;", "")
-                .addHeader("sec-ch-ua", "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Google Chrome\";v=\"140\"")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=XMGz08xYW1g&dashboard_page_id=1J1r34hZDTtlUqPdX77xx&slice_id=522")
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36")
+                .addHeader("sec-ch-ua", "\"Chromium\";v=\"148\", \"Google Chrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"")
                 .addHeader("sec-ch-ua-mobile", "?0")
                 .addHeader("sec-ch-ua-platform", "\"Windows\"")
+                .addHeader("Sec-Fetch-Dest", "empty")
+                .addHeader("Sec-Fetch-Mode", "same-origin")
+                .addHeader("Sec-Fetch-Site", "same-origin")
+                .addHeader("X-CSRFToken;", "")
                 .addHeader("Cookie", cookie)
                 .build();
 
         int maxRetries = 3;
-        IOException lastEx = null;
+        IOException lastException = null;
 
         for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try (Response response = client.newCall(request).execute()) {
-                String respBody = (response.body() != null) ? response.body().string() : null;
-                if (response.isSuccessful() && respBody != null) {
-                    return new JSONObject(respBody);
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseStr = response.body().string();
+                    return new JSONObject(responseStr);
                 } else {
-                    System.err.println("sendWidget15Request - HTTP " + response.code() + " (attempt " + attempt + ")");
-                    if (respBody != null) System.err.println("Response body: " + respBody);
+                    System.err.println("Request failed (status=" + response.code() + "), attempt " + attempt);
                 }
             } catch (IOException e) {
-                lastEx = e;
-                System.err.println("sendWidget15Request attempt " + attempt + " failed: " + e.getMessage());
+                lastException = e;
+                System.err.println("Attempt " + attempt + " failed: " + e.getMessage());
             }
-            try { Thread.sleep(300L); } catch (InterruptedException ignored) {}
         }
 
-        throw new IOException("sendWidget15Request failed after " + maxRetries + " attempts", lastEx);
+        throw new IOException("Failed to get response after " + maxRetries + " attempts", lastException);
     }
 
 
     public static JSONObject sendWidget16Request() throws IOException {
-        // Cookie'yi dışarıdan al (örn: "session=....")
         String cookie = ConfigurationReader.getProperty("cookie");
 
-        // SSL doğrulamasını bypass eden client (lokal/test için) + timeoutlar
         OkHttpClient client = InsecureHttp.newClient()
                 .newBuilder()
-                .connectTimeout(timeoutValue, TimeUnit.SECONDS)
-                .readTimeout(timeoutValue, TimeUnit.SECONDS)
-                .writeTimeout(timeoutValue, TimeUnit.SECONDS)
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
-        // URL (slice_id=523)
-        String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A523%7D";
+        String url = "https://dia-dashboard.efectura.com/api/v1/chart/data?form_data=%7B%22slice_id%22%3A523%7D&force=true";
 
-        // Body (cURL'deki --data-raw birebir, \r\n kaçışlı)
         String jsonBody = """
-        {"datasource":{"id":330,"type":"table"},"force":false,"queries":[{"filters":[],"extras":{"having":"","where":"(makeDate(FISCALYEAR,FISCALMONTH,1) >= \\r\\n    if(toMonth(now()) >= 7,\\r\\n       addMonths(date_trunc('year', now()), 6),\\r\\n       addMonths(date_trunc('year', now()), -6))\\r\\n) AND (splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1])"},"applied_time_extras":{},"columns":[{"expressionType":"SQL","label":"Kalite Segment","sqlExpression":"ProductQuality"}],"metrics":[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Satış (L)","optionName":"metric_rufg1yjrf89_xlaru84993l","sqlExpression":"SUM(Total_Sales)"}],"orderby":[[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Satış (L)","optionName":"metric_rufg1yjrf89_xlaru84993l","sqlExpression":"SUM(Total_Sales)"},false]],"annotation_layers":[],"row_limit":100,"series_limit":0,"order_desc":true,"url_params":{"slice_id":"523"},"custom_params":{},"custom_form_data":{}}],"form_data":{"datasource":"330__table","viz_type":"pie","slice_id":523,"url_params":{"slice_id":"523"},"groupby":[{"expressionType":"SQL","label":"Kalite Segment","sqlExpression":"ProductQuality"}],"metric":{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Satış (L)","optionName":"metric_rufg1yjrf89_xlaru84993l","sqlExpression":"SUM(Total_Sales)"},"adhoc_filters":[{"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_mjbqmduoopq_lnjm9tpfin","isExtra":false,"isNew":false,"operator":"TEMPORAL_RANGE","sqlExpression":"makeDate(FISCALYEAR,FISCALMONTH,1) >= \\r\\n    if(toMonth(now()) >= 7,\\r\\n       addMonths(date_trunc('year', now()), 6),\\r\\n       addMonths(date_trunc('year', now()), -6))\\r\\n","subject":"TRHISLEMTARIHI"},{"clause":"WHERE","comparator":null,"datasourceWarning":false,"expressionType":"SQL","filterOptionName":"filter_fy3zmmp6mm6_n8n5guvcuxq","isExtra":false,"isNew":false,"operator":null,"sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      'Marmara'\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]","subject":null}],"row_limit":100,"sort_by_metric":true,"color_scheme":"supersetColors","show_labels_threshold":0.1,"show_legend":false,"legendType":"scroll","legendOrientation":"top","legendMargin":null,"label_type":"key_percent","number_format":"SMART_NUMBER","date_format":"smart_date","show_labels":true,"labels_outside":true,"label_line":true,"show_total":false,"outerRadius":60,"donut":true,"innerRadius":35,"extra_form_data":{},"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}
+        {"datasource":{"id":330,"type":"table"},"force":true,"queries":[{"filters":[],"extras":{"having":"","where":"(makeDate(FISCALYEAR,FISCALMONTH,1) >= \\r\\n    if(toMonth(now()) >= 7,\\r\\n       addMonths(date_trunc('year', now()), 6),\\r\\n       addMonths(date_trunc('year', now()), -6))\\r\\n) AND (splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      ifNull(BM, '')\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]) AND (ROTA NOT ILIKE '%LZM%') AND (BM ILIKE 'Marmara%')"},"applied_time_extras":{},"columns":[{"expressionType":"SQL","label":"Kalite Segment","sqlExpression":"ProductQuality"}],"metrics":[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Satış (L)","optionName":"metric_rufg1yjrf89_xlaru84993l","sqlExpression":"SUM(Total_Sales)"}],"orderby":[[{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Satış (L)","optionName":"metric_rufg1yjrf89_xlaru84993l","sqlExpression":"SUM(Total_Sales)"},false]],"annotation_layers":[],"row_limit":100,"series_limit":0,"order_desc":true,"url_params":{"dashboard_page_id":"1J1r34hZDTtlUqPdX77xx","form_data_key":"BM1otjZ06xE","slice_id":"523"},"custom_params":{},"custom_form_data":{}}],"form_data":{"datasource":"330__table","viz_type":"pie","slice_id":523,"url_params":{"dashboard_page_id":"1J1r34hZDTtlUqPdX77xx","form_data_key":"BM1otjZ06xE","slice_id":"523"},"groupby":[{"expressionType":"SQL","label":"Kalite Segment","sqlExpression":"ProductQuality"}],"metric":{"aggregate":null,"column":null,"datasourceWarning":false,"expressionType":"SQL","hasCustomLabel":true,"label":"Satış (L)","optionName":"metric_rufg1yjrf89_xlaru84993l","sqlExpression":"SUM(Total_Sales)"},"adhoc_filters":[{"expressionType":"SQL","sqlExpression":"makeDate(FISCALYEAR,FISCALMONTH,1) >= \\r\\n    if(toMonth(now()) >= 7,\\r\\n       addMonths(date_trunc('year', now()), 6),\\r\\n       addMonths(date_trunc('year', now()), -6))\\r\\n","clause":"WHERE","subject":"TRHISLEMTARIHI","operator":"TEMPORAL_RANGE","comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_mjbqmduoopq_lnjm9tpfin"},{"expressionType":"SQL","sqlExpression":"splitByChar(' ', upperUTF8(replaceAll(replaceAll(ifNull(BM, ''), 'ı', 'i'), 'İ', 'I')))[1]\\r\\nLIKE \\r\\nsplitByChar(' ', upperUTF8(replaceAll(replaceAll(\\r\\n    {% if url_param('BM') %}\\r\\n      '{{ url_param('BM') }}'\\r\\n    {% else %}\\r\\n      ifNull(BM, '')\\r\\n    {% endif %}, 'ı', 'i'), 'İ', 'I')))[1]","clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_fy3zmmp6mm6_n8n5guvcuxq"},{"expressionType":"SQL","sqlExpression":"ROTA NOT ILIKE '%LZM%'","clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_q36a0nidke_hgslxbfvqxd"},{"expressionType":"SQL","sqlExpression":"BM ILIKE 'Marmara%'","clause":"WHERE","subject":null,"operator":null,"comparator":null,"isExtra":false,"isNew":false,"datasourceWarning":false,"filterOptionName":"filter_x2sb6upi7oc_i8zgadssf7e"}],"row_limit":100,"sort_by_metric":true,"color_scheme":"supersetColors","show_labels_threshold":0.1,"show_legend":false,"legendType":"scroll","legendOrientation":"top","legendMargin":null,"label_type":"key_percent","number_format":"SMART_NUMBER","date_format":"smart_date","show_labels":true,"labels_outside":true,"label_line":true,"show_total":false,"outerRadius":60,"donut":true,"innerRadius":35,"extra_form_data":{},"force":true,"result_format":"json","result_type":"results"},"result_format":"json","result_type":"results"}
         """;
 
         RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
@@ -530,43 +343,40 @@ public class Requests {
                 .url(url)
                 .post(body)
                 .addHeader("Accept", "application/json")
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
                 .addHeader("Connection", "keep-alive")
+                .addHeader("Content-Type", "application/json")
                 .addHeader("Origin", "https://dia-dashboard.efectura.com")
-                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=Xp02fQeA4Dc&slice_id=523")
+                .addHeader("Referer", "https://dia-dashboard.efectura.com/explore/?form_data_key=BM1otjZ06xE&dashboard_page_id=1J1r34hZDTtlUqPdX77xx&slice_id=523")
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36")
+                .addHeader("sec-ch-ua", "\"Chromium\";v=\"148\", \"Google Chrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"")
+                .addHeader("sec-ch-ua-mobile", "?0")
+                .addHeader("sec-ch-ua-platform", "\"Windows\"")
                 .addHeader("Sec-Fetch-Dest", "empty")
                 .addHeader("Sec-Fetch-Mode", "same-origin")
                 .addHeader("Sec-Fetch-Site", "same-origin")
-                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")
-                // cURL'de header adı 'X-CSRFToken;' (sonunda ';') — aynısını gönderiyoruz:
                 .addHeader("X-CSRFToken;", "")
-                .addHeader("sec-ch-ua", "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Google Chrome\";v=\"140\"")
-                .addHeader("sec-ch-ua-mobile", "?0")
-                .addHeader("sec-ch-ua-platform", "\"Windows\"")
                 .addHeader("Cookie", cookie)
                 .build();
 
         int maxRetries = 3;
-        IOException lastEx = null;
+        IOException lastException = null;
 
         for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try (Response response = client.newCall(request).execute()) {
-                String respBody = response.body() != null ? response.body().string() : null;
-                if (response.isSuccessful() && respBody != null) {
-                    return new JSONObject(respBody);
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseStr = response.body().string();
+                    return new JSONObject(responseStr);
                 } else {
-                    System.err.println("sendWidget16Request - HTTP " + response.code() + " (attempt " + attempt + ")");
-                    if (respBody != null) System.err.println("Response body: " + respBody);
+                    System.err.println("Request failed (status=" + response.code() + "), attempt " + attempt);
                 }
             } catch (IOException e) {
-                lastEx = e;
-                System.err.println("sendWidget16Request attempt " + attempt + " failed: " + e.getMessage());
+                lastException = e;
+                System.err.println("Attempt " + attempt + " failed: " + e.getMessage());
             }
-            try { Thread.sleep(300L); } catch (InterruptedException ignored) {}
         }
 
-        throw new IOException("sendWidget16Request failed after 3 attempts", lastEx);
+        throw new IOException("Failed to get response after " + maxRetries + " attempts", lastException);
     }
 
 
